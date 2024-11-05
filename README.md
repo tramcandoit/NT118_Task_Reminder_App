@@ -5,3 +5,7 @@
 - **Khi muốn code được merge vào master**: Tạo pull request -> Nhờ ít nhất 1 bạn trong team review
 - **Sau khi code đã được merge vào master**: Thông báo với team để nhắc mọi người pull code từ master về trước khi code tiếp
 - Hạn chế chỉnh sửa file code không do mình đảm nhận để tránh conflict (trừ khi có task cần phải chỉnh sửa trên file code của bạn khác)
+---
+## UI implementation:
+- Mỗi người muốn làm giao diện nào thì tạo 1 Fragment cho giao diện đó (Home/Calendar/List/Settings)
+- Có thể tham khảo CalendarFragment.java / fragment_calendar.xml 
