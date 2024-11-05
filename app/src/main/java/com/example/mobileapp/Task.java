@@ -3,6 +3,7 @@ package com.example.mobileapp;
 public class Task {
     private int taskId;
     private int userId;
+    private int categoryId;
     private String name;
     private String priority;
     private String status;
@@ -14,9 +15,10 @@ public class Task {
     public Task() {
     }
 
-    public Task(int taskId, int userId, String name, String priority, String status, String date, String time, String repeat_frequency, String description) {
+    public Task(int taskId, int userId, int categoryId, String name, String priority, String status, String date, String time, String repeat_frequency, String description) {
         this.taskId = taskId;
         this.userId = userId;
+        this.categoryId = categoryId;
         this.name = name;
         this.priority = priority;
         this.status = status;
@@ -40,6 +42,14 @@ public class Task {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getName() {

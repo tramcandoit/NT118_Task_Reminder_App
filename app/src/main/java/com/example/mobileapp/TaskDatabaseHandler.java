@@ -18,6 +18,7 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
     // Contacts Table Columns names
     private static final String KEY_TASKID = "taskId";
     private static final String KEY_USERID = "userId";
+    private static final String KEY_CATEGORYID = "categoryId";
     private static final String KEY_NAME = "ten_nhiem_vu";
     private static final String KEY_PRIORITY = "muc_do_uu_tien";
     private static final String KEY_STATUS = "trang_thai";
@@ -37,6 +38,7 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
                 TABLE_TASKS + "("
                 + KEY_TASKID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + KEY_USERID + " INTEGER,"
+                + KEY_CATEGORYID + " INTEGER,"
                 + KEY_NAME + " TEXT,"
                 + KEY_PRIORITY + " INTEGER,"
                 + KEY_STATUS + " INTEGER,"
@@ -62,11 +64,12 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_USERID, task.getUserId());
+        values.put(KEY_CATEGORYID, task.getCategoryId());
         values.put(KEY_NAME, task.getName());
         values.put(KEY_PRIORITY, task.getPriority());
         values.put(KEY_STATUS, task.getStatus());
-        values.put(KEY_DATE, task.getDate().toString());
-        values.put(KEY_TIME, task.getTime().toString());
+        values.put(KEY_DATE, task.getDate());
+        values.put(KEY_TIME, task.getTime());
         values.put(KEY_FREQUENCY, task.getRepeat_frequency());
         values.put(KEY_DESCRIPTION, task.getDescription());
 
@@ -80,7 +83,7 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
     public Task getTask(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_TASKS,
-                new String[] { KEY_TASKID, KEY_USERID, KEY_NAME, KEY_PRIORITY, KEY_STATUS, KEY_DATE, KEY_TIME, KEY_FREQUENCY, KEY_DESCRIPTION },
+                new String[] { KEY_TASKID, KEY_USERID, KEY_CATEGORYID, KEY_NAME, KEY_PRIORITY, KEY_STATUS, KEY_DATE, KEY_TIME, KEY_FREQUENCY, KEY_DESCRIPTION },
                 KEY_TASKID + "=?",
                 new String[] { String.valueOf(id) },
                 null,
@@ -98,13 +101,14 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
         Task task = new Task(
                 Integer.parseInt(cursor.getString(0)),   // getTaskId
                 Integer.parseInt(cursor.getString(1)),    // getUserId
-                cursor.getString(2),    // getName
-                cursor.getString(3),    // getPriority
-                cursor.getString(4),    // getStatus
-                cursor.getString(5),    // getDate
-                cursor.getString(6),    // getTime
-                cursor.getString(7),    // getRepeat_frequency
-                cursor.getString(8)    // getDescription
+                Integer.parseInt(cursor.getString(2)),    // getCategoryId
+                cursor.getString(3),    // getName
+                cursor.getString(4),    // getPriority
+                cursor.getString(5),    // getStatus
+                cursor.getString(6),    // getDate
+                cursor.getString(7),    // getTime
+                cursor.getString(8),    // getRepeat_frequency
+                cursor.getString(9)    // getDescription
         );
         return task;
     }
@@ -122,13 +126,14 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
                 Task Task = new Task();
                 Task.setTaskId(Integer.parseInt(cursor.getString(0)));
                 Task.setUserId(Integer.parseInt(cursor.getString(1)));
-                Task.setName(cursor.getString(2));
-                Task.setPriority(cursor.getString(3));
-                Task.setStatus(cursor.getString(4));
-                Task.setDate(cursor.getString(5));
-                Task.setTime(cursor.getString(6));
-                Task.setRepeat_frequency(cursor.getString(7));
-                Task.setDescription(cursor.getString(8));
+                Task.setCategoryId(Integer.parseInt(cursor.getString(2)));
+                Task.setName(cursor.getString(3));
+                Task.setPriority(cursor.getString(4));
+                Task.setStatus(cursor.getString(5));
+                Task.setDate(cursor.getString(6));
+                Task.setTime(cursor.getString(7));
+                Task.setRepeat_frequency(cursor.getString(8));
+                Task.setDescription(cursor.getString(9));
                 // Adding Contact to list
                 TaskList.add(Task);
             } while (cursor.moveToNext());
@@ -143,11 +148,12 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(KEY_USERID, task.getUserId());
+        values.put(KEY_CATEGORYID, task.getCategoryId());
         values.put(KEY_NAME, task.getName());
         values.put(KEY_PRIORITY, task.getPriority());
         values.put(KEY_STATUS, task.getStatus());
-        values.put(KEY_DATE, task.getDate().toString());
-        values.put(KEY_TIME, task.getTime().toString());
+        values.put(KEY_DATE, task.getDate());
+        values.put(KEY_TIME, task.getTime());
         values.put(KEY_FREQUENCY, task.getRepeat_frequency());
         values.put(KEY_DESCRIPTION, task.getDescription());
 
