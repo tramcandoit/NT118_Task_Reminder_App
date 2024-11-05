@@ -77,10 +77,11 @@ public class UserDatabaseHandler extends SQLiteOpenHelper {
         return user;
     }
 
-    public void deleteUser(User user) {
+    public void deleteUserbyID(int ID)
+    {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_USERS, KEY_USERID + " = ?",
-                new String[]{String.valueOf(user.getUser_id())});
+                new String[]{String.valueOf(ID)});
         db.close();
     }
 
