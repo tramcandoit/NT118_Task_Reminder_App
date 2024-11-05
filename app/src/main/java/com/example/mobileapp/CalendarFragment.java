@@ -19,6 +19,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  * Use the {@link CalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
+ *
  */
 public class CalendarFragment extends Fragment {
 //    // TODO: Rename parameter arguments, choose names that match
