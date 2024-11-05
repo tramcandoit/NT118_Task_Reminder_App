@@ -83,6 +83,11 @@ public class HomeFragment extends Fragment {
             tasksList.add(new Task("Task 2", new Time(sdf.parse("11:00 AM").getTime())));
             tasksList.add(new Task("Task 3", new Time(sdf.parse("12:00 PM").getTime())));
             tasksList.add(new Task("Task 4", new Time(sdf.parse("01:00 PM").getTime())));
+            tasksList.add(new Task("Task 5", new Time(sdf.parse("02:00 PM").getTime())));
+            tasksList.add(new Task("Task 6", new Time(sdf.parse("03:00 PM").getTime())));
+            tasksList.add(new Task("Task 7", new Time(sdf.parse("04:00 PM").getTime())));
+            tasksList.add(new Task("Task 8", new Time(sdf.parse("05:00 PM").getTime())));
+            tasksList.add(new Task("Task 9", new Time(sdf.parse("06:00 PM").getTime())));
         } catch (ParseException e) {
             e.printStackTrace();
         }
