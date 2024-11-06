@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fm_changepass"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@color/white"
+    tools:context=".ChangepassFragment">
+
+    <!--  Text Cancel  -->
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:textColor="@color/blue"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--  Text change passwword   -->
+    <TextView
+        android:id="@+id/tv_changepass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/change_password"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!--  Text Save -->
+    <TextView
+        android:id="@+id/tv_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:textColor="@color/blue"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_cancel"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--  TextView Current  -->
+    <TextView
+        android:id="@+id/tv_current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/current"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_changepass" />
+
+    <!--  EditText Input pass  -->
+    <EditText
+        android:id="@+id/et_pass_current"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:autofillHints=""
+        android:background="@drawable/edittext_border"
+        android:hint="@string/current_password"
+        android:inputType="textPassword"
+        android:padding="15dp"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_current" />
+
+    <!--  icon hide password  -->
+    <ImageView
+        android:id="@+id/ic_hide_current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_hide"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/et_pass_current"
+        app:layout_constraintEnd_toEndOf="@+id/et_pass_current"
+        app:layout_constraintTop_toTopOf="@+id/et_pass_current" />
+
+    <!--  icon show password  -->
+    <ImageView
+        android:id="@+id/ic_show_current"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_show"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/et_pass_current"
+        app:layout_constraintEnd_toEndOf="@+id/et_pass_current"
+        app:layout_constraintTop_toTopOf="@+id/et_pass_current" />
+
+    <!--  TextView New  -->
+    <TextView
+        android:id="@+id/tv_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/newP"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_pass_current" />
+
+    <!--  EditText Input pass  -->
+    <EditText
+        android:id="@+id/et_pass_new"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:autofillHints=""
+        android:background="@drawable/edittext_border"
+        android:hint="@string/new_password"
+        android:inputType="textPassword"
+        android:padding="15dp"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_new" />
+
+    <!--  icon hide password  -->
+    <ImageView
+        android:id="@+id/ic_hide_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_hide"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/et_pass_new"
+        app:layout_constraintEnd_toEndOf="@+id/et_pass_new"
+        app:layout_constraintTop_toTopOf="@+id/et_pass_new" />
+
+    <!--  icon show password  -->
+    <ImageView
+        android:id="@+id/ic_show_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_show"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/et_pass_new"
+        app:layout_constraintEnd_toEndOf="@+id/et_pass_new"
+        app:layout_constraintTop_toTopOf="@+id/et_pass_new" />
+
+
+    <!--  TextView Confirm  -->
+    <TextView
+        android:id="@+id/tv_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/confirm"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_pass_new" />
+
+    <!--  EditText Input pass  -->
+    <EditText
+        android:id="@+id/et_pass_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:autofillHints=""
+        android:background="@drawable/edittext_border"
+        android:hint="@string/re_enter_new_password"
+        android:inputType="textPassword"
+        android:padding="15dp"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_confirm" />
+
+    <!--  icon hide password  -->
+    <ImageView
+        android:id="@+id/ic_hide_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_hide"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/et_pass_confirm"
+        app:layout_constraintEnd_toEndOf="@+id/et_pass_confirm"
+        app:layout_constraintTop_toTopOf="@+id/et_pass_confirm" />
+
+    <!--  icon show password  -->
+    <ImageView
+        android:id="@+id/ic_show_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_show"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/et_pass_confirm"
+        app:layout_constraintEnd_toEndOf="@+id/et_pass_confirm"
+        app:layout_constraintTop_toTopOf="@+id/et_pass_confirm" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
