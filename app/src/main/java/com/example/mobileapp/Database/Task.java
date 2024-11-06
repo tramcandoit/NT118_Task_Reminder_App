@@ -1,4 +1,4 @@
-package com.example.mobileapp;
+package com.example.mobileapp.Database;
 
 public class Task {
     private int taskId;

@@ -1,4 +1,4 @@
-package com.example.mobileapp;
+package com.example.mobileapp.Database;
 
 import java.util.ArrayList;
 import java.util.List;
