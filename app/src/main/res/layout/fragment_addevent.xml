@@ -37,7 +37,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:layout_marginTop="10dp"
                 android:id="@+id/tv_addevent_eventname_label"
                 android:text="Event name"
                 android:textSize="24sp"
@@ -59,7 +59,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
-                android:background="@drawable/background_events_item"
+                android:background="@drawable/background_tasks_item"
 
                 app:layout_constraintTop_toBottomOf="@id/tv_addevent_eventname_label"
                 app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +73,7 @@
                 android:textColor="@color/blue"
                 android:textSize="24sp"
                 android:textStyle="bold"
-
+                android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_addevent_addevent_textbox"
                 tools:layout_editor_absoluteY="229dp" />
@@ -111,40 +111,17 @@
 
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tv_addevent_priority_label"
-                android:text="Priority"
-                android:textSize="24sp"
-                android:textColor="@color/blue"
-                android:textStyle="bold"
-                android:layout_marginTop="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_date_input_layout"/>
-
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:id="@+id/sp_addevent_priority"
-                android:layout_marginTop="5dp"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="5dp"
-                android:background="@drawable/background_spinner"
-                android:gravity="center_vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_addevent_priority_label"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/tv_addevent_frequency_label"
-                android:text="Frequency"
-                android:textSize="24sp"
-                android:textColor="@color/blue"
-                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@id/sp_addevent_priority"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:text="Frequency"
+                android:textColor="@color/blue"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_date_input_layout"
+                tools:layout_editor_absoluteY="314dp" />
 
             <Spinner
                 android:layout_width="200dp"
@@ -163,10 +140,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tv_addevent_description_label"
                 android:text="Description"
+                android:layout_marginTop="10dp"
                 android:textSize="24sp"
                 android:textColor="@color/blue"
                 android:textStyle="bold"
-                android:layout_marginTop="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/sp_addevent_frequency_selector"/>
 
@@ -183,7 +160,7 @@
                 android:scrollbars="vertical"
                 android:scrollbarStyle="insideOverlay"
                 android:scrollbarSize="8dp"
-                android:minHeight="200dp"
+                android:minHeight="250dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_addevent_description_label"/>
             <View
