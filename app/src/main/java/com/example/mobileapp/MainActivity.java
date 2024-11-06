@@ -92,7 +92,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btn_add.setOnClickListener(v -> {
-            addTask();
+            if (bottomNavigationView.getSelectedItemId() == R.id.nav_home) {
+                addTask();
+            }
+            else if (bottomNavigationView.getSelectedItemId() == R.id.nav_calendar) {
+//                addEvent();
+            }
         });
     }
 }
