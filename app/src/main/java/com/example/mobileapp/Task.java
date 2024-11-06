@@ -1,26 +1,36 @@
 package com.example.mobileapp;
 
-import java.sql.Date;
-import java.sql.Time;
-
 public class Task {
     private int taskId;
     private int userId;
+    private int categoryId;
     private String name;
-    private String type;
     private String priority;
     private String status;
-    private Date date;
-    private Time time;
+    private String date;
+    private String time;
     private String repeat_frequency;
     private String description;
 
     public Task() {
     }
 
-    public Task(String name, Time time) {
+    public Task(String name, String time) {
         this.name = name;
         this.time = time;
+    }
+
+    public Task(int taskId, int userId, int categoryId, String name, String priority, String status, String date, String time, String repeat_frequency, String description) {
+        this.taskId = taskId;
+        this.userId = userId;
+        this.categoryId = categoryId;
+        this.name = name;
+        this.priority = priority;
+        this.status = status;
+        this.date = date;
+        this.time = time;
+        this.repeat_frequency = repeat_frequency;
+        this.description = description;
     }
 
     public int getTaskId() {
@@ -39,20 +49,20 @@ public class Task {
         this.userId = userId;
     }
 
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getPriority() {
@@ -71,19 +81,19 @@ public class Task {
         this.status = status;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public Time getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

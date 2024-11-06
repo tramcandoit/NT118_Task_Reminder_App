@@ -77,20 +77,16 @@ public class HomeFragment extends Fragment {
         tasksList = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
 
-        try {
-            // Parse the time strings to Time objects
-            tasksList.add(new Task("Task 1", new Time(sdf.parse("10:00 AM").getTime())));
-            tasksList.add(new Task("Task 2", new Time(sdf.parse("11:00 AM").getTime())));
-            tasksList.add(new Task("Task 3", new Time(sdf.parse("12:00 PM").getTime())));
-            tasksList.add(new Task("Task 4", new Time(sdf.parse("01:00 PM").getTime())));
-            tasksList.add(new Task("Task 5", new Time(sdf.parse("02:00 PM").getTime())));
-            tasksList.add(new Task("Task 6", new Time(sdf.parse("03:00 PM").getTime())));
-            tasksList.add(new Task("Task 7", new Time(sdf.parse("04:00 PM").getTime())));
-            tasksList.add(new Task("Task 8", new Time(sdf.parse("05:00 PM").getTime())));
-            tasksList.add(new Task("Task 9", new Time(sdf.parse("06:00 PM").getTime())));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        // Parse the time strings to Time objects
+        tasksList.add(new Task("Task 1", "10:00 AM"));
+        tasksList.add(new Task("Task 2", "11:00 AM"));
+        tasksList.add(new Task("Task 3", "12:00 PM"));
+        tasksList.add(new Task("Task 4", "01:00 PM"));
+        tasksList.add(new Task("Task 5", "02:00 PM"));
+        tasksList.add(new Task("Task 6", "03:00 PM"));
+        tasksList.add(new Task("Task 7", "04:00 PM"));
+        tasksList.add(new Task("Task 8", "05:00 PM"));
+        tasksList.add(new Task("Task 9", "06:00 PM"));
 
         lvAdapter = new TasksArrayAdapter(requireActivity(), tasksList);
         listView.setAdapter(lvAdapter);
