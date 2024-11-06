@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fm_noti_sound"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@color/white"
+    tools:context=".NotiSoundFragment">
+
+    <!--  Text Settings  -->
+    <TextView
+        android:id="@+id/tv_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings"
+        android:textColor="@color/blue"
+        android:textSize="20sp"
+        app:drawableLeftCompat="@drawable/ic_arrow_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--  Text Noti & sounds   -->
+    <TextView
+        android:id="@+id/tv_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/notification_sounds"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!--  Text Save -->
+    <TextView
+        android:id="@+id/tv_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:textColor="@color/blue"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_settings"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--  Choose sound  -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_sound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:padding="10dp"
+        android:background="@color/light_blue_2"
+        app:layout_constraintTop_toBottomOf="@+id/tv_account"
+        tools:layout_editor_absoluteX="20dp">
+
+        <TextView
+            android:id="@+id/tv_sound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sound"
+            android:textColor="@color/blue"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/rg_sound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="@+id/tv_sound"
+            app:layout_constraintTop_toBottomOf="@+id/tv_sound">
+
+            <RadioButton
+                android:id="@+id/rb_none_sound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/none"
+                android:textSize="20sp"/>
+
+            <RadioButton
+                android:id="@+id/rb_sound1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sound_1"
+                android:textSize="20sp"/>
+
+            <RadioButton
+                android:id="@+id/rb_sound2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sound_2"
+                android:textSize="20sp"/>
+
+            <RadioButton
+                android:id="@+id/rb_sound3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sound_3"
+                android:textSize="20sp"/>
+
+        </RadioGroup>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--  Choose vibration  -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_vibration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@color/light_blue_2"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/layout_sound"
+        tools:layout_editor_absoluteX="33dp">
+
+        <TextView
+            android:id="@+id/tv_vibration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vibration"
+            android:textColor="@color/blue"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioGroup
+            android:id="@+id/rg_vibration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="@+id/tv_vibration"
+            app:layout_constraintTop_toBottomOf="@+id/tv_vibration">
+
+            <RadioButton
+                android:id="@+id/rb_none_vibration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/none"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/rb_one_shot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/one_shot"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/rb_waveform"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/waveform"
+                android:textSize="20sp" />
+
+        </RadioGroup>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
