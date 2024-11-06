@@ -3,6 +3,7 @@ package com.example.mobileapp;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,8 +30,15 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
 
     private void addTask() {
-        AddTaskFragment addTaskFragment = new AddTaskFragment();
-        addTaskFragment.show(getSupportFragmentManager(), "addTaskFragment");
+        HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (homeFragment != null) {
+            AddTaskFragment addTaskFragment = AddTaskFragment.newInstance(homeFragment);
+            addTaskFragment.show(getSupportFragmentManager(), "addTaskFragment");
+        }
+        else {
+            // Xử lý nếu không tìm thấy HomeFragment, ví dụ: Log
+            Log.e("MainActivity", "HomeFragment not found!");
+        }
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
