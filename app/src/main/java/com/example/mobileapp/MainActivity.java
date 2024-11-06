@@ -40,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
             Log.e("MainActivity", "HomeFragment not found!");
         }
     }
+
+    private void addEvent()
+    {
+        AddEventFragment addEventFragment = new AddEventFragment();
+        addEventFragment.show(getSupportFragmentManager(), "addEventFragment");
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,12 +69,16 @@ public class MainActivity extends AppCompatActivity {
 
                 if (item.getItemId() == R.id.nav_calendar) {
                     selectedFragment = new CalendarFragment();
+                    btn_add.setVisibility(View.VISIBLE);
                 } else if (item.getItemId() == R.id.nav_list) {
                     selectedFragment = new ListFragment();
+                    btn_add.setVisibility(View.VISIBLE);
                 } else if (item.getItemId() == R.id.nav_settings) {
                     selectedFragment = new SettingsFragment();
+                    btn_add.setVisibility(View.GONE);
                 } else if (item.getItemId() == R.id.nav_home) { // Assuming there is a home menu item
                     selectedFragment = new HomeFragment();
+                    btn_add.setVisibility(View.VISIBLE);
                 }
 
                 // Replace the fragment in the container
