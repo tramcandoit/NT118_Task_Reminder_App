@@ -73,7 +73,7 @@ public class CalendarFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
         // Initialize the ListView
-        eventListView = view.findViewById(R.id.eventListView);
+        eventListView = view.findViewById(R.id.event_ListView);
 
         // Create a list of sample events (using String for simplicity)
         eventList = new ArrayList<>();
