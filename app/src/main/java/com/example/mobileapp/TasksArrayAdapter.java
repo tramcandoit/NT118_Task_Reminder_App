@@ -34,7 +34,7 @@ public class TasksArrayAdapter extends ArrayAdapter<Task> {
         if (task != null) {
             tvItemName.setText(task.getName());
             if (task.getTime() != null) {
-                tvItemTime.setText(timeFormat.format(task.getTime()));
+                tvItemTime.setText((task.getTime()));
             } else {
                 tvItemTime.setText(""); // or "No time set" if preferred
             }
