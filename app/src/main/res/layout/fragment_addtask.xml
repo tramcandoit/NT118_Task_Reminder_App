@@ -81,12 +81,14 @@
 
             <Spinner
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/sp_addtask_categories"
+                android:layout_marginTop="5dp"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp"
-                android:layout_marginTop="5dp"
                 android:gravity="center_vertical"
+                android:spinnerMode="dropdown"
+                android:minHeight="48dp"
                 android:background="@drawable/background_spinner"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_addtask_categories_label"/>
