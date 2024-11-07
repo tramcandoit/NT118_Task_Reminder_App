@@ -77,9 +77,9 @@ public class CalendarFragment extends Fragment {
 
         // Create a list of sample events (using String for simplicity)
         eventList = new ArrayList<>();
-        eventList.add("16/09/2023 - 9:45 PM - Finish Report");
-        eventList.add("16/09/2023 - 10:00 AM - Water the plants");
-        eventList.add("27/09/2023 - 8:00 PM - Dinner with friends");
+        eventList.add("10/11/2024 - 9:45 PM - Finish Report");
+        eventList.add("10/11/2024 - 10:00 AM - Water the plants");
+        eventList.add("11/11/2024 - 8:00 PM - Dinner with friends");
 
         // Set up ArrayAdapter with the sample event list
         ArrayAdapter<String> adapter = new ArrayAdapter<>(

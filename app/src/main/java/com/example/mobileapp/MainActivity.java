@@ -1,25 +1,14 @@
 package com.example.mobileapp;
 
-import android.content.Intent;
-import android.content.res.ColorStateList;
+
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
-import androidx.activity.EdgeToEdge;
+
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         AddEventFragment addEventFragment = new AddEventFragment();
         addEventFragment.show(getSupportFragmentManager(), "addEventFragment");
     }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                     btn_add.setVisibility(View.VISIBLE);
                 } else if (item.getItemId() == R.id.nav_list) {
                     selectedFragment = new ListFragment();
-                    btn_add.setVisibility(View.VISIBLE);
+                    btn_add.setVisibility(View.GONE);
                 } else if (item.getItemId() == R.id.nav_settings) {
                     selectedFragment = new SettingsFragment();
                     btn_add.setVisibility(View.GONE);
@@ -96,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 addTask();
             }
             else if (bottomNavigationView.getSelectedItemId() == R.id.nav_calendar) {
-//                addEvent();
+                addEvent();
             }
         });
     }
