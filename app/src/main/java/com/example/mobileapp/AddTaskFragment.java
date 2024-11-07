@@ -74,9 +74,9 @@ public class AddTaskFragment extends DialogFragment {
         // Categories spinner
         List<CategoriesItem> categories = new ArrayList<>();
         categories.add(new CategoriesItem(R.drawable.icon_user, "Work"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Work1"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Work2"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Work3"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Health"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Shopping"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Cooking"));
         SpinnerAdapter categoryAdapter = new SpinnerAdapter(getContext(), categories);
         spCategories.setAdapter(categoryAdapter);
         spCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
