@@ -122,7 +122,6 @@
                 <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:id="@+id/et_addtask_date_selector"
                     android:background="@drawable/background_nostroke"
                     android:paddingHorizontal="20dp"
@@ -131,6 +130,8 @@
                     android:textSize="20sp"
                     android:textColor="@color/black"
                     android:hint="01/01/2001"
+                    android:focusable="false"
+                    android:clickable="false"
                     android:minHeight="48dp"/>
             </LinearLayout>
 
@@ -163,6 +164,8 @@
                     android:textSize="20sp"
                     android:textColor="@color/black"
                     android:hint="12:12"
+                    android:focusable="false"
+                    android:clickable="false"
                     android:gravity="center"
                     android:minHeight="48dp"/>
             </LinearLayout>

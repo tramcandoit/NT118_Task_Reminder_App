@@ -13,10 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-
+import android.app.DatePickerDialog;
 import android.widget.ArrayAdapter;
+import java.text.SimpleDateFormat;
 import com.example.mobileapp.Database.TaskDatabaseHandler;
-
+import java.util.Calendar;
+import java.util.Locale;
+import android.app.TimePickerDialog;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class AddTaskFragment extends DialogFragment {
     Spinner spPriority;
     Spinner spFrequency;
     EditText etDescription;
+
 
     TaskDatabaseHandler db;
     List<Task> tasks;
@@ -126,6 +130,77 @@ public class AddTaskFragment extends DialogFragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+
+
+        // Cài đặt tương tác về thời gian
+        // Tạo một instance của Calendar để lấy ngày hiện tại
+        final Calendar calendar = Calendar.getInstance();
+
+        // Định dạng ngày dd/mm/yyyy
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+        // Chuyển ngày hiện tại thành chuỗi và gán cho etDate
+        String currentDate = sdf.format(calendar.getTime());
+
+        etDate.setText(currentDate);
+        //Gắn sự kiện chọn ngày
+        etDate.setOnClickListener(v -> {
+
+            // Mở DatePickerDialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                    (view, year, monthOfYear, dayOfMonth) -> {
+
+                        calendar.set(year, monthOfYear, dayOfMonth);
+                        String selectedDate = sdf.format(calendar.getTime());
+
+                        // Đặt ngày đã chọn vào etDate
+                        etDate.setText(selectedDate);
+                    },
+                    // Đặt ngày ban đầu cho DatePickerDialog (ngày hiện tại)
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
+            );
+
+            // Đặt nút Lưu trong DatePickerDialog
+            datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, "Save", datePickerDialog);
+
+            // Đặt nút Hủy trong DatePickerDialog
+            datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, "Cancel", (dialog, which) -> dialog.cancel());
+
+            // Hiển thị DatePickerDialog
+            datePickerDialog.show();
+        });
+
+
+        // Định dạng giờ hiện tại
+        SimpleDateFormat sdf_time = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        String currentTime = sdf_time.format(calendar.getTime());
+
+        // Gán giờ hiện tại vào etTime
+        etTime.setText(currentTime);
+        etTime.setOnClickListener(v -> {
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+            int minute = calendar.get(Calendar.MINUTE);
+            // Mở TimePickerDialog
+            TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                    (view, selectedHour, selectedMinute) -> {
+                        // Định dạng thời gian đã chọn thành "hh:mm"
+                        String selectedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
+
+                        // Đặt thời gian đã chọn vào etTime
+                        etTime.setText(selectedTime);
+                    }, hour, minute, true);
+
+            // Đặt nút Lưu trong TimePickerDialog
+            timePickerDialog.setButton(TimePickerDialog.BUTTON_POSITIVE, "Lưu", timePickerDialog);
+
+            // Đặt nút Hủy trong TimePickerDialog
+            timePickerDialog.setButton(TimePickerDialog.BUTTON_NEGATIVE, "Hủy", (dialog, which) -> dialog.cancel());
+
+            // Hiển thị TimePickerDialog
+            timePickerDialog.show();
+        });
+
+
 
         builder.setView(dialogView)
                 .setPositiveButton("Save", (dialog, id) -> {
