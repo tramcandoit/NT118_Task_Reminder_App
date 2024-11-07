@@ -32,8 +32,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void addEvent()
     {
-        AddEventFragment addEventFragment = new AddEventFragment();
-        addEventFragment.show(getSupportFragmentManager(), "addEventFragment");
+        CalendarFragment calendarFragment = (CalendarFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (calendarFragment != null) {
+            AddEventFragment addEventFragment = AddEventFragment.newInstance(calendarFragment);
+            addEventFragment.show(getSupportFragmentManager(), "addEventFragment");
+        }
+
     }
 
 
@@ -44,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.view_bottom_navigation);
         FloatingActionButton btn_add = findViewById(R.id.fab_add);
+
+
 
         // Load the default fragment (HomeFragment) initially
         if (savedInstanceState == null) {

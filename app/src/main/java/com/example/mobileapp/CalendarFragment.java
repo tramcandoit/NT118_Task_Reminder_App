@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 
@@ -28,7 +27,7 @@ import java.util.Locale;
  * create an instance of this fragment.
  *
  */
-public class CalendarFragment extends Fragment {
+public class CalendarFragment extends Fragment implements OnEventAddedListener {
 //    // TODO: Rename parameter arguments, choose names that match
 //    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //    private static final String ARG_PARAM1 = "param1";
@@ -71,9 +70,28 @@ public class CalendarFragment extends Fragment {
 
     private ListView eventListView;
     private List<String> eventList;
+    private ArrayAdapter<String> adapter;
     private CalendarView calendarView;
     private List<EventDay> events;
 
+
+    @Override
+    public void onEventAdded(String eventString) {
+        // Thêm event mới vào list
+        eventList.add(eventString);
+
+        // Cập nhật adapter
+        adapter.notifyDataSetChanged();
+
+        // Refresh highlight calendar
+        events = new ArrayList<>();
+        addEventsToCalendar();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,9 +102,6 @@ public class CalendarFragment extends Fragment {
         // Initialize the ListView
         eventListView = view.findViewById(R.id.event_ListView);
         calendarView = view.findViewById(R.id.view_calendar);
-
-
-
 
         // Create a list of sample events (using String for simplicity)
         eventList = new ArrayList<>();
@@ -101,7 +116,7 @@ public class CalendarFragment extends Fragment {
         addEventsToCalendar();
 
         // Set up ArrayAdapter with the sample event list
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+        adapter = new ArrayAdapter<>(
                 getContext(),
                 android.R.layout.simple_list_item_1,
                 eventList
@@ -111,8 +126,7 @@ public class CalendarFragment extends Fragment {
         eventListView.setAdapter(adapter);
 
         eventListView.setOnItemLongClickListener((parent, view1, position, id) -> {
-            // Lưu lại ngày của event sắp bị xóa
-            String removedEventDate = eventList.get(position);
+
             // Xóa event khỏi list
             eventList.remove(position);
 
