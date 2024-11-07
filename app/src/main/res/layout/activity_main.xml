@@ -34,9 +34,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:src="@drawable/icon_add"
+
         app:layout_constraintBottom_toTopOf="@id/view_bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:backgroundTint="@color/blue" />
+        app:backgroundTint="@color/light_blue" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
