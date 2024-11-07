@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fm_account"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@color/white"
+    tools:context=".AccountFragment">
+
+    <!--  Text Settings  -->
+    <TextView
+        android:id="@+id/tv_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings"
+        android:textColor="@color/blue"
+        android:textSize="20sp"
+        app:drawableLeftCompat="@drawable/ic_arrow_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--  Text Account   -->
+    <TextView
+        android:id="@+id/tv_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/account"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!--  Text Save -->
+    <TextView
+        android:id="@+id/tv_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:textColor="@color/blue"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_settings"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--  TextView Your Username   -->
+    <TextView
+        android:id="@+id/tv_your_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="50dp"
+        android:drawablePadding="8dp"
+        android:text="@string/your_username"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:drawableLeftCompat="@drawable/ic_user"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_account" />
+
+    <!--  EditText Input username  -->
+    <EditText
+        android:id="@+id/et_username_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/edittext_border"
+        android:hint="@string/hint_username"
+        android:padding="15dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_your_username" />
+
+    <!--  TextView Your email   -->
+    <TextView
+        android:id="@+id/tv_your_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:drawablePadding="8dp"
+        android:text="@string/your_email"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:drawableLeftCompat="@drawable/ic_email"
+        app:layout_constraintStart_toStartOf="@+id/tv_your_username"
+        app:layout_constraintTop_toBottomOf="@+id/et_username_input" />
+
+    <!--  EditText Input email  -->
+    <EditText
+        android:id="@+id/et_email_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:autofillHints=""
+        android:background="@drawable/edittext_border"
+        android:hint="@string/hint_email"
+        android:inputType="textEmailAddress"
+        android:padding="15dp"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_your_email"
+        tools:layout_editor_absoluteX="19dp" />
+
+    <!--  TextView Password   -->
+    <TextView
+        android:id="@+id/tv_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:drawablePadding="8dp"
+        android:text="@string/password"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:drawableLeftCompat="@drawable/ic_pass"
+        app:layout_constraintStart_toStartOf="@+id/tv_your_email"
+        app:layout_constraintTop_toBottomOf="@+id/et_email_input" />
+
+    <!-- change password Button -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_change_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/button"
+        android:padding="14dp"
+        android:text="@string/change_password"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_password"
+        tools:layout_editor_absoluteX="20dp" />
+
+    <!-- Delete account Button -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_delete_acc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp"
+        android:background="@drawable/button_delete"
+        android:padding="14dp"
+        android:text="@string/delete_account"
+        android:textAllCaps="false"
+        android:textColor="@color/red"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/btn_change_pass"
+        tools:layout_editor_absoluteX="24dp" />
+
+    <!-- Layout Pop-up for delete account-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pu_delete_acc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_blue_2"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="20dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/your_account_will_be_deleted_are_you_sure"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/continueD"
+            android:textColor="@color/red"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/cancel"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

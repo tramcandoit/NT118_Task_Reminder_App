@@ -81,7 +81,7 @@
         app:layout_constraintStart_toStartOf="@+id/tv_your_email"
         app:layout_constraintTop_toBottomOf="@+id/et_email_input" />
 
-    <!--  EditText Input email  -->
+    <!--  EditText Input pass  -->
     <EditText
         android:id="@+id/et_pass_input"
         android:layout_width="match_parent"
