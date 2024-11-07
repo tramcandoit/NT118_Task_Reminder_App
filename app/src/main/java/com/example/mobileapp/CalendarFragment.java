@@ -1,10 +1,9 @@
 package com.example.mobileapp;
 
-import android.media.metrics.Event;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.applandeo.materialcalendarview.CalendarDay;
+import com.applandeo.materialcalendarview.CalendarView;
+import com.applandeo.materialcalendarview.EventDay;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,6 +71,8 @@ public class CalendarFragment extends Fragment {
 
     private ListView eventListView;
     private List<String> eventList;
+    private CalendarView calendarView;
+    private List<EventDay> events;
 
 
     @Override
@@ -74,12 +83,22 @@ public class CalendarFragment extends Fragment {
 
         // Initialize the ListView
         eventListView = view.findViewById(R.id.event_ListView);
+        calendarView = view.findViewById(R.id.view_calendar);
+
+
+
 
         // Create a list of sample events (using String for simplicity)
         eventList = new ArrayList<>();
         eventList.add("10/11/2024 - 9:45 PM - Finish Report");
         eventList.add("10/11/2024 - 10:00 AM - Water the plants");
         eventList.add("11/11/2024 - 8:00 PM - Dinner with friends");
+
+        // Tạo danh sách sự kiện để highlight
+        events = new ArrayList<>();
+
+        // Chuyển đổi và thêm các ngày sự kiện
+        addEventsToCalendar();
 
         // Set up ArrayAdapter with the sample event list
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
@@ -91,15 +110,52 @@ public class CalendarFragment extends Fragment {
         // Attach the adapter to the ListView
         eventListView.setAdapter(adapter);
 
-        // Set long click listener for deleting items
         eventListView.setOnItemLongClickListener((parent, view1, position, id) -> {
-            // Remove the item from the list
+            // Lưu lại ngày của event sắp bị xóa
+            String removedEventDate = eventList.get(position);
+            // Xóa event khỏi list
             eventList.remove(position);
-            // Notify the adapter that the data has changed to refresh the ListView
+
+            // Refresh adapter
             adapter.notifyDataSetChanged();
+
+            // Refresh highlight
+            events = new ArrayList<>();
+            addEventsToCalendar();
+
+
             return true;
         });
 
         return view;
+    }
+
+
+
+
+    private void addEventsToCalendar() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+        for (String eventString : eventList) {
+            try {
+                // Tách ngày từ chuỗi sự kiện
+                String dateStr = eventString.split(" - ")[0];
+                Calendar eventCalendar = Calendar.getInstance();
+                eventCalendar.setTime(sdf.parse(dateStr));
+
+                // Tạo EventDay (highlight icon)
+                EventDay eventDay = new EventDay(
+                        eventCalendar,
+                        R.drawable.ic_check
+                );
+
+                events.add(eventDay);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Thêm các sự kiện vào CalendarView
+        calendarView.setEvents(events);
     }
 }

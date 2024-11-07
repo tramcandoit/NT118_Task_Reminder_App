@@ -28,10 +28,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+
     }
 }
 
 dependencies {
+
+    implementation ("com.applandeo:material-calendar-view:1.9.2")
 
     implementation(libs.appcompat)
     implementation(libs.material)
