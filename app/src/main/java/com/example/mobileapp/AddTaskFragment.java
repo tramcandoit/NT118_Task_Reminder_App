@@ -74,9 +74,9 @@ public class AddTaskFragment extends DialogFragment {
         // Categories spinner
         List<CategoriesItem> categories = new ArrayList<>();
         categories.add(new CategoriesItem(R.drawable.icon_user, "Work"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Work1"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Work2"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Work3"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Health"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Shopping"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Cooking"));
         SpinnerAdapter categoryAdapter = new SpinnerAdapter(getContext(), categories);
         spCategories.setAdapter(categoryAdapter);
         spCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -132,11 +132,11 @@ public class AddTaskFragment extends DialogFragment {
                     // Lấy dữ liệu từ các trường EditText, Spinner
                     // Lấy dữ liệu từ các trường EditText, Spinner
                     task.setName(etName.getText().toString());
-                    //task.setCategoryId(spCategories.getSelectedItemPosition());
+                    task.setCategoryId(spCategories.getSelectedItemPosition());
                     task.setDate(etDate.getText().toString());
                     task.setTime(etTime.getText().toString());
-                    //task.setPriority(spPriority.getSelectedItem().toString());
-                    //task.setRepeat_frequency(spFrequency.getSelectedItem().toString());
+                    task.setPriority(spPriority.getSelectedItem().toString());
+                    task.setRepeat_frequency(spFrequency.getSelectedItem().toString());
                     task.setDescription(etDescription.getText().toString());
 
                     // Thêm vào Database

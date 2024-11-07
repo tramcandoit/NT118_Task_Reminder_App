@@ -1,20 +1,19 @@
 package com.example.mobileapp;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
 
-import java.sql.Time;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +28,9 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private GridView gridView;
+    private GridView gvCategories;
     private CategoriesAdapter gvAdapter;
-    private List<CategoriesItem> gridItems;
+    private List<CategoriesItem> categories;
     private ListView listView;
     private TasksArrayAdapter lvAdapter;
     private List<Task> tasksList;
@@ -65,19 +64,17 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-
-        gridView = view.findViewById(R.id.gv_home_categories);
+        gvCategories = view.findViewById(R.id.gv_home_categories);
         listView = view.findViewById(R.id.lv_Todaytask);
 
+        categories = new ArrayList<>();
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Work"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Health"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Shopping"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Cooking"));
 
-        gridItems = new ArrayList<>();
-        gridItems.add(new CategoriesItem(R.drawable.icon_user, "Home"));
-        gridItems.add(new CategoriesItem(R.drawable.icon_user, "Calendar"));
-        gridItems.add(new CategoriesItem(R.drawable.icon_user, "Paper"));
-        gridItems.add(new CategoriesItem(R.drawable.icon_user, "Daily"));
-
-        gvAdapter = new CategoriesAdapter(requireActivity(), gridItems);
-        gridView.setAdapter(gvAdapter);
+        gvAdapter = new CategoriesAdapter(requireActivity(), categories);
+        gvCategories.setAdapter(gvAdapter);
 
         // Prepare some test data for list
         tasksList = new ArrayList<>();
@@ -96,6 +93,31 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
 
         lvAdapter = new TasksArrayAdapter(requireActivity(), tasksList);
         listView.setAdapter(lvAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Task clickedTask = tasksList.get(position);
+
+                // Lấy ra tên category từ ID
+                int categoryId = clickedTask.getCategoryId(); // Lấy categoryId (int - vị trí của category)
+                String categoryLabel = ((CategoriesItem) gvCategories.getItemAtPosition(categoryId)).getLabel(); //Lấy ra label từ category đã lưu
+
+                // Tạo AlertDialog để hiển thị chi tiết task
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                builder.setTitle(clickedTask.getName());
+
+                // Tạo layout cho AlertDialog (nếu cần hiển thị nhiều thông tin hơn)
+                String taskDetails = "Time: " + clickedTask.getTime() + "\n" +
+                        "Category: " + categoryLabel + "\n" + //  Lấy tên category từ ID
+                        "Priority: " + clickedTask.getPriority() + "\n" +
+                        "Frequency: " + clickedTask.getRepeat_frequency() + "\n" +
+                        "Description: " + clickedTask.getDescription();
+                builder.setMessage(taskDetails);
+                builder.setPositiveButton("OK", null);
+                builder.show();
+            }
+        });
 
         return view;
     }
