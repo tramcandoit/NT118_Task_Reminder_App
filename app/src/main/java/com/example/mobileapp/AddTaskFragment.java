@@ -132,11 +132,11 @@ public class AddTaskFragment extends DialogFragment {
                     // Lấy dữ liệu từ các trường EditText, Spinner
                     // Lấy dữ liệu từ các trường EditText, Spinner
                     task.setName(etName.getText().toString());
-                    //task.setCategoryId(spCategories.getSelectedItemPosition());
+                    task.setCategoryId(spCategories.getSelectedItemPosition());
                     task.setDate(etDate.getText().toString());
                     task.setTime(etTime.getText().toString());
-                    //task.setPriority(spPriority.getSelectedItem().toString());
-                    //task.setRepeat_frequency(spFrequency.getSelectedItem().toString());
+                    task.setPriority(spPriority.getSelectedItem().toString());
+                    task.setRepeat_frequency(spFrequency.getSelectedItem().toString());
                     task.setDescription(etDescription.getText().toString());
 
                     // Thêm vào Database
