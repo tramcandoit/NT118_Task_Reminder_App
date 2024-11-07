@@ -23,20 +23,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--  arrow left  -->
-        <ImageView
-            android:id="@+id/ic_arrow_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_left"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_settings"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_settings" />
-
         <!--  Text Account  -->
         <TextView
             android:id="@+id/tv_account"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="50dp"
@@ -61,8 +51,9 @@
         <!--  Text Notification & Sounds  -->
         <TextView
             android:id="@+id/tv_noti_sound"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="30dp"
             android:drawablePadding="20dp"
             android:text="@string/notification_sounds"
@@ -85,8 +76,9 @@
         <!--  Text Productivity -->
         <TextView
             android:id="@+id/tv_productivity"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="30dp"
             android:drawablePadding="20dp"
             android:text="@string/productivity"
@@ -109,8 +101,9 @@
         <!--  Text Theme -->
         <TextView
             android:id="@+id/tv_theme"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="30dp"
             android:drawablePadding="20dp"
             android:text="@string/theme"
@@ -133,8 +126,9 @@
         <!--  Text Language -->
         <TextView
             android:id="@+id/tv_language"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="30dp"
             android:drawablePadding="20dp"
             android:text="@string/language"
@@ -157,8 +151,9 @@
         <!--  Text Help & Feedback -->
         <TextView
             android:id="@+id/tv_help_feed"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="30dp"
             android:drawablePadding="20dp"
             android:text="@string/help_feedback"
@@ -181,8 +176,9 @@
         <!--  Text About -->
         <TextView
             android:id="@+id/tv_about"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="30dp"
             android:drawablePadding="20dp"
             android:text="@string/about"
@@ -204,7 +200,7 @@
 
         <!-- Log out Button -->
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="90dp"
