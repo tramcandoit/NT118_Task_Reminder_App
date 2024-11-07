@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ListFragment#newInstance} factory method to
+ * Use the {@link ListFragment #newInstance} factory method to
  * create an instance of this fragment.
  */
 public class ListFragment extends Fragment {
@@ -151,6 +151,9 @@ public class ListFragment extends Fragment {
         upcoming_task_List.add("Sample upcoming task 5");
         upcoming_task_List.add("Sample upcoming task 6");
         upcoming_task_List.add("Sample upcoming task 7");
+        upcoming_task_List.add("Sample upcoming task 8");
+        upcoming_task_List.add("Sample upcoming task 9");
+        upcoming_task_List.add("Sample upcoming task 10");
 
 
         // Set custom adapter for upcoming tasks
