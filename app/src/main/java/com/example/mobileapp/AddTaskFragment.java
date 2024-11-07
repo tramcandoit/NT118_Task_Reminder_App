@@ -95,8 +95,8 @@ public class AddTaskFragment extends DialogFragment {
         priorities.add("High");
         priorities.add("Medium");
         priorities.add("Low");
-        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, priorities);
-        priorityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, priorities);
+        priorityAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
         spPriority.setAdapter(priorityAdapter);
         spPriority.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -114,8 +114,8 @@ public class AddTaskFragment extends DialogFragment {
         frequencies.add("Daily");
         frequencies.add("Weekly");
         frequencies.add("Monthly");
-        ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, frequencies);
-        frequencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, frequencies);
+        frequencyAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
         spFrequency.setAdapter(frequencyAdapter);
         spFrequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -128,7 +128,7 @@ public class AddTaskFragment extends DialogFragment {
         });
 
         builder.setView(dialogView)
-                .setPositiveButton("Lưu", (dialog, id) -> {
+                .setPositiveButton("Save", (dialog, id) -> {
                     // Lấy dữ liệu từ các trường EditText, Spinner
                     // Lấy dữ liệu từ các trường EditText, Spinner
                     task.setName(etName.getText().toString());
@@ -150,7 +150,7 @@ public class AddTaskFragment extends DialogFragment {
                     // Sau khi lưu, đóng dialog
                     dismiss();
                 })
-                .setNegativeButton("Hủy", (dialog, id) -> {
+                .setNegativeButton("Cancel", (dialog, id) -> {
                     AddTaskFragment.this.getDialog().cancel();
                 });
 
