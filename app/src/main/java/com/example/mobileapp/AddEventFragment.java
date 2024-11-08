@@ -28,6 +28,7 @@ public class AddEventFragment extends DialogFragment {
     private Spinner spFrequency;
     private EditText etDescription;
     OnEventAddedListener listener;
+    private EventDatabaseHandler event_db;
 
     public static AddEventFragment newInstance(OnEventAddedListener listener) {
         AddEventFragment fragment = new AddEventFragment();
@@ -44,6 +45,7 @@ public class AddEventFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+
 
         // Khởi tạo biến Event
         final Event event = new Event();
@@ -99,7 +101,7 @@ public class AddEventFragment extends DialogFragment {
                     (view, year, monthOfYear, dayOfMonth) -> {
 
                         calendar.set(year, monthOfYear, dayOfMonth);
-                        String selectedDate = sdf.format(calendar.getTime());
+                        String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
 
                         // Đặt ngày đã chọn vào etDate
                         etDate.setText(selectedDate);
@@ -134,8 +136,8 @@ public class AddEventFragment extends DialogFragment {
 
                     }
 
-                    // Sau khi lưu, đóng dialog
-                    //dismiss();
+                    //Sau khi lưu, đóng dialog
+                    dismiss();
 
                 })
                 .setNegativeButton("Cancel", (dialog, id) -> {

@@ -59,6 +59,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private TextView tvTheme;
+    private TextView tvLanguage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +68,7 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         tvTheme = view.findViewById(R.id.tv_theme);
+        tvLanguage = view.findViewById(R.id.tv_language);
         tvTheme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,6 +78,20 @@ public class SettingsFragment extends Fragment {
                 // Thực hiện transaction để thay thế fragment hiện tại
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, themeFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        tvLanguage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Chuyển sang class ThemeFragment
+                LanguageFragment languageFragment = new LanguageFragment();
+
+                // Thực hiện transaction để thay thế fragment hiện tại
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, languageFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
