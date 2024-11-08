@@ -107,6 +107,7 @@
                     android:textSize="20sp"
                     android:hint="01/01/2001"
                     android:minHeight="48dp"/>
+
             </LinearLayout>
 
 

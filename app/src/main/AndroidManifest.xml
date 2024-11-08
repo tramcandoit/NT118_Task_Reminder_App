@@ -30,6 +30,7 @@
         <activity
             android:name=".HomeFragment"
             android:exported="true"></activity>
+
     </application>
 
 </manifest>
