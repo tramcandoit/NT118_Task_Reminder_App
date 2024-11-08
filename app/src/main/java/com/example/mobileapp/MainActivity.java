@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
         bottomNavigationView = findViewById(R.id.view_bottom_navigation);
         FloatingActionButton btn_add = findViewById(R.id.fab_add);
 

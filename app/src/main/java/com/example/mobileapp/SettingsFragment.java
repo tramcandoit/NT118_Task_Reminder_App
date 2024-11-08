@@ -80,6 +80,7 @@ public class SettingsFragment extends Fragment {
                 transaction.commit();
             }
         });
+
         return view;
     }
 }
