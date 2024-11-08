@@ -38,12 +38,18 @@ public class AddTaskFragment extends DialogFragment {
     ArrayList<Task> taskArrayList;
     TasksArrayAdapter taskAdapter;
 
-    private OnTaskAddedListener listener;
+
+    OnTaskAddedListener listener;
 
     public static AddTaskFragment newInstance(OnTaskAddedListener listener) {
         AddTaskFragment fragment = new AddTaskFragment();
         fragment.listener = listener;
         return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Nullable
