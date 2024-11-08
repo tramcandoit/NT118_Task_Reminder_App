@@ -1,27 +1,29 @@
 package com.example.mobileapp;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.AdapterView;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-import android.app.DatePickerDialog;
-import android.widget.ArrayAdapter;
-import java.text.SimpleDateFormat;
+
 import com.example.mobileapp.Database.TaskDatabaseHandler;
-import java.util.Calendar;
-import java.util.Locale;
-import android.app.TimePickerDialog;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class AddTaskFragment extends DialogFragment {
     EditText etName;
@@ -124,6 +126,7 @@ public class AddTaskFragment extends DialogFragment {
         frequencies.add("Daily");
         frequencies.add("Weekly");
         frequencies.add("Monthly");
+        frequencies.add("Once");
         ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, frequencies);
         frequencyAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
         spFrequency.setAdapter(frequencyAdapter);
