@@ -15,9 +15,14 @@ public class Task {
     public Task() {
     }
 
-    public Task(String name, String time) {
+    public Task(int categoryId, String name, String priority, String repeat_frequency, String date, String time, String description) {
+        this.categoryId = categoryId;
         this.name = name;
+        this.priority = priority;
+        this.repeat_frequency = repeat_frequency;
+        this.date = date;
         this.time = time;
+        this.description = description;
     }
 
     public Task(int taskId, int userId, int categoryId, String name, String priority, String status, String date, String time, String repeat_frequency, String description) {

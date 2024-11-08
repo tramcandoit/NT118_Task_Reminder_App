@@ -3,12 +3,13 @@ package com.example.mobileapp;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.applandeo.materialcalendarview.CalendarView;
@@ -37,9 +38,9 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
 //    private String mParam1;
 //    private String mParam2;
 //
-//    public CalendarFragment() {
-//        // Required empty public constructor
-//    }
+    public CalendarFragment() {
+        // Required empty public constructor
+    }
 //
 //    /**
 //     * Use this factory method to create a new instance of
@@ -69,16 +70,41 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
 //    }
 
     private ListView eventListView;
-    private List<String> eventList;
-    private ArrayAdapter<String> adapter;
+    private List<Event> eventList;
+    private EventsArrayAdapter adapter;
     private CalendarView calendarView;
     private List<EventDay> events;
 
+    private void addEventsToCalendar() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+        for (Event event : eventList) {
+            try {
+                // Tách ngày từ chuỗi sự kiện
+                String dateStr = event.getDate();
+                Calendar eventCalendar = Calendar.getInstance();
+                eventCalendar.setTime(sdf.parse(dateStr));
+
+                // Tạo EventDay (highlight icon)
+                EventDay eventDay = new EventDay(
+                        eventCalendar,
+                        R.drawable.ic_check
+                );
+
+                events.add(eventDay);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Thêm các sự kiện vào CalendarView
+        calendarView.setEvents(events);
+    }
 
     @Override
-    public void onEventAdded(String eventString) {
+    public void onEventAdded(Event event) {
         // Thêm event mới vào list
-        eventList.add(eventString);
+        eventList.add(event);
 
         // Cập nhật adapter
         adapter.notifyDataSetChanged();
@@ -105,9 +131,9 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
 
         // Create a list of sample events (using String for simplicity)
         eventList = new ArrayList<>();
-        eventList.add("10/11/2024 - 9:45 PM - Finish Report");
-        eventList.add("10/11/2024 - 10:00 AM - Water the plants");
-        eventList.add("11/11/2024 - 8:00 PM - Dinner with friends");
+        eventList.add(new Event("Finish Report", "10/11/2024", "Weekly", "This is a description for the event."));
+        eventList.add(new Event("Birthday Party", "11/11/2024", "Once", "This is a description for the event."));
+        eventList.add(new Event("Dinner with friends", "11/11/2024", "Once", "This is a description for the event."));
 
         // Tạo danh sách sự kiện để highlight
         events = new ArrayList<>();
@@ -116,9 +142,8 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
         addEventsToCalendar();
 
         // Set up ArrayAdapter with the sample event list
-        adapter = new ArrayAdapter<>(
-                getContext(),
-                android.R.layout.simple_list_item_1,
+        adapter = new EventsArrayAdapter(
+                requireActivity(),
                 eventList
         );
 
@@ -141,35 +166,25 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
             return true;
         });
 
-        return view;
-    }
+        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event clickedEvent = eventList.get(position);
 
+                // Tạo AlertDialog để hiển thị chi tiết task
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                builder.setTitle(clickedEvent.getName());
 
-
-
-    private void addEventsToCalendar() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-        for (String eventString : eventList) {
-            try {
-                // Tách ngày từ chuỗi sự kiện
-                String dateStr = eventString.split(" - ")[0];
-                Calendar eventCalendar = Calendar.getInstance();
-                eventCalendar.setTime(sdf.parse(dateStr));
-
-                // Tạo EventDay (highlight icon)
-                EventDay eventDay = new EventDay(
-                        eventCalendar,
-                        R.drawable.ic_check
-                );
-
-                events.add(eventDay);
-            } catch (ParseException e) {
-                e.printStackTrace();
+                // Tạo layout cho AlertDialog (nếu cần hiển thị nhiều thông tin hơn)
+                String taskDetails = "Date: " + clickedEvent.getDate() + "\n" +
+                        "Frequency: " + clickedEvent.getRepeat_frequency() + "\n" +
+                        "Description: " + clickedEvent.getDescription();
+                builder.setMessage(taskDetails);
+                builder.setPositiveButton("OK", null);
+                builder.show();
             }
-        }
+        });
 
-        // Thêm các sự kiện vào CalendarView
-        calendarView.setEvents(events);
+        return view;
     }
 }

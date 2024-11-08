@@ -1,18 +1,17 @@
 package com.example.mobileapp;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -81,15 +80,11 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
 
         // Parse the time strings to Time objects
-        tasksList.add(new Task("Task 1", "10:00 AM"));
-        tasksList.add(new Task("Task 2", "11:00 AM"));
-        tasksList.add(new Task("Task 3", "12:00 PM"));
-        tasksList.add(new Task("Task 4", "01:00 PM"));
-        tasksList.add(new Task("Task 5", "02:00 PM"));
-        tasksList.add(new Task("Task 6", "03:00 PM"));
-        tasksList.add(new Task("Task 7", "04:00 PM"));
-        tasksList.add(new Task("Task 8", "05:00 PM"));
-        tasksList.add(new Task("Task 9", "06:00 PM"));
+        tasksList.add(new Task(0, "Report project to teacher", "High", "Monthly", "08/11/2024","10:30", "This is description for task."));
+        tasksList.add(new Task(1, "Squat & Push-up", "Medium", "Daily", "08/11/2024","06:00", "This is description for task."));
+        tasksList.add(new Task(2, "Buy a new cloth", "Low", "Monthly", "05/10/2024","15:00", "This is description for task."));
+        tasksList.add(new Task(3, "Learn new recipe", "Medium", "Weekly", "05/10/2024","18:00", "This is description for task."));
+        tasksList.add(new Task(0, "Do homework", "High", "Daily", "05/10/2024","20:00", "This is description for task."));
 
         lvAdapter = new TasksArrayAdapter(requireActivity(), tasksList);
         listView.setAdapter(lvAdapter);
