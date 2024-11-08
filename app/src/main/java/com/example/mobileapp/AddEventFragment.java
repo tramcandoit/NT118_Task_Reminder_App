@@ -2,7 +2,6 @@ package com.example.mobileapp;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,24 +35,17 @@ public class AddEventFragment extends DialogFragment {
         return fragment;
     }
 
-
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_addevent, container, false);
-
-
-
-        return view;
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
-        // Khởi tạo biến Task
+        // Khởi tạo biến Event
         final Event event = new Event();
         // Tạo AlertDialog để hiển thị chi tiết thông tin
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
@@ -72,9 +63,9 @@ public class AddEventFragment extends DialogFragment {
         // Frequency Spinner
         spFrequency = dialogView.findViewById(R.id.sp_addevent_frequency_selector);
         List<String> frequencies = new ArrayList<>();
-        frequencies.add("Daily");
         frequencies.add("Weekly");
         frequencies.add("Monthly");
+        frequencies.add("Once");
         ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(getContext(), R.layout.addevent_spinner_item_text, frequencies);
         frequencyAdapter.setDropDownViewResource(R.layout.addevent_spinner_item_text);
         spFrequency.setAdapter(frequencyAdapter);
@@ -132,17 +123,14 @@ public class AddEventFragment extends DialogFragment {
 
         builder.setView(dialogView)
                 .setPositiveButton("Save", (dialog, id) -> {
-
-
-                    String name = (etEventName.getText().toString());
-                    String date = (etDate.getText().toString());
-                    //event.setRepeat_frequency(spFrequency.getSelectedItem().toString());
-                    String des = (etDescription.getText().toString());
-                    String eventString = date + " - " + name + " - " + des;
+                    event.setName(etEventName.getText().toString());
+                    event.setDate(etDate.getText().toString());
+                    event.setRepeat_frequency(spFrequency.getSelectedItem().toString());
+                    event.setDescription(etDescription.getText().toString());
 
                     // Thêm vào danh sách tasks ở HomeFragment
                     if (listener != null) {
-                        listener.onEventAdded(eventString);
+                        listener.onEventAdded(event);
 
                     }
 

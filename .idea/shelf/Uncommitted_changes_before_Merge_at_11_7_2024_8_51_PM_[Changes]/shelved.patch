@@ -1,0 +1,30 @@
+Index: app/src/main/java/com/example/mobileapp/CalendarFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.mobileapp;\r\n\r\nimport android.media.metrics.Event;\r\nimport android.os.Bundle;\r\n\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.ArrayAdapter;\r\nimport android.widget.ListView;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\n/**\r\n * A simple {@link Fragment} subclass.\r\n * Use the {@link CalendarFragment#newInstance} factory method to\r\n * create an instance of this fragment.\r\n *\r\n */\r\npublic class CalendarFragment extends Fragment {\r\n//    // TODO: Rename parameter arguments, choose names that match\r\n//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER\r\n//    private static final String ARG_PARAM1 = \"param1\";\r\n//    private static final String ARG_PARAM2 = \"param2\";\r\n//\r\n//    // TODO: Rename and change types of parameters\r\n//    private String mParam1;\r\n//    private String mParam2;\r\n//\r\n//    public CalendarFragment() {\r\n//        // Required empty public constructor\r\n//    }\r\n//\r\n//    /**\r\n//     * Use this factory method to create a new instance of\r\n//     * this fragment using the provided parameters.\r\n//     *\r\n//     * @param param1 Parameter 1.\r\n//     * @param param2 Parameter 2.\r\n//     * @return A new instance of fragment CalendarFragment.\r\n//     */\r\n//    // TODO: Rename and change types and number of parameters\r\n//    public static CalendarFragment newInstance(String param1, String param2) {\r\n//        CalendarFragment fragment = new CalendarFragment();\r\n//        Bundle args = new Bundle();\r\n//        args.putString(ARG_PARAM1, param1);\r\n//        args.putString(ARG_PARAM2, param2);\r\n//        fragment.setArguments(args);\r\n//        return fragment;\r\n//    }\r\n//\r\n//    @Override\r\n//    public void onCreate(Bundle savedInstanceState) {\r\n//        super.onCreate(savedInstanceState);\r\n//        if (getArguments() != null) {\r\n//            mParam1 = getArguments().getString(ARG_PARAM1);\r\n//            mParam2 = getArguments().getString(ARG_PARAM2);\r\n//        }\r\n//    }\r\n\r\n    private ListView eventListView;\r\n    private List<String> eventList;\r\n\r\n\r\n    @Override\r\n    public View onCreateView(LayoutInflater inflater, ViewGroup container,\r\n                             Bundle savedInstanceState) {\r\n        // Inflate the layout for this fragment\r\n        View view = inflater.inflate(R.layout.fragment_calendar, container, false);\r\n\r\n        // Initialize the ListView\r\n        eventListView = view.findViewById(R.id.event_ListView);\r\n\r\n        // Create a list of sample events (using String for simplicity)\r\n        eventList = new ArrayList<>();\r\n        eventList.add(\"16/09/2023 - 9:45 PM - Finish Report\");\r\n        eventList.add(\"16/09/2023 - 10:00 AM - Water the plants\");\r\n        eventList.add(\"27/09/2023 - 8:00 PM - Dinner with friends\");\r\n\r\n        // Set up ArrayAdapter with the sample event list\r\n        ArrayAdapter<String> adapter = new ArrayAdapter<>(\r\n                getContext(),\r\n                android.R.layout.simple_list_item_1,\r\n                eventList\r\n        );\r\n\r\n        // Attach the adapter to the ListView\r\n        eventListView.setAdapter(adapter);\r\n\r\n        // Set long click listener for deleting items\r\n        eventListView.setOnItemLongClickListener((parent, view1, position, id) -> {\r\n            // Remove the item from the list\r\n            eventList.remove(position);\r\n            // Notify the adapter that the data has changed to refresh the ListView\r\n            adapter.notifyDataSetChanged();\r\n            return true;\r\n        });\r\n\r\n        return view;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/mobileapp/CalendarFragment.java b/app/src/main/java/com/example/mobileapp/CalendarFragment.java
+--- a/app/src/main/java/com/example/mobileapp/CalendarFragment.java	(revision 06453d54a1c32ad7fe96bbdee266ed9e402deddf)
++++ b/app/src/main/java/com/example/mobileapp/CalendarFragment.java	(date 1730987451114)
+@@ -1,17 +1,14 @@
+ package com.example.mobileapp;
+ 
+-import android.media.metrics.Event;
+ import android.os.Bundle;
+-
+-import androidx.fragment.app.Fragment;
+-import androidx.recyclerview.widget.RecyclerView;
+-
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+ import android.widget.ArrayAdapter;
+ import android.widget.ListView;
+ 
++import androidx.fragment.app.Fragment;
++
+ import java.util.ArrayList;
+ import java.util.List;
+ 

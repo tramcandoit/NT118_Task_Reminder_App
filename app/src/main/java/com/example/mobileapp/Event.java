@@ -11,6 +11,13 @@ public class Event {
     public Event() {
     }
 
+    public Event(String name, String date, String repeat_frequency, String description) {
+        this.name = name;
+        this.date = date;
+        this.repeat_frequency = repeat_frequency;
+        this.description = description;
+    }
+
     public int getEventId() {
         return eventId;
     }
