@@ -1,7 +1,11 @@
 package com.example.mobileapp;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,19 +21,28 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.core.content.ContextCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 public class AddEventFragment extends DialogFragment {
+    private static final int MAX_NAME_LENGTH = 50;
+    private static final int MAX_DESCRIPTION_LENGTH = 200;
+    private static final List<String> VALID_FREQUENCIES = Arrays.asList("Weekly", "Monthly", "Once");
+    private static final String NOTIFICATION_CHANNEL_ID = "events_channel";
+
     private EditText etEventName;
     private EditText etDate;
     private Spinner spFrequency;
     private EditText etDescription;
-    OnEventAddedListener listener;
+    private OnEventAddedListener listener;
     private EventDatabaseHandler event_db;
 
     public static AddEventFragment newInstance(OnEventAddedListener listener) {
@@ -38,170 +51,225 @@ public class AddEventFragment extends DialogFragment {
         return fragment;
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-
-
-        // Khởi tạo biến Event
-        final Event event = new Event();
-        event_db = new EventDatabaseHandler(requireContext());
-        // Tạo AlertDialog để hiển thị chi tiết thông tin
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-
-        // Tạo layout cho AlertDialog
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.fragment_addevent, null);
 
-        // Ánh xạ
-        etEventName = dialogView.findViewById(R.id.tv_addevent_addevent_textbox);
-        etDate = dialogView.findViewById(R.id.et_addevent_date_selector);
-        etDescription = dialogView.findViewById(R.id.et_addevent_description);
+        initializeViews(dialogView);
+        setupFrequencySpinner();
+        setupDatePicker();
 
-        // Frequency Spinner
-        spFrequency = dialogView.findViewById(R.id.sp_addevent_frequency_selector);
-        List<String> frequencies = new ArrayList<>();
-        frequencies.add("Weekly");
-        frequencies.add("Monthly");
-        frequencies.add("Once");
-        ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(getContext(), R.layout.addevent_spinner_item_text, frequencies);
-        frequencyAdapter.setDropDownViewResource(R.layout.addevent_spinner_item_text);
-        spFrequency.setAdapter(frequencyAdapter);
-        spFrequency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        // Lay thoi gian hien tai
-        final Calendar calendar = Calendar.getInstance();
-
-        // Định dạng ngày dd/mm/yyyy
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-        // Chuyển ngày hiện tại thành chuỗi và gán cho etDate
-        String currentDate = sdf.format(calendar.getTime());
-        // Gán vào edit text chọn ngày
-        etDate.setText(currentDate);
-
-        etDate.setOnClickListener(v -> {
-
-            // Mở DatePickerDialog
-            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                    (view, year, monthOfYear, dayOfMonth) -> {
-
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
-
-                        // Đặt ngày đã chọn vào etDate
-                        etDate.setText(selectedDate);
-                    },
-                    // Đặt ngày ban đầu cho DatePickerDialog (ngày hiện tại)
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
-            );
-
-            // Đặt nút Lưu trong DatePickerDialog
-            datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, "Save", datePickerDialog);
-
-            // Đặt nút Hủy trong DatePickerDialog
-            datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, "Cancel", (dialog, which) -> dialog.cancel());
-
-            // Hiển thị DatePickerDialog
-            datePickerDialog.show();
-        });
-
-
-
-
-        // Tạo dialog
         AlertDialog dialog = builder.setView(dialogView)
-                .setPositiveButton("Save", null) // Đặt listener sau
+                .setPositiveButton("Save", null)
                 .setNegativeButton("Cancel", (dialogInterface, i) -> dismiss())
                 .create();
 
-        // Đặt OnShowListener để custom việc click nút Save
-        dialog.setOnShowListener(dialogInterface -> {
-            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            positiveButton.setOnClickListener(view -> {
-                // Kiểm tra tên sự kiện
-                String eventName = etEventName.getText().toString().trim();
-                if (eventName.isEmpty()) {
-                    Toast.makeText(requireContext(), "Event name cannot be empty", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-
-                // Kiểm tra ngày hợp lệ
-                String selectedDateStr = etDate.getText().toString();
-                SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-                try {
-                    // Chuyển đổi ngày đã chọn thành đối tượng Date
-                    Calendar selectedDate = Calendar.getInstance();
-                    selectedDate.setTime(sdf1.parse(selectedDateStr));
-
-                    // Lấy ngày hiện tại
-                    Calendar currentDay = Calendar.getInstance();
-
-                    // Reset time để so sánh chính xác
-                    currentDay.set(Calendar.HOUR_OF_DAY, 0);
-                    currentDay.set(Calendar.MINUTE, 0);
-                    currentDay.set(Calendar.SECOND, 0);
-                    currentDay.set(Calendar.MILLISECOND, 0);
-
-                    selectedDate.set(Calendar.HOUR_OF_DAY, 0);
-                    selectedDate.set(Calendar.MINUTE, 0);
-                    selectedDate.set(Calendar.SECOND, 0);
-                    selectedDate.set(Calendar.MILLISECOND, 0);
-
-                    // Kiểm tra nếu ngày được chọn là trong quá khứ
-                    if (selectedDate.before(currentDay)) {
-                        Toast.makeText(requireContext(), "You cannot add an event in the past", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    // Nếu tất cả đều hợp lệ, thực hiện lưu sự kiện
-                    event.setName(eventName);
-                    event.setDate(selectedDateStr);
-                    event.setRepeat_frequency(spFrequency.getSelectedItem().toString());
-                    String description = etDescription.getText().toString().trim();
-                    if (description.isEmpty()) {
-                        description = "No description";
-                    }
-                    event.setDescription(description);
-
-                    // Thêm vào danh sách tasks ở HomeFragment
-                    if (listener != null) {
-                        listener.onEventAdded(event);
-                    }
-
-                    // Hiển thị Toast thành công
-                    Toast.makeText(requireContext(), "Event added successfully", Toast.LENGTH_SHORT).show();
-
-                    // Đóng dialog
-                    dismiss();
-
-                } catch (Exception e) {
-                    // Xử lý nếu có lỗi khi parse ngày
-                    Toast.makeText(requireContext(), "Invalid date format", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                }
-            });
-        });
+        dialog.setOnShowListener(dialogInterface -> setupSaveButton(dialog));
 
         return dialog;
+    }
 
+    private void initializeViews(View view) {
+        etEventName = view.findViewById(R.id.tv_addevent_addevent_textbox);
+        etDate = view.findViewById(R.id.et_addevent_date_selector);
+        etDescription = view.findViewById(R.id.et_addevent_description);
+        spFrequency = view.findViewById(R.id.sp_addevent_frequency_selector);
+        event_db = new EventDatabaseHandler(requireContext());
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        etDate.setText(sdf.format(Calendar.getInstance().getTime()));
+    }
+
+    private void setupFrequencySpinner() {
+        ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(
+                getContext(),
+                R.layout.addevent_spinner_item_text,
+                VALID_FREQUENCIES
+        );
+        frequencyAdapter.setDropDownViewResource(R.layout.addevent_spinner_item_text);
+        spFrequency.setAdapter(frequencyAdapter);
+    }
+
+    private void setupDatePicker() {
+        etDate.setOnClickListener(v -> showDatePicker());
+    }
+
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                getContext(),
+                (view, year, month, dayOfMonth) -> {
+                    String selectedDate = String.format(Locale.getDefault(),
+                            "%02d/%02d/%04d", dayOfMonth, month + 1, year);
+                    etDate.setText(selectedDate);
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        );
+
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        datePickerDialog.show();
+    }
+
+    private void scheduleNotification(Event event) {
+        Context context = requireContext();
+        Intent intent = new Intent(context, EventNotificationReceiver.class);
+        intent.putExtra("eventName", event.getName());
+        intent.putExtra("eventDescription", event.getDescription());
+        intent.putExtra("eventId", event.getEventId());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context,
+                event.getEventId(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(event.getDate()));
+
+            // Set notification time to 8:00 AM
+            calendar.set(Calendar.HOUR_OF_DAY, 8);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+
+            switch (event.getRepeat_frequency()) {
+                case "Once":
+                    alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.getTimeInMillis(),
+                            pendingIntent
+                    );
+                    break;
+                case "Weekly":
+                    alarmManager.setRepeating(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.getTimeInMillis(),
+                            AlarmManager.INTERVAL_DAY * 7,
+                            pendingIntent
+                    );
+                    break;
+                case "Monthly":
+                    alarmManager.setRepeating(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.getTimeInMillis(),
+                            AlarmManager.INTERVAL_DAY * 30,
+                            pendingIntent
+                    );
+                    break;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setupSaveButton(AlertDialog dialog) {
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        positiveButton.setOnClickListener(view -> {
+            if (validateAndSaveEvent()) {
+                dismiss();
+            }
+        });
+    }
+
+    private boolean validateAndSaveEvent() {
+        String eventName = etEventName.getText().toString().trim();
+        if (!validateEventName(eventName)) {
+            return false;
+        }
+
+        String selectedDateStr = etDate.getText().toString();
+        if (!validateDate(selectedDateStr)) {
+            return false;
+        }
+
+        String description = etDescription.getText().toString().trim();
+        if (!validateDescription(description)) {
+            return false;
+        }
+
+        Event event = createEventFromInput();
+        if (listener != null) {
+            listener.onEventAdded(event);
+            scheduleNotification(event);
+            showSuccessMessage();
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean validateEventName(String name) {
+        if (name.isEmpty()) {
+            showError("Event name cannot be empty");
+            return false;
+        }
+        if (name.length() > MAX_NAME_LENGTH) {
+            showError("Event name is too long (max " + MAX_NAME_LENGTH + " characters)");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateDate(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        try {
+            Calendar selectedDate = Calendar.getInstance();
+            selectedDate.setTime(sdf.parse(dateStr));
+
+            Calendar currentDay = Calendar.getInstance();
+            selectedDate.set(Calendar.HOUR_OF_DAY, 0);
+            selectedDate.set(Calendar.MINUTE, 0);
+            selectedDate.set(Calendar.SECOND, 0);
+            selectedDate.set(Calendar.MILLISECOND, 0);
+
+            currentDay.set(Calendar.HOUR_OF_DAY, 0);
+            currentDay.set(Calendar.MINUTE, 0);
+            currentDay.set(Calendar.SECOND, 0);
+            currentDay.set(Calendar.MILLISECOND, 0);
+
+            if (selectedDate.before(currentDay)) {
+                showError("Cannot add an event in the past");
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            showError("Invalid date format");
+            return false;
+        }
+    }
+
+    private boolean validateDescription(String description) {
+        if (description.length() > MAX_DESCRIPTION_LENGTH) {
+            showError("Description is too long (max " + MAX_DESCRIPTION_LENGTH + " characters)");
+            return false;
+        }
+        return true;
+    }
+
+    private Event createEventFromInput() {
+        Event event = new Event();
+        event.setName(etEventName.getText().toString().trim());
+        event.setDate(etDate.getText().toString());
+        event.setRepeat_frequency(spFrequency.getSelectedItem().toString());
+        String description = etDescription.getText().toString().trim();
+        event.setDescription(description.isEmpty() ? "No description" : description);
+        return event;
+    }
+
+    private void showError(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showSuccessMessage() {
+        Toast.makeText(requireContext(), "Event added successfully", Toast.LENGTH_SHORT).show();
     }
 }
