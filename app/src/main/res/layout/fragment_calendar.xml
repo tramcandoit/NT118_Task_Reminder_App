@@ -16,7 +16,7 @@
         android:textColor="@color/blue"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
@@ -24,6 +24,7 @@
         android:id="@+id/view_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@+id/title_calendar"
         />
 
