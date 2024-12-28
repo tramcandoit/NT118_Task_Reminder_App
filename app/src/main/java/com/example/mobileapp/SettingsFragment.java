@@ -59,6 +59,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private TextView tvTheme;
+    private TextView tvLanguage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +68,7 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         tvTheme = view.findViewById(R.id.tv_theme);
+        tvLanguage = view.findViewById(R.id.tv_language);
         tvTheme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,6 +82,7 @@ public class SettingsFragment extends Fragment {
                 transaction.commit();
             }
         });
+
 
         return view;
     }

@@ -1,16 +1,19 @@
 package com.example.mobileapp;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
@@ -70,22 +73,26 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
 //    }
 
     private ListView eventListView;
-    private List<Event> eventList;
+    private ArrayList<Event> eventList;
     private EventsArrayAdapter adapter;
     private CalendarView calendarView;
     private List<EventDay> events;
+    private EventDatabaseHandler event_db;
 
+
+    // Them event vao lich
     private void addEventsToCalendar() {
+        // Tao date format ngay thang nam
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        // Xoa list event de update list event moi
+        events.clear();
 
         for (Event event : eventList) {
             try {
-                // Tách ngày từ chuỗi sự kiện
                 String dateStr = event.getDate();
                 Calendar eventCalendar = Calendar.getInstance();
                 eventCalendar.setTime(sdf.parse(dateStr));
 
-                // Tạo EventDay (highlight icon)
                 EventDay eventDay = new EventDay(
                         eventCalendar,
                         R.drawable.ic_check
@@ -97,26 +104,38 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
             }
         }
 
-        // Thêm các sự kiện vào CalendarView
         calendarView.setEvents(events);
+    }
+
+    private void loadListEvent()
+    {
+        eventList.clear();
+        eventList.addAll(event_db.getAllEvent());
+        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onEventAdded(Event event) {
-        // Thêm event mới vào list
-        eventList.add(event);
-
-        // Cập nhật adapter
-        adapter.notifyDataSetChanged();
-
-        // Refresh highlight calendar
-        events = new ArrayList<>();
+        event_db.AddEvent(event);
+        loadListEvent();
         addEventsToCalendar();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Refresh the event list when the fragment resumes
+        loadListEvent();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        event_db = new EventDatabaseHandler(requireContext());
+        eventList = new ArrayList<>();
+        events = new ArrayList<>();
+
     }
 
     @Override
@@ -129,19 +148,6 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
         eventListView = view.findViewById(R.id.event_ListView);
         calendarView = view.findViewById(R.id.view_calendar);
 
-        // Create a list of sample events (using String for simplicity)
-        eventList = new ArrayList<>();
-        eventList.add(new Event("Finish Report", "10/11/2024", "Weekly", "This is a description for the event."));
-        eventList.add(new Event("Birthday Party", "11/11/2024", "Once", "This is a description for the event."));
-        eventList.add(new Event("Dinner with friends", "11/11/2024", "Once", "This is a description for the event."));
-
-        // Tạo danh sách sự kiện để highlight
-        events = new ArrayList<>();
-
-        // Chuyển đổi và thêm các ngày sự kiện
-        addEventsToCalendar();
-
-        // Set up ArrayAdapter with the sample event list
         adapter = new EventsArrayAdapter(
                 requireActivity(),
                 eventList
@@ -150,37 +156,69 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
         // Attach the adapter to the ListView
         eventListView.setAdapter(adapter);
 
-        eventListView.setOnItemLongClickListener((parent, view1, position, id) -> {
-
-            // Xóa event khỏi list
-            eventList.remove(position);
-
-            // Refresh adapter
-            adapter.notifyDataSetChanged();
-
-            // Refresh highlight
-            events = new ArrayList<>();
-            addEventsToCalendar();
+        // Load danh sách Event
+        loadListEvent();
+        // Thêm highlight vào lịch
+        addEventsToCalendar();
 
 
-            return true;
-        });
 
+
+
+
+        // Click de xem chi tiet event
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event clickedEvent = eventList.get(position);
 
-                // Tạo AlertDialog để hiển thị chi tiết task
+                // AlertDialog de hien properties event
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 builder.setTitle(clickedEvent.getName());
 
-                // Tạo layout cho AlertDialog (nếu cần hiển thị nhiều thông tin hơn)
+                // Hien thi thong tin event
                 String taskDetails = "Date: " + clickedEvent.getDate() + "\n" +
                         "Frequency: " + clickedEvent.getRepeat_frequency() + "\n" +
                         "Description: " + clickedEvent.getDescription();
                 builder.setMessage(taskDetails);
+                // Them nut OK
                 builder.setPositiveButton("OK", null);
+                // Thêm nut Delete
+                builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Tao dialog de xac nhan xoa
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle("Confirm delete")
+                                .setMessage("Are you sure you want to delete this event?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface confirmDialog, int which) {
+                                        // Chọn event đang được chọn để remove
+                                        Event eventToRemove = eventList.get(position);
+
+                                        // Xóa event tương ứng trong database
+                                        event_db.RemoveEvent(eventToRemove.getEventId());
+
+                                        // Xóa khỏi danh sách hiển thị
+                                        eventList.remove(position);
+
+                                        // Cập nhật adapter
+                                        adapter.notifyDataSetChanged();
+
+                                        // Cập nhật lại highlight trên Calendar
+                                        addEventsToCalendar();
+
+                                        // Hiển thị thông báo đã xóa thành công
+                                        Toast.makeText(requireContext(), "Event deleted successfully", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .setNegativeButton("No", null)
+                                .show();
+                    }
+                });
+
+
                 builder.show();
             }
         });

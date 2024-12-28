@@ -28,7 +28,6 @@ public class ThemeFragment extends Fragment {
         }
     }
 
-    private TextView tvTheme;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

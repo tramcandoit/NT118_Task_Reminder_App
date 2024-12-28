@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +30,7 @@ public class AddEventFragment extends DialogFragment {
     private Spinner spFrequency;
     private EditText etDescription;
     OnEventAddedListener listener;
+    private EventDatabaseHandler event_db;
 
     public static AddEventFragment newInstance(OnEventAddedListener listener) {
         AddEventFragment fragment = new AddEventFragment();
@@ -45,8 +48,10 @@ public class AddEventFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
 
+
         // Khởi tạo biến Event
         final Event event = new Event();
+        event_db = new EventDatabaseHandler(requireContext());
         // Tạo AlertDialog để hiển thị chi tiết thông tin
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
@@ -57,7 +62,6 @@ public class AddEventFragment extends DialogFragment {
         // Ánh xạ
         etEventName = dialogView.findViewById(R.id.tv_addevent_addevent_textbox);
         etDate = dialogView.findViewById(R.id.et_addevent_date_selector);
-
         etDescription = dialogView.findViewById(R.id.et_addevent_description);
 
         // Frequency Spinner
@@ -99,7 +103,7 @@ public class AddEventFragment extends DialogFragment {
                     (view, year, monthOfYear, dayOfMonth) -> {
 
                         calendar.set(year, monthOfYear, dayOfMonth);
-                        String selectedDate = sdf.format(calendar.getTime());
+                        String selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
 
                         // Đặt ngày đã chọn vào etDate
                         etDate.setText(selectedDate);
@@ -121,27 +125,83 @@ public class AddEventFragment extends DialogFragment {
 
 
 
-        builder.setView(dialogView)
-                .setPositiveButton("Save", (dialog, id) -> {
-                    event.setName(etEventName.getText().toString());
-                    event.setDate(etDate.getText().toString());
+        // Tạo dialog
+        AlertDialog dialog = builder.setView(dialogView)
+                .setPositiveButton("Save", null) // Đặt listener sau
+                .setNegativeButton("Cancel", (dialogInterface, i) -> dismiss())
+                .create();
+
+        // Đặt OnShowListener để custom việc click nút Save
+        dialog.setOnShowListener(dialogInterface -> {
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            positiveButton.setOnClickListener(view -> {
+                // Kiểm tra tên sự kiện
+                String eventName = etEventName.getText().toString().trim();
+                if (eventName.isEmpty()) {
+                    Toast.makeText(requireContext(), "Event name cannot be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                // Kiểm tra ngày hợp lệ
+                String selectedDateStr = etDate.getText().toString();
+                SimpleDateFormat sdf1 = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+                try {
+                    // Chuyển đổi ngày đã chọn thành đối tượng Date
+                    Calendar selectedDate = Calendar.getInstance();
+                    selectedDate.setTime(sdf1.parse(selectedDateStr));
+
+                    // Lấy ngày hiện tại
+                    Calendar currentDay = Calendar.getInstance();
+
+                    // Reset time để so sánh chính xác
+                    currentDay.set(Calendar.HOUR_OF_DAY, 0);
+                    currentDay.set(Calendar.MINUTE, 0);
+                    currentDay.set(Calendar.SECOND, 0);
+                    currentDay.set(Calendar.MILLISECOND, 0);
+
+                    selectedDate.set(Calendar.HOUR_OF_DAY, 0);
+                    selectedDate.set(Calendar.MINUTE, 0);
+                    selectedDate.set(Calendar.SECOND, 0);
+                    selectedDate.set(Calendar.MILLISECOND, 0);
+
+                    // Kiểm tra nếu ngày được chọn là trong quá khứ
+                    if (selectedDate.before(currentDay)) {
+                        Toast.makeText(requireContext(), "You cannot add an event in the past", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Nếu tất cả đều hợp lệ, thực hiện lưu sự kiện
+                    event.setName(eventName);
+                    event.setDate(selectedDateStr);
                     event.setRepeat_frequency(spFrequency.getSelectedItem().toString());
-                    event.setDescription(etDescription.getText().toString());
+                    String description = etDescription.getText().toString().trim();
+                    if (description.isEmpty()) {
+                        description = "No description";
+                    }
+                    event.setDescription(description);
 
                     // Thêm vào danh sách tasks ở HomeFragment
                     if (listener != null) {
                         listener.onEventAdded(event);
-
                     }
 
-                    // Sau khi lưu, đóng dialog
-                    //dismiss();
+                    // Hiển thị Toast thành công
+                    Toast.makeText(requireContext(), "Event added successfully", Toast.LENGTH_SHORT).show();
 
-                })
-                .setNegativeButton("Cancel", (dialog, id) -> {
-                    AddEventFragment.this.getDialog().cancel();
-                });
+                    // Đóng dialog
+                    dismiss();
 
-        return builder.create();
+                } catch (Exception e) {
+                    // Xử lý nếu có lỗi khi parse ngày
+                    Toast.makeText(requireContext(), "Invalid date format", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            });
+        });
+
+        return dialog;
+
     }
 }
