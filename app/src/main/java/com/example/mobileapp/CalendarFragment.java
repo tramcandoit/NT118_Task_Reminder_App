@@ -1,9 +1,11 @@
 package com.example.mobileapp;
 
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,10 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.applandeo.materialcalendarview.CalendarDay;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
+import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
+import com.applandeo.materialcalendarview.listeners.OnCalendarDayClickListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -78,6 +84,8 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
     private CalendarView calendarView;
     private List<EventDay> events;
     private EventDatabaseHandler event_db;
+    private TextView txtNoEvent;
+    private List<Event> fullEventList;
 
 
     // Them event vao lich
@@ -87,7 +95,7 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
         // Xoa list event de update list event moi
         events.clear();
 
-        for (Event event : eventList) {
+        for (Event event : fullEventList) { // Thay đổi từ eventList sang fullEventList
             try {
                 String dateStr = event.getDate();
                 Calendar eventCalendar = Calendar.getInstance();
@@ -107,61 +115,107 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
         calendarView.setEvents(events);
     }
 
-    private void loadListEvent()
-    {
-        eventList.clear();
-        eventList.addAll(event_db.getAllEvent());
+    private void loadListEvent() {
+        fullEventList.clear(); // Clear danh sách gốc
+        fullEventList.addAll(event_db.getAllEvent()); // Nạp toàn bộ sự kiện vào danh sách gốc
+
+        eventList.clear(); // Clear danh sách hiển thị
+        eventList.addAll(fullEventList); // Nạp toàn bộ sự kiện vào danh sách hiển thị
+
         adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onEventAdded(Event event) {
         event_db.AddEvent(event);
-        loadListEvent();
-        addEventsToCalendar();
+        loadListEvent(); // Nạp lại toàn bộ sự kiện
+        showTodayEvents(); // Hiển thị sự kiện của ngày hiện tại
+        addEventsToCalendar(); // Cập nhật highlight cho calendar
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        // Refresh the event list when the fragment resumes
+
         loadListEvent();
+        showTodayEvents();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         event_db = new EventDatabaseHandler(requireContext());
         eventList = new ArrayList<>();
         events = new ArrayList<>();
+        fullEventList = new ArrayList<>();
 
     }
 
+
+
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
+        // Tao layout calendar
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
 
-        // Initialize the ListView
+        // Anh xa
         eventListView = view.findViewById(R.id.event_ListView);
         calendarView = view.findViewById(R.id.view_calendar);
-
+        txtNoEvent = view.findViewById(R.id.no_ev_txt);
+        txtNoEvent.setVisibility(View.GONE);
         adapter = new EventsArrayAdapter(
                 requireActivity(),
                 eventList
         );
 
-        // Attach the adapter to the ListView
+
+        // Set adapter cho danh sach event
         eventListView.setAdapter(adapter);
 
-        // Load danh sách Event
+        // load event
         loadListEvent();
-        // Thêm highlight vào lịch
+        // load highlight tuong ung event dang co
         addEventsToCalendar();
+        // hien thi event trong ngay (khi khoi dong app)
+        showTodayEvents();
 
+        // Click vào ngày để xem event trong ngay do
+        calendarView.setOnCalendarDayClickListener(new OnCalendarDayClickListener() {
+            @Override
+            public void onClick(@NonNull CalendarDay calendarDay) {
+                // Chuyen format cho ngay
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                String selectedDateStr = String.format("%02d/%02d/%04d",
+                        calendarDay.getCalendar().get(Calendar.DAY_OF_MONTH),
+                        calendarDay.getCalendar().get(Calendar.MONTH) + 1,
+                        calendarDay.getCalendar().get(Calendar.YEAR)
+                );
 
+                // Loc event de hien thi event o ngay da chon
+                List<Event> dayEvents = new ArrayList<>();
+                for (Event event : fullEventList) {
+                    if (event.getDate().equals(selectedDateStr)) {
+                        dayEvents.add(event);
+                    }
+                }
+
+                // Cap nhat list event hien thi
+                eventList.clear();
+                eventList.addAll(dayEvents);
+                adapter.notifyDataSetChanged();
+
+                // Hien thi hoac an text khong co su kien
+                if (dayEvents.isEmpty()) {
+                    txtNoEvent.setVisibility(View.VISIBLE);
+                    txtNoEvent.setText(String.format("No events on %s", selectedDateStr));
+                } else {
+                    txtNoEvent.setVisibility(View.GONE);
+                }
+            }
+        });
 
 
 
@@ -183,7 +237,7 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
                 builder.setMessage(taskDetails);
                 // Them nut OK
                 builder.setPositiveButton("OK", null);
-                // Thêm nut Delete
+                // Thêm nut Delete va event xoa su kien
                 builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -199,6 +253,9 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
 
                                         // Xóa event tương ứng trong database
                                         event_db.RemoveEvent(eventToRemove.getEventId());
+
+                                        // Cập nhật fullEventList
+                                        fullEventList.remove(eventToRemove);
 
                                         // Xóa khỏi danh sách hiển thị
                                         eventList.remove(position);
@@ -218,11 +275,45 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
                     }
                 });
 
-
                 builder.show();
             }
         });
 
         return view;
+    }
+
+    private void showTodayEvents() {
+        // Định dạng ngày hiện tại
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String todayDateStr = sdf.format(Calendar.getInstance().getTime());
+
+        // Lọc các sự kiện của ngày hiện tại
+        List<Event> todayEvents = new ArrayList<>();
+        for (Event event : fullEventList) {
+            if (event.getDate().equals(todayDateStr)) {
+                todayEvents.add(event);
+            }
+        }
+
+        // Cập nhật danh sách sự kiện hiển thị
+        eventList.clear();
+        eventList.addAll(todayEvents);
+        adapter.notifyDataSetChanged();
+
+        // Hiển thị/ẩn text thông báo không có sự kiện
+        if (todayEvents.isEmpty()) {
+            txtNoEvent.setVisibility(View.VISIBLE);
+            txtNoEvent.setText("No events today");
+        } else {
+            txtNoEvent.setVisibility(View.GONE);
+        }
+
+        // Set calendar to today's date
+        try {
+            Calendar today = Calendar.getInstance();
+            calendarView.setDate(today);
+        } catch (OutOfDateRangeException e) {
+            e.printStackTrace();
+        }
     }
 }
