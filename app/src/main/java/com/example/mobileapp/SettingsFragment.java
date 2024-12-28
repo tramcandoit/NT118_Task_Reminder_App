@@ -83,19 +83,7 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        tvLanguage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Chuyển sang class ThemeFragment
-                LanguageFragment languageFragment = new LanguageFragment();
 
-                // Thực hiện transaction để thay thế fragment hiện tại
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, languageFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
         return view;
     }
 }
