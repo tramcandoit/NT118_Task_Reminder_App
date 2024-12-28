@@ -1,6 +1,7 @@
 package com.example.mobileapp;
 
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
@@ -77,8 +79,12 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
     private List<EventDay> events;
     private EventDatabaseHandler event_db;
 
+
+    // Them event vao lich
     private void addEventsToCalendar() {
+        // Tao date format ngay thang nam
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        // Xoa list event de update list event moi
         events.clear();
 
         for (Event event : eventList) {
@@ -158,37 +164,61 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
 
 
 
-        // Long click để xóa event
-        eventListView.setOnItemLongClickListener((parent, view1, position, id) -> {
 
-            // Chon event dang duoc chon de remove
-            Event eventToRemove = eventList.get(position);
-            // Xoa event tuong ung trong database
-            event_db.RemoveEvent(eventToRemove.getEventId()); // Tạm thời chưa có delete
-            // Xoa khoi danh sach hien thi
-            eventList.remove(position);
-            // Cap nhat adapter
-            adapter.notifyDataSetChanged();
-            // Cap nhat lai highlight tren Calendar
-            addEventsToCalendar();
-            return true;
-        });
 
+        // Click de xem chi tiet event
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event clickedEvent = eventList.get(position);
 
-                // Tạo AlertDialog để hiển thị chi tiết task
+                // AlertDialog de hien properties event
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 builder.setTitle(clickedEvent.getName());
 
-                // Tạo layout cho AlertDialog (nếu cần hiển thị nhiều thông tin hơn)
+                // Hien thi thong tin event
                 String taskDetails = "Date: " + clickedEvent.getDate() + "\n" +
                         "Frequency: " + clickedEvent.getRepeat_frequency() + "\n" +
                         "Description: " + clickedEvent.getDescription();
                 builder.setMessage(taskDetails);
+                // Them nut OK
                 builder.setPositiveButton("OK", null);
+                // Thêm nut Delete
+                builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Tao dialog de xac nhan xoa
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle("Confirm delete")
+                                .setMessage("Are you sure you want to delete this event?")
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface confirmDialog, int which) {
+                                        // Chọn event đang được chọn để remove
+                                        Event eventToRemove = eventList.get(position);
+
+                                        // Xóa event tương ứng trong database
+                                        event_db.RemoveEvent(eventToRemove.getEventId());
+
+                                        // Xóa khỏi danh sách hiển thị
+                                        eventList.remove(position);
+
+                                        // Cập nhật adapter
+                                        adapter.notifyDataSetChanged();
+
+                                        // Cập nhật lại highlight trên Calendar
+                                        addEventsToCalendar();
+
+                                        // Hiển thị thông báo đã xóa thành công
+                                        Toast.makeText(requireContext(), "Event deleted successfully", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .setNegativeButton("No", null)
+                                .show();
+                    }
+                });
+
+
                 builder.show();
             }
         });

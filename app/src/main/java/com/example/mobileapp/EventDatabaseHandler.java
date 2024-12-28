@@ -2,15 +2,23 @@ package com.example.mobileapp;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class EventDatabaseHandler extends SQLiteOpenHelper {
     private static final String TAG = "EventDatabaseHandler";
@@ -138,4 +146,6 @@ public class EventDatabaseHandler extends SQLiteOpenHelper {
         } while (idExists);
         return randomId;
     }
+
+
 }
