@@ -1,8 +1,12 @@
 package com.example.mobileapp;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,13 +44,89 @@ public class AddTaskFragment extends DialogFragment {
     ArrayList<Task> taskArrayList;
     TasksArrayAdapter taskAdapter;
 
-
     OnTaskAddedListener listener;
 
     public static AddTaskFragment newInstance(OnTaskAddedListener listener) {
         AddTaskFragment fragment = new AddTaskFragment();
         fragment.listener = listener;
         return fragment;
+    }
+
+    private void scheduleNotification(Task task) {
+        Context context = requireContext();
+        Intent intent = new Intent(context, TaskNotificationReceiver.class);
+        intent.putExtra("taskName", task.getName());
+        intent.putExtra("taskDescription", task.getDescription());
+        intent.putExtra("taskId", task.getTaskId());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context,
+                task.getTaskId(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()); // Kết hợp date và time
+            // Kết hợp ngày và giờ từ EditText
+            String dateTimeString = task.getDate() + " " + task.getTime();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(dateTimeString)); // Parse cả ngày và giờ
+
+            switch (task.getRepeat_frequency()) {
+                case "Once":
+                    alarmManager.setExactAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.getTimeInMillis(),
+                            pendingIntent);
+                    break;
+                case "Daily":
+                    scheduleRepeatingNotification(
+                            alarmManager,
+                            pendingIntent,
+                            calendar,
+                            task.getRepeat_frequency()
+                    );
+                    break;
+                case "Weekly":
+                    scheduleRepeatingNotification(
+                            alarmManager,
+                            pendingIntent,
+                            calendar,
+                            task.getRepeat_frequency()
+                    );
+                    break;
+            }
+        } catch (ParseException e) {
+            // Xử lý ParseException
+            Toast.makeText(getContext(), "Invalid date/time format", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+    private void scheduleRepeatingNotification(AlarmManager alarmManager, PendingIntent pendingIntent, Calendar calendar, String frequency) {
+        long interval;
+        if ("Daily".equals(frequency)) {
+            interval = AlarmManager.INTERVAL_DAY;
+        } else if ("Weekly".equals(frequency)) {
+            interval = AlarmManager.INTERVAL_DAY * 7;
+        } else {
+            return; // Không hỗ trợ tần suất khác
+        }
+
+        alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(),
+                pendingIntent
+        );
+
+        calendar.add(Calendar.MILLISECOND, (int) interval); // Cập nhật thời gian cho lần lặp tiếp theo
+        AlarmManager finalAlarmManager = alarmManager;
+        new android.os.Handler().postDelayed(() -> {
+            scheduleRepeatingNotification(finalAlarmManager, pendingIntent, calendar, frequency);
+        }, interval);
     }
 
     @Override
@@ -125,7 +206,7 @@ public class AddTaskFragment extends DialogFragment {
         List<String> frequencies = new ArrayList<>();
         frequencies.add("Daily");
         frequencies.add("Weekly");
-        frequencies.add("Monthly");
+//        frequencies.add("Monthly");
         frequencies.add("Once");
         ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, frequencies);
         frequencyAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
@@ -229,6 +310,7 @@ public class AddTaskFragment extends DialogFragment {
                     // Thêm vào danh sách tasks ở HomeFragment
                     if (listener != null) {
                         listener.onTaskAdded(task);
+                        scheduleNotification(task);
                     }
 
                     // Sau khi lưu, đóng dialog
@@ -245,4 +327,5 @@ public class AddTaskFragment extends DialogFragment {
     private void showSuccessMessage() {
         Toast.makeText(requireContext(), LanguageManager.getLocalizedText(requireContext(), "task_added"), Toast.LENGTH_SHORT).show();
     }
+
 }

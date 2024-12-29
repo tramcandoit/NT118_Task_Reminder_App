@@ -1,0 +1,16 @@
+<resources>
+    <color name="purple_200">#BB86FC</color> <!-- Tối hơn một chút -->
+    <color name="purple_500">#6200EE</color> <!-- Đậm hơn so với Light Mode -->
+    <color name="purple_700">#3700B3</color> <!-- Giữ nguyên màu này cho sự đồng nhất -->
+    <color name="teal_200">#03DAC5</color> <!-- Vẫn giữ nguyên, vì phù hợp với Dark Mode -->
+    <color name="teal_700">#018786</color> <!-- Tối hơn một chút -->
+    <color name="white">#1F1F1F</color> <!-- Màu nền chính cho Dark Mode -->
+    <color name="black">#E1E1E1</color> <!-- Màu trắng sáng nhưng không chói mắt trong Dark Mode -->
+    <color name="blue">#2196F3</color> <!-- Vẫn giữ màu này, vì nó sẽ vẫn phù hợp trong Dark Mode -->
+    <color name="light_blue">#4A90E2</color> <!-- Màu xanh sáng hơn so với Light Mode -->
+    <color name="light_blue_2">#353538</color> <!-- Màu nền tối hơn cho Dark Mode -->
+    <color name="light_gray">#505050</color> <!-- Màu xám tối hơn cho Dark Mode -->
+    <color name="light_gray_2">#303030</color> <!-- Màu xám 2 tối hơn cho Dark Mode -->
+    <color name="red">#FF0033</color> <!-- Đỏ sáng hơn trong Dark Mode -->
+    <color name="grey">#616161</color> <!-- Tối hơn so với Light Mode -->
+</resources>
