@@ -4,8 +4,8 @@
     android:viewportWidth="15"
     android:width="25dp">
       
-    <path android:fillColor="#00000000" android:pathData="M3,9C3,8.47 3.211,7.961 3.586,7.586C3.961,7.211 4.47,7 5,7H9C9.53,7 10.039,7.211 10.414,7.586C10.789,7.961 11,8.47 11,9C11,9.265 10.895,9.52 10.707,9.707C10.52,9.895 10.265,10 10,10H4C3.735,10 3.48,9.895 3.293,9.707C3.105,9.52 3,9.265 3,9Z" android:strokeColor="#333333" android:strokeLineJoin="round" android:strokeWidth="1"/>
+    <path android:fillColor="@color/white" android:pathData="M3,9C3,8.47 3.211,7.961 3.586,7.586C3.961,7.211 4.47,7 5,7H9C9.53,7 10.039,7.211 10.414,7.586C10.789,7.961 11,8.47 11,9C11,9.265 10.895,9.52 10.707,9.707C10.52,9.895 10.265,10 10,10H4C3.735,10 3.48,9.895 3.293,9.707C3.105,9.52 3,9.265 3,9Z" android:strokeColor="@color/black" android:strokeLineJoin="round" android:strokeWidth="1"/>
       
-    <path android:fillColor="#00000000" android:pathData="M7,5C7.828,5 8.5,4.328 8.5,3.5C8.5,2.672 7.828,2 7,2C6.172,2 5.5,2.672 5.5,3.5C5.5,4.328 6.172,5 7,5Z" android:strokeColor="#333333" android:strokeWidth="1"/>
+    <path android:fillColor="@color/white" android:pathData="M7,5C7.828,5 8.5,4.328 8.5,3.5C8.5,2.672 7.828,2 7,2C6.172,2 5.5,2.672 5.5,3.5C5.5,4.328 6.172,5 7,5Z" android:strokeColor="@color/black" android:strokeWidth="1"/>
     
 </vector>

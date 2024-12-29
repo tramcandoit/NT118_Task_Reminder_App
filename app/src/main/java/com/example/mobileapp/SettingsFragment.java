@@ -2,14 +2,13 @@ package com.example.mobileapp;
 
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,8 +57,13 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    // Khai báo các view
+    private TextView tvAccount;
+    private TextView tvNotiSound;
+    private TextView tvProductivity;
     private TextView tvTheme;
     private TextView tvLanguage;
+    private TextView tvHelpFeed;
     private TextView tvAbout;
 
     @Override
@@ -68,9 +72,52 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        // lấy ra các view
+        tvAccount = view.findViewById(R.id.tv_account);
+        tvNotiSound= view.findViewById(R.id.tv_noti_sound);
+        tvProductivity = view.findViewById(R.id.tv_productivity);
         tvTheme = view.findViewById(R.id.tv_theme);
         tvLanguage = view.findViewById(R.id.tv_language);
+        tvHelpFeed = view.findViewById(R.id.tv_help_feed);
         tvAbout = view.findViewById(R.id.tv_about);
+
+        // Xử lý sự kiện click
+        tvAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Chuyển sang class AccountFragment
+                AccountFragment accountFragment = new AccountFragment();
+
+                // Thực hiện transaction để thay thế fragment hiện tại
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, accountFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        tvNotiSound.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NotiSoundFragment notiSoundFragment = new NotiSoundFragment();
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, notiSoundFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        tvProductivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ProductivityFragment productivityFragment = new ProductivityFragment();
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, productivityFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
         tvTheme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,6 +127,29 @@ public class SettingsFragment extends Fragment {
                 // Thực hiện transaction để thay thế fragment hiện tại
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, themeFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        tvLanguage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LanguageFragment languageFragment = new LanguageFragment();
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, languageFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+            }
+        });
+
+        tvHelpFeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HelpFeedFragment helpFeedFragment = new HelpFeedFragment();
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, helpFeedFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
@@ -96,21 +166,6 @@ public class SettingsFragment extends Fragment {
 
             }
         });
-
-        tvLanguage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LanguageFragment languageFragment = new LanguageFragment();
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, languageFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-
-            }
-        });
-
-
-
 
         return view;
     }
