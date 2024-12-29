@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -29,7 +30,7 @@
                 android:textStyle="bold"
                 android:gravity="center"
                 android:layout_marginTop="5dp"
-
+                android:textColor="@color/blue"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -41,7 +42,7 @@
                 android:id="@+id/tv_addevent_eventname_label"
                 android:text="@string/event_name"
                 android:textSize="24sp"
-                android:textColor="@color/blue"
+                android:textColor="@color/black"
                 android:textStyle="bold"
 
                 app:layout_constraintTop_toBottomOf="@id/tv_addevent_tittle"
@@ -70,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/date"
-                android:textColor="@color/blue"
+                android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
@@ -93,6 +94,7 @@
                     android:layout_marginTop="10dp"
                     android:gravity="center"
                     android:src="@drawable/icon_calendar2"
+                    app:tint="@color/black"
                     />
 
                 <EditText
@@ -117,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/freq"
-                android:textColor="@color/blue"
+                android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -137,16 +139,16 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_addevent_frequency_label"/>
 
             <TextView
+                android:id="@+id/tv_addevent_description_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_addevent_description_label"
-                android:text="@string/description"
                 android:layout_marginTop="10dp"
+                android:text="@string/description"
+                android:textColor="@color/black"
                 android:textSize="24sp"
-                android:textColor="@color/blue"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sp_addevent_frequency_selector"/>
+                app:layout_constraintTop_toBottomOf="@id/sp_addevent_frequency_selector" />
 
             <EditText
                 android:layout_width="match_parent"
