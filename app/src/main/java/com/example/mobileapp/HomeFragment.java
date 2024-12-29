@@ -33,6 +33,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
     private ListView listView;
     private TasksArrayAdapter lvAdapter;
     private List<Task> tasksList;
+    private TaskDatabaseHandler db;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -65,6 +66,8 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
 
         gvCategories = view.findViewById(R.id.gv_home_categories);
         listView = view.findViewById(R.id.lv_Todaytask);
+        db = new TaskDatabaseHandler(requireContext());
+
 
         categories = new ArrayList<>();
         categories.add(new CategoriesItem(R.drawable.icon_user, "Work"));
@@ -77,14 +80,8 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
 
         // Prepare some test data for list
         tasksList = new ArrayList<>();
+        tasksList = db.getAllTasks();
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-
-        // Parse the time strings to Time objects
-        tasksList.add(new Task(0, "Report project to teacher", "High", "Monthly", "08/11/2024","10:30", "This is description for task."));
-        tasksList.add(new Task(1, "Squat & Push-up", "Medium", "Daily", "08/11/2024","06:00", "This is description for task."));
-        tasksList.add(new Task(2, "Buy a new cloth", "Low", "Monthly", "05/10/2024","15:00", "This is description for task."));
-        tasksList.add(new Task(3, "Learn new recipe", "Medium", "Weekly", "05/10/2024","18:00", "This is description for task."));
-        tasksList.add(new Task(0, "Do homework", "High", "Daily", "05/10/2024","20:00", "This is description for task."));
 
         lvAdapter = new TasksArrayAdapter(requireActivity(), tasksList);
         listView.setAdapter(lvAdapter);
@@ -111,6 +108,19 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
                 builder.setMessage(taskDetails);
                 builder.setPositiveButton("OK", null);
                 builder.show();
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Task task = tasksList.get(position);
+
+                db.deleteTask(task); // Xóa khỏi database
+                tasksList.remove(position);
+                lvAdapter.notifyDataSetChanged();
+
+                return false;
             }
         });
 
