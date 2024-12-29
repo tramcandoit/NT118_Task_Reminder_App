@@ -153,6 +153,7 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
 
 
 
+
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -186,7 +187,6 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
         calendarView.setOnCalendarDayClickListener(new OnCalendarDayClickListener() {
             @Override
             public void onClick(@NonNull CalendarDay calendarDay) {
-                // Chuyen format cho ngay
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 String selectedDateStr = String.format("%02d/%02d/%04d",
                         calendarDay.getCalendar().get(Calendar.DAY_OF_MONTH),
@@ -194,7 +194,6 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
                         calendarDay.getCalendar().get(Calendar.YEAR)
                 );
 
-                // Loc event de hien thi event o ngay da chon
                 List<Event> dayEvents = new ArrayList<>();
                 for (Event event : fullEventList) {
                     if (event.getDate().equals(selectedDateStr)) {
@@ -202,78 +201,79 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
                     }
                 }
 
-                // Cap nhat list event hien thi
                 eventList.clear();
                 eventList.addAll(dayEvents);
                 adapter.notifyDataSetChanged();
 
-                // Hien thi hoac an text khong co su kien
                 if (dayEvents.isEmpty()) {
                     txtNoEvent.setVisibility(View.VISIBLE);
-                    txtNoEvent.setText(String.format("No events on %s", selectedDateStr));
+                    txtNoEvent.setText(
+                            String.format(
+                                    LanguageManager.getLocalizedText(requireContext(), "no_events_on_date"),
+                                    selectedDateStr
+                            )
+                    );
                 } else {
                     txtNoEvent.setVisibility(View.GONE);
                 }
             }
         });
 
-
-
-
-        // Click de xem chi tiet event
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event clickedEvent = eventList.get(position);
 
-                // AlertDialog de hien properties event
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 builder.setTitle(clickedEvent.getName());
 
-                // Hien thi thong tin event
-                String taskDetails = "Date: " + clickedEvent.getDate() + "\n" +
-                        "Frequency: " + clickedEvent.getRepeat_frequency() + "\n" +
-                        "Description: " + clickedEvent.getDescription();
+                String taskDetails =
+                        LanguageManager.getLocalizedText(requireContext(), "date") + ": " + clickedEvent.getDate() + "\n" +
+                                LanguageManager.getLocalizedText(requireContext(), "frequency") + ": " + clickedEvent.getRepeat_frequency() + "\n" +
+                                LanguageManager.getLocalizedText(requireContext(), "description") + ": " + clickedEvent.getDescription();
+
                 builder.setMessage(taskDetails);
-                // Them nut OK
-                builder.setPositiveButton("OK", null);
-                // Thêm nut Delete va event xoa su kien
-                builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Tao dialog de xac nhan xoa
-                        new AlertDialog.Builder(requireContext())
-                                .setTitle("Confirm delete")
-                                .setMessage("Are you sure you want to delete this event?")
-                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface confirmDialog, int which) {
-                                        // Chọn event đang được chọn để remove
-                                        Event eventToRemove = eventList.get(position);
+                builder.setPositiveButton(
+                        LanguageManager.getLocalizedText(requireContext(), "ok"),
+                        null
+                );
 
-                                        // Xóa event tương ứng trong database
-                                        event_db.RemoveEvent(eventToRemove.getEventId());
+                builder.setNegativeButton(
+                        LanguageManager.getLocalizedText(requireContext(), "delete"),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                new AlertDialog.Builder(requireContext())
+                                        .setTitle(LanguageManager.getLocalizedText(requireContext(), "confirm_delete"))
+                                        .setMessage(LanguageManager.getLocalizedText(requireContext(), "confirm_delete_message"))
+                                        .setPositiveButton(
+                                                LanguageManager.getLocalizedText(requireContext(), "yes"),
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface confirmDialog, int which) {
+                                                        Event eventToRemove = eventList.get(position);
+                                                        event_db.RemoveEvent(eventToRemove.getEventId());
+                                                        fullEventList.remove(eventToRemove);
+                                                        eventList.remove(position);
+                                                        adapter.notifyDataSetChanged();
+                                                        addEventsToCalendar();
 
-                                        // Cập nhật fullEventList
-                                        fullEventList.remove(eventToRemove);
-
-                                        // Xóa khỏi danh sách hiển thị
-                                        eventList.remove(position);
-
-                                        // Cập nhật adapter
-                                        adapter.notifyDataSetChanged();
-
-                                        // Cập nhật lại highlight trên Calendar
-                                        addEventsToCalendar();
-
-                                        // Hiển thị thông báo đã xóa thành công
-                                        Toast.makeText(requireContext(), "Event deleted successfully", Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .setNegativeButton("No", null)
-                                .show();
-                    }
-                });
+                                                        Toast.makeText(
+                                                                requireContext(),
+                                                                LanguageManager.getLocalizedText(requireContext(), "event_deleted"),
+                                                                Toast.LENGTH_SHORT
+                                                        ).show();
+                                                    }
+                                                }
+                                        )
+                                        .setNegativeButton(
+                                                LanguageManager.getLocalizedText(requireContext(), "no"),
+                                                null
+                                        )
+                                        .show();
+                            }
+                        }
+                );
 
                 builder.show();
             }
@@ -303,7 +303,9 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
         // Hiển thị/ẩn text thông báo không có sự kiện
         if (todayEvents.isEmpty()) {
             txtNoEvent.setVisibility(View.VISIBLE);
-            txtNoEvent.setText("No events today");
+            txtNoEvent.setText(String.format(
+                    LanguageManager.getLocalizedText(requireContext(), "no_events_today")
+            ));
         } else {
             txtNoEvent.setVisibility(View.GONE);
         }

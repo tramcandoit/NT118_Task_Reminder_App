@@ -63,8 +63,8 @@ public class AddEventFragment extends DialogFragment {
         setupDatePicker();
 
         AlertDialog dialog = builder.setView(dialogView)
-                .setPositiveButton("Save", null)
-                .setNegativeButton("Cancel", (dialogInterface, i) -> dismiss())
+                .setPositiveButton(LanguageManager.getLocalizedText(requireContext(), "save"), null)
+                .setNegativeButton(LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialogInterface, i) -> dismiss())
                 .create();
 
         dialog.setOnShowListener(dialogInterface -> setupSaveButton(dialog));
@@ -270,6 +270,6 @@ public class AddEventFragment extends DialogFragment {
     }
 
     private void showSuccessMessage() {
-        Toast.makeText(requireContext(), "Event added successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), LanguageManager.getLocalizedText(requireContext(), "event_added"), Toast.LENGTH_SHORT).show();
     }
 }
