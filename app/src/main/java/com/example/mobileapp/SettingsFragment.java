@@ -60,6 +60,7 @@ public class SettingsFragment extends Fragment {
 
     private TextView tvTheme;
     private TextView tvLanguage;
+    private TextView tvAbout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +70,7 @@ public class SettingsFragment extends Fragment {
 
         tvTheme = view.findViewById(R.id.tv_theme);
         tvLanguage = view.findViewById(R.id.tv_language);
+        tvAbout = view.findViewById(R.id.tv_about);
         tvTheme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,6 +84,32 @@ public class SettingsFragment extends Fragment {
                 transaction.commit();
             }
         });
+
+        tvAbout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AboutFragment aboutFragment = new AboutFragment();
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, aboutFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+            }
+        });
+
+        tvLanguage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LanguageFragment languageFragment = new LanguageFragment();
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, languageFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+            }
+        });
+
+
 
 
         return view;
