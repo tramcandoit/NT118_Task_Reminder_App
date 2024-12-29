@@ -170,10 +170,10 @@ public class AddTaskFragment extends DialogFragment {
             );
 
             // Đặt nút Lưu trong DatePickerDialog
-            datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, "Save", datePickerDialog);
+            datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, LanguageManager.getLocalizedText(requireContext(), "save"), datePickerDialog);
 
             // Đặt nút Hủy trong DatePickerDialog
-            datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, "Cancel", (dialog, which) -> dialog.cancel());
+            datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialog, which) -> dialog.cancel());
 
             // Hiển thị DatePickerDialog
             datePickerDialog.show();
@@ -200,10 +200,10 @@ public class AddTaskFragment extends DialogFragment {
                     }, hour, minute, true);
 
             // Đặt nút Lưu trong TimePickerDialog
-            timePickerDialog.setButton(TimePickerDialog.BUTTON_POSITIVE, "Lưu", timePickerDialog);
+            timePickerDialog.setButton(TimePickerDialog.BUTTON_POSITIVE, LanguageManager.getLocalizedText(requireContext(), "save"), timePickerDialog);
 
             // Đặt nút Hủy trong TimePickerDialog
-            timePickerDialog.setButton(TimePickerDialog.BUTTON_NEGATIVE, "Hủy", (dialog, which) -> dialog.cancel());
+            timePickerDialog.setButton(TimePickerDialog.BUTTON_NEGATIVE, LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialog, which) -> dialog.cancel());
 
             // Hiển thị TimePickerDialog
             timePickerDialog.show();
@@ -212,7 +212,7 @@ public class AddTaskFragment extends DialogFragment {
 
 
         builder.setView(dialogView)
-                .setPositiveButton("Save", (dialog, id) -> {
+                .setPositiveButton(LanguageManager.getLocalizedText(requireContext(), "save"), (dialog, id) -> {
                     // Lấy dữ liệu từ các trường EditText, Spinner
                     // Lấy dữ liệu từ các trường EditText, Spinner
                     task.setName(etName.getText().toString());
@@ -236,13 +236,13 @@ public class AddTaskFragment extends DialogFragment {
                     // Hiện thông báo thêm task thành công
                     showSuccessMessage();
                 })
-                .setNegativeButton("Cancel", (dialog, id) -> {
+                .setNegativeButton(LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialog, id) -> {
                     AddTaskFragment.this.getDialog().cancel();
                 });
 
         return builder.create();
     }
     private void showSuccessMessage() {
-        Toast.makeText(requireContext(), "Task added successfully", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), LanguageManager.getLocalizedText(requireContext(), "task_added"), Toast.LENGTH_SHORT).show();
     }
 }
