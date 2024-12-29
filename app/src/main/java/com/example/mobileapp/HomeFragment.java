@@ -1,5 +1,9 @@
 package com.example.mobileapp;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +50,23 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+    private void cancelNotification(Task task) {
+        Context context = requireContext();
+        Intent intent = new Intent(context, TaskNotificationReceiver.class);
+        intent.putExtra("taskName", task.getName());
+        intent.putExtra("taskDescription", task.getDescription());
+        intent.putExtra("taskId", task.getTaskId());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context,
+                task.getTaskId(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
     }
 
     @Override
@@ -116,6 +137,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Task task = tasksList.get(position);
 
+                cancelNotification(task);   // Hủy thông báo trước khi xóa
                 db.deleteTask(task); // Xóa khỏi database
                 tasksList.remove(position);
                 lvAdapter.notifyDataSetChanged();
