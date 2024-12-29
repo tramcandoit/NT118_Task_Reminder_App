@@ -1,12 +1,17 @@
-package com.example.mobileapp.Database;
+package com.example.mobileapp;
 
-import java.util.ArrayList;
-import java.util.List;
+import static android.content.ContentValues.TAG;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class TaskDatabaseHandler extends SQLiteOpenHelper {
     // All Static variables
     // Database Version
@@ -37,7 +42,7 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
         String CREATE_TASKS_TABLE = "CREATE TABLE " +
                 TABLE_TASKS + "("
                 + KEY_TASKID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + KEY_USERID + " INTEGER,"
+                + KEY_USERID + " INTEGER ,"
                 + KEY_CATEGORYID + " INTEGER,"
                 + KEY_NAME + " TEXT,"
                 + KEY_PRIORITY + " INTEGER,"
@@ -61,6 +66,7 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
 
     // Adding new contact
     public long addTask(Task task) {
+        Log.d(TAG, "Adding event: " + task.getName() + " on " +task.getDate());
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_USERID, task.getUserId());
@@ -75,6 +81,11 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
 
         // Inserting Row
         long id = db.insert(TABLE_TASKS, null, values);
+        if (id == -1) {
+            Log.e(TAG, "Failed to insert event: " + task.getName());
+        } else {
+            Log.d(TAG, "Event added with id: ");
+        }
         db.close(); // Close database connection
         return id;
     }
@@ -125,7 +136,7 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
             do {
                 Task Task = new Task();
                 Task.setTaskId(Integer.parseInt(cursor.getString(0)));
-                Task.setUserId(Integer.parseInt(cursor.getString(1)));
+//                Task.setUserId(Integer.parseInt(cursor.getString(1)));
                 Task.setCategoryId(Integer.parseInt(cursor.getString(2)));
                 Task.setName(cursor.getString(3));
                 Task.setPriority(cursor.getString(4));
@@ -138,6 +149,7 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
                 TaskList.add(Task);
             } while (cursor.moveToNext());
         }
+        cursor.close();
         // return Task list
         return TaskList;
     }

@@ -11,13 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-
-import com.example.mobileapp.Database.TaskDatabaseHandler;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,6 +64,7 @@ public class AddTaskFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         // Khởi tạo biến Task
         final Task task = new Task();
+        db = new TaskDatabaseHandler(requireContext());
 
         // Tạo AlertDialog để hiển thị chi tiết thông tin
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -224,7 +224,7 @@ public class AddTaskFragment extends DialogFragment {
                     task.setDescription(etDescription.getText().toString());
 
                     // Thêm vào Database
-                    // db.addTask(task);
+                    db.addTask(task);
 
                     // Thêm vào danh sách tasks ở HomeFragment
                     if (listener != null) {
@@ -233,11 +233,16 @@ public class AddTaskFragment extends DialogFragment {
 
                     // Sau khi lưu, đóng dialog
                     dismiss();
+                    // Hiện thông báo thêm task thành công
+                    showSuccessMessage();
                 })
                 .setNegativeButton("Cancel", (dialog, id) -> {
                     AddTaskFragment.this.getDialog().cancel();
                 });
 
         return builder.create();
+    }
+    private void showSuccessMessage() {
+        Toast.makeText(requireContext(), "Task added successfully", Toast.LENGTH_SHORT).show();
     }
 }
