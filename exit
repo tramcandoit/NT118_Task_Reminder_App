@@ -1,0 +1,260 @@
+[33mcommit ba352452f79f6f6622d5de7c14de8f6996cc6438[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mTrangg[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/Khang[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31morigin/Danh[m[33m, [m[1;32mmaster[m[33m)[m
+Merge: 8c2fa07 087709a
+Author: Trần Ngọc Danh <160441333+kenjima3301@users.noreply.github.com>
+Date:   Sun Dec 29 15:20:14 2024 +0700
+
+    Merge pull request #48 from tramcandoit/Khanh
+    
+    Update
+
+[33mcommit 087709a4645a9c1d481bacd07f77b9a86baaf63f[m
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Sun Dec 29 14:05:02 2024 +0700
+
+    Add missing Vietnamese preference for Add Task, Add Event fragment, etc...
+
+[33mcommit c2de0e4137e4c91ec1bd3171db5e0d7e62c12e19[m
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Sun Dec 29 13:16:14 2024 +0700
+
+    Add change languague function and bring up some fragment at SettingsFragment
+
+[33mcommit 8c2fa0773d9655abfbc43bf5371a82aa62b38589[m
+Merge: 5ddb0a8 e33435c
+Author: Pham Huynh Tan Khang <165039295+VitalsZen@users.noreply.github.com>
+Date:   Sun Dec 29 11:12:55 2024 +0700
+
+    Merge pull request #45 from tramcandoit/Danh
+    
+    Update database for task
+
+[33mcommit e33435cd05d90d0f3330abf2d814130c464595b5[m
+Author: kenjima3301 <danhtran3301@gmail.com>
+Date:   Sun Dec 29 10:54:34 2024 +0700
+
+    Update database for task
+
+[33mcommit 5ddb0a85ce1ad2ddc1d673337e6ffa2ba6faae59[m
+Merge: f32f79d 5bac484
+Author: Pham Huynh Tan Khang <165039295+VitalsZen@users.noreply.github.com>
+Date:   Sat Dec 28 17:50:57 2024 +0700
+
+    Merge pull request #44 from tramcandoit/Khanh
+    
+    Cập nhật các tính năng liên quan tới Event
+
+[33mcommit 5bac48448842d022e7f2fac69d0ceac49bd8fc72[m
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Sat Dec 28 16:42:12 2024 +0700
+
+    Thêm thông báo cho event, thêm tính năng chọn ngày để xem event theo từng ngày
+
+[33mcommit fcd464e64f99e559439883218a8cd449505d0342[m
+Merge: dd61c50 f32f79d
+Author: Le Huu Khanh <khanhledsdh@gmail.com>
+Date:   Sat Dec 28 15:51:15 2024 +0700
+
+    Merge pull request #43 from tramcandoit/master
+    
+    Merge pull request #42 from tramcandoit/Khanh
+
+[33mcommit dd61c5044d886c537a5343ada4da07c0429f268a[m
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Sat Dec 28 15:50:24 2024 +0700
+
+    Add Notification For Events
+
+[33mcommit f32f79d9409da8356f746eb313d57a45d2dfaea1[m
+Merge: dfa7183 1020ed1
+Author: Trần Ngọc Danh <160441333+kenjima3301@users.noreply.github.com>
+Date:   Sat Dec 28 15:39:06 2024 +0700
+
+    Merge pull request #42 from tramcandoit/Khanh
+    
+    Khanh
+
+[33mcommit 1020ed1dbbd9e602edbedaabef94f3e8e1f29b6a[m
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Sat Dec 28 14:37:47 2024 +0700
+
+    update calendar fragment
+
+[33mcommit b17bae94326d5d5eafe41205c1481b465eedd7de[m
+Merge: 284bd56 dfa7183
+Author: Le Huu Khanh <khanhledsdh@gmail.com>
+Date:   Sat Dec 28 12:48:31 2024 +0700
+
+    Merge branch 'master' into Khanh
+
+[33mcommit dfa7183cadf065459d4f9f6f3b208190452436a8[m
+Merge: dbf55a3 ee714a9
+Author: Trần Ngọc Danh <160441333+kenjima3301@users.noreply.github.com>
+Date:   Sat Dec 28 12:11:57 2024 +0700
+
+    Merge pull request #38 from tramcandoit/Khang
+    
+    Điều chỉnh giao diện
+
+[33mcommit 284bd562cf4f163d6a8cf4e0e157c2dd5b3bc2e1[m
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Fri Nov 8 16:17:17 2024 +0700
+
+    Update Database Event (them, xoa)
+
+[33mcommit a8f88339851894c4580d75031bf7aca985a0f506[m
+Merge: c560c10 dbf55a3
+Author: Le Huu Khanh <khanhledsdh@gmail.com>
+Date:   Fri Nov 8 14:07:36 2024 +0700
+
+    Merge pull request #39 from tramcandoit/master
+    
+    Update branch
+
+[33mcommit ee714a988a0c4e7ab53cb7286549c2af602c6394[m
+Author: Pham Huynh Tan Khang <22520624@gm.uit.edu.vn>
+Date:   Fri Nov 8 11:31:15 2024 +0700
+
+    điều chỉnh giao diện
+
+[33mcommit dbf55a3eedbbdecd8ef5329e4f915c33226be666[m
+Merge: c42c592 fbb7a75
+Author: Pham Huynh Tan Khang <165039295+VitalsZen@users.noreply.github.com>
+Date:   Fri Nov 8 08:37:01 2024 +0700
+
+    Merge pull request #37 from tramcandoit/Danh
+    
+    Danh
+
+[33mcommit fbb7a75d84bc575ee55eb933d8b1be3543ef96b9[m
+Author: kenjima3301 <danhtran3301@gmail.com>
+Date:   Fri Nov 8 08:31:48 2024 +0700
+
+    Cập nhật tính năng Calendar
+    
+    - Sửa đổi giao diện hiện thị các event
+    - Hiển thị chi tiết event khi nhấn
+
+[33mcommit 05c3994bff944e2a244682035c698b186c2b0056[m
+Merge: 852a926 c42c592
+Author: kenjima3301 <danhtran3301@gmail.com>
+Date:   Fri Nov 8 07:10:46 2024 +0700
+
+    Merge remote-tracking branch 'refs/remotes/origin/master' into Danh
+    
+    # Conflicts:
+    #       app/src/main/java/com/example/mobileapp/CalendarFragment.java
+
+[33mcommit c42c592cc14667c30b865ea7a352f3dd2704d8cf[m
+Merge: b8be0de c560c10
+Author: Trần Ngọc Danh <160441333+kenjima3301@users.noreply.github.com>
+Date:   Fri Nov 8 07:08:55 2024 +0700
+
+    Merge pull request #36 from tramcandoit/Khanh
+    
+    Khanh
+
+[33mcommit c560c10f0bcbc46a477c9be1827e0103cfb037a3[m
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Thu Nov 7 22:56:16 2024 +0700
+
+    Update tính năng Add Event
+
+[33mcommit 852a9262068d590de3c5bcda332789f450fc3626[m
+Author: kenjima3301 <danhtran3301@gmail.com>
+Date:   Thu Nov 7 20:58:32 2024 +0700
+
+    .
+
+[33mcommit 13f441ebb8023ce42a95e39253be53f53f07d717[m
+Merge: edb25cd b8be0de
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Thu Nov 7 20:40:10 2024 +0700
+
+    Merge pull request #35 from tramcandoit/master
+    
+    Update
+
+[33mcommit edb25cda6dc7e2c40dc4330ec5b7be0d555aae6d[m
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Thu Nov 7 20:21:02 2024 +0700
+
+    Thêm icon còn thiếu
+
+[33mcommit 1f210bd01ea094ca3d6684f88063ca00c6179257[m
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Thu Nov 7 20:11:55 2024 +0700
+
+    Update Calendar, thêm tính năng xóa highlight
+
+[33mcommit b8be0de1c0d7e79d3f1c8ffeb75b16b8c7ed396e[m
+Merge: 28b80fe 78f2e6f
+Author: BÙI THỊ NGỌC TRĂM <116325294+tramcandoit@users.noreply.github.com>
+Date:   Thu Nov 7 19:56:59 2024 +0700
+
+    Merge pull request #34 from tramcandoit/Khang
+    
+    Cài đặt tương tác chọn thời gian và giờ cho AddTaskFragment
+
+[33mcommit 78f2e6f5c06e89f1a201b20111beb87ea80b7df1[m
+Author: Pham Huynh Tan Khang <22520624@gm.uit.edu.vn>
+Date:   Thu Nov 7 19:51:48 2024 +0700
+
+    Cài đặt TimePicker và DatePicker cho AddTaskFragment
+
+[33mcommit 6f74afa8adac62b297909b24e65d0320d5492f8c[m
+Merge: e960fd5 28b80fe
+Author: Pham Huynh Tan Khang <22520624@gm.uit.edu.vn>
+Date:   Thu Nov 7 19:02:48 2024 +0700
+
+    Merge branch 'master' into Khang
+
+[33mcommit e960fd502b8cc6158cb14423fe4a7cdc677e54c2[m
+Merge: cc4ebfd 8677d41
+Author: Pham Huynh Tan Khang <22520624@gm.uit.edu.vn>
+Date:   Thu Nov 7 19:02:34 2024 +0700
+
+    Merge branch 'master' into Khang
+
+[33mcommit e983e17e4334fb64a9d0f331a06d147dd9cf6765[m
+Merge: 2a90957 28b80fe
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Thu Nov 7 18:36:33 2024 +0700
+
+    Merge pull request #33 from tramcandoit/master
+    
+    Update
+
+[33mcommit 28b80fe8f3e1053704c4fc50129f56cccddf5781[m
+Merge: e4c569f 06453d5
+Author: Pham Huynh Tan Khang <165039295+VitalsZen@users.noreply.github.com>
+Date:   Thu Nov 7 18:31:39 2024 +0700
+
+    Merge pull request #31 from tramcandoit/Danh
+    
+    Danh
+
+[33mcommit 2a90957b9969e23120252d5c52ffaa7a386521a2[m
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Thu Nov 7 18:25:57 2024 +0700
+
+    Thêm click event cho nút Theme ở SettingsFragment
+
+[33mcommit 6269f022785a4363de5a3b6830156cdeec92b0f6[m
+Merge: 2f09f62 e4c569f
+Author: KhanhLe04 <khanhledsdh@gmail.com>
+Date:   Thu Nov 7 18:13:49 2024 +0700
+
+    Merge remote-tracking branch 'origin/Khanh' into Khanh
+
+[33mcommit 06453d54a1c32ad7fe96bbdee266ed9e402deddf[m
+Author: kenjima3301 <danhtran3301@gmail.com>
+Date:   Thu Nov 7 17:31:34 2024 +0700
+
+    Hiển thị chi tiết Task khi được click vào
+
+[33mcommit 9e3fac3fcc8ac773e08623aa9ed5cacea325f09a[m
+Merge: b1222b7 e4c569f
+Author: kenjima3301 <danhtran3301@gmail.com>
+Date:   Thu Nov 7 15:45:40 2024 +0700
+
+    Merge remote-tracking branch 'refs/remotes/origin/master' i

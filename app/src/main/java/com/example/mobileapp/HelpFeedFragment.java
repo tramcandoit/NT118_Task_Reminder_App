@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class NotiSoundFragment extends Fragment {
+public class HelpFeedFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -31,7 +31,7 @@ public class NotiSoundFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_noti_sound, container, false);
+        View view = inflater.inflate(R.layout.fragment_help_feedback, container, false);
 
         tvSetting = view.findViewById(R.id.tv_settings);
         tvSetting.setOnClickListener(new View.OnClickListener() {
