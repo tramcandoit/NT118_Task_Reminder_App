@@ -145,13 +145,12 @@
                 >
 
                 <ImageView
+                    android:id="@+id/img_addtask_time"
                     android:layout_width="40dp"
                     android:layout_height="30dp"
-                    android:id="@+id/img_addtask_time"
-                    android:src="@drawable/icon_clock"
                     android:layout_marginTop="14dp"
                     android:gravity="center"
-                    />
+                    android:src="@drawable/icon_clock" />
 
                 <EditText
                     android:layout_width="wrap_content"
