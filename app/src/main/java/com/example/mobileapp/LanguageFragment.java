@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -15,7 +16,8 @@ import androidx.fragment.app.FragmentTransaction;
 public class LanguageFragment extends Fragment {
     private RadioGroup rgLanguage;
     private RadioButton rbEng, rbViet;
-    private TextView tvSetting, tvSave;
+    private LinearLayout tvSetting;
+    private TextView tvSave;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
