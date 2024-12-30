@@ -14,6 +14,7 @@ import java.util.List;
 
 public class TaskDatabaseHandler extends SQLiteOpenHelper {
     // All Static variables
+    private static final int ID_BOUND = 100000;
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
@@ -190,5 +191,24 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_TASKS, null, null); // Xóa tất cả các hàng trong bảng Tasks
         db.close();
+    }
+
+    private boolean checkIfIdExists(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT 1 FROM " + TABLE_TASKS + " WHERE event_id = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(id)});
+        boolean exists = cursor.moveToFirst(); // Returns true if the cursor found a record
+        cursor.close();
+        return exists;
+    }
+
+    public int generateUniqueRandomId() {
+        int randomId;
+        boolean idExists;
+        do {
+            randomId = (int) (Math.random() * ID_BOUND) + 1; // Generating a random number between 1 and ID_BOUND
+            idExists = checkIfIdExists(randomId);
+        } while (idExists);
+        return randomId;
     }
 }
