@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,8 +33,8 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private GridView gvCategories;
-    private CategoriesAdapter gvAdapter;
+    RecyclerView rvCategories;
+    CategoriesAdapter categoriesAdapter;
     private List<CategoriesItem> categories;
     private ListView listView;
     private TasksArrayAdapter lvAdapter;
@@ -75,6 +77,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
         lvAdapter.notifyDataSetChanged();
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,21 +86,46 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        gvCategories = view.findViewById(R.id.gv_home_categories);
+        rvCategories = view.findViewById(R.id.rv_home_categories);
         listView = view.findViewById(R.id.lv_Todaytask);
         db = new TaskDatabaseHandler(requireContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false); // Hoặc "this" nếu trong Activity
+        rvCategories.setLayoutManager(layoutManager);
 
+        int space = 35; // Khoảng cách giữa các item (trong pixel)
+        rvCategories.addItemDecoration(new HorizontalSpacingItemDecoration(space));
 
         categories = new ArrayList<>();
         categories.add(new CategoriesItem(R.drawable.icon_user, "Work"));
         categories.add(new CategoriesItem(R.drawable.icon_user, "Health"));
         categories.add(new CategoriesItem(R.drawable.icon_user, "Shopping"));
         categories.add(new CategoriesItem(R.drawable.icon_user, "Cooking"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Travel"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Music"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Misc"));
+        categories.add(new CategoriesItem(R.drawable.icon_user, "Study"));
 
-        gvAdapter = new CategoriesAdapter(requireActivity(), categories);
-        gvCategories.setAdapter(gvAdapter);
+
+
+
+        categoriesAdapter = new CategoriesAdapter(requireContext(), categories); // Hoặc "this" nếu trong Activity
+        rvCategories.setAdapter(categoriesAdapter);
+
+        if (categories.size() > 4) {
+            rvCategories.setHorizontalScrollBarEnabled(true);
+        } else {
+            rvCategories.setHorizontalScrollBarEnabled(false);
+        }
+
+        rvCategories.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+            }
+        });
 
         // Prepare some test data for list
         tasksList = new ArrayList<>();
@@ -111,11 +139,17 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Task clickedTask = tasksList.get(position);
+                int categoryId = clickedTask.getCategoryId();
 
-                // Lấy ra tên category từ ID
-                int categoryId = clickedTask.getCategoryId(); // Lấy categoryId (int - vị trí của category)
-                String categoryLabel = ((CategoriesItem) gvCategories.getItemAtPosition(categoryId)).getLabel(); //Lấy ra label từ category đã lưu
+                String categoryLabel = null; // Khởi tạo categoryLabel
 
+                // Tìm category theo ID (giả sử categoryId là vị trí trong danh sách)
+                if (categoryId >= 0 && categoryId < categories.size()) {
+                    categoryLabel = categories.get(categoryId).getLabel();
+                } else {
+                    // Xử lý trường hợp categoryId không hợp lệ (ví dụ: categoryId = -1)
+                    categoryLabel = "Unknown Category"; // Hoặc bất kỳ giá trị mặc định nào
+                }
                 // Tạo AlertDialog để hiển thị chi tiết task
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 builder.setTitle(clickedTask.getName());
@@ -148,4 +182,6 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
 
         return view;
     }
+
+
 }
