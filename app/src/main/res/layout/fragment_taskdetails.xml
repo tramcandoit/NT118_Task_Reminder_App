@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbarSize="8dp"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical"
+        tools:layout_editor_absoluteX="49dp"
+        tools:layout_editor_absoluteY="53dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/tv_taskdetail_tittle"
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="Task Detail"
+                android:textColor="@color/blue"
+                android:textSize="25sp"
+                android:textStyle="bold"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_taskdetail_taskname_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/task_name"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingRight="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_taskdetail_tittle" />
+
+            <TextView
+                android:id="@+id/tv_taskdetail_taskdetail_textbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:fontFamily="sans-serif"
+                android:background="@drawable/background_tasks_item"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:textSize="18sp"
+                android:inputType="text"
+                android:maxLines="1"
+                android:lines="1"
+                android:scrollHorizontally="true"
+                android:ellipsize="none"
+
+                app:layout_constraintStart_toEndOf="@id/tv_taskdetail_taskname_label"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_taskdetail_taskname_label" />
+
+
+            <TextView
+                android:id="@+id/tv_taskdetail_categories_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/category"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingRight="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_taskdetail_taskdetail_textbox" />
+
+            <TextView
+                android:id="@+id/tv_taskdetail_categories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/background_tasks_item"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                android:spinnerMode="dropdown"
+
+                app:layout_constraintLeft_toRightOf="@id/tv_taskdetail_categories_label"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_taskdetail_categories_label" />
+
+            <TextView
+                android:id="@+id/tv_taskdetail_date_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/date"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_taskdetail_categories" />
+
+            <LinearLayout
+                android:id="@+id/ll_date_input_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_taskdetail_date_label">
+
+                <ImageView
+                    android:id="@+id/img_taskdetail_date"
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center"
+                    android:src="@drawable/icon_calendar2"
+                    app:tint="@color/black" />
+
+                <TextView
+                    android:id="@+id/tv_taskdetail_date_selector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="7dp"
+                    android:background="@drawable/background_nostroke"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:hint="01/01/2001"
+                    android:minHeight="48dp"
+                    android:paddingHorizontal="20dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_time_input_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_date_input_layout">
+
+                <ImageView
+                    android:id="@+id/img_taskdetail_time"
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="14dp"
+                    android:gravity="center"
+                    android:src="@drawable/icon_clock"
+                    app:tint="@color/black" />
+
+                <TextView
+                    android:id="@+id/tv_taskdetail_time_selector"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="7dp"
+                    android:background="@drawable/background_nostroke"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:gravity="center"
+                    android:hint="12:12"
+                    android:minHeight="48dp"
+                    android:paddingHorizontal="20dp"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_taskdetail_priority_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/priority"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_time_input_layout" />
+
+            <TextView
+                android:id="@+id/sp_taskdetail_priority"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/background_tasks_item"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+
+                app:layout_constraintLeft_toRightOf="@id/tv_taskdetail_priority_label"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_taskdetail_priority_label" />
+
+            <TextView
+                android:id="@+id/tv_taskdetail_frequency_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/freq"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingEnd="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sp_taskdetail_priority" />
+
+            <TextView
+                android:id="@+id/tv_taskdetail_frequency_selector"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/background_tasks_item"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="5dp"
+                app:layout_constraintStart_toEndOf="@id/tv_taskdetail_frequency_label"
+                app:layout_constraintBaseline_toBaselineOf="@id/tv_taskdetail_frequency_label" />
+
+            <TextView
+                android:id="@+id/tv_taskdetail_description_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/description"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_taskdetail_frequency_selector" />
+
+            <TextView
+                android:id="@+id/tv_taskdetail_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/background_tasks_item"
+                android:gravity="left"
+                android:hint="@string/enter_notes"
+                android:minHeight="200dp"
+                android:padding="10dp"
+                android:scrollbarSize="8dp"
+                android:scrollbarStyle="insideOverlay"
+                android:scrollbars="vertical"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_taskdetail_description_label" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_taskdetail_description" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

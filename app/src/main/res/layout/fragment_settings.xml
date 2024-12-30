@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:src="@drawable/ic_arrow_right"
+            app:tint="@color/blue"
             app:layout_constraintBottom_toBottomOf="@+id/tv_account"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -69,6 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:src="@drawable/ic_arrow_right"
+            app:tint="@color/blue"
             app:layout_constraintBottom_toBottomOf="@+id/tv_noti_sound"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -94,6 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:src="@drawable/ic_arrow_right"
+            app:tint="@color/blue"
             app:layout_constraintBottom_toBottomOf="@+id/tv_productivity"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -119,6 +122,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:src="@drawable/ic_arrow_right"
+            app:tint="@color/blue"
             app:layout_constraintBottom_toBottomOf="@+id/tv_theme"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -144,6 +148,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:src="@drawable/ic_arrow_right"
+            app:tint="@color/blue"
             app:layout_constraintBottom_toBottomOf="@+id/tv_language"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -169,6 +174,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:src="@drawable/ic_arrow_right"
+            app:tint="@color/blue"
             app:layout_constraintBottom_toBottomOf="@+id/tv_help_feed"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -194,6 +200,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
             android:src="@drawable/ic_arrow_right"
+            app:tint="@color/blue"
             app:layout_constraintBottom_toBottomOf="@+id/tv_about"
             app:layout_constraintEnd_toEndOf="parent" />
 

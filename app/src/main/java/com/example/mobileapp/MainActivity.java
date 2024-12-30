@@ -1,6 +1,5 @@
 package com.example.mobileapp;
 
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -19,30 +18,28 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
+    private FloatingActionButton btn_add;
+    private static final String FAB_VISIBILITY_STATE = "fab_visibility_state";
+    private int savedVisibility = View.VISIBLE;
 
     private void addTask() {
         HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (homeFragment != null) {
             AddTaskFragment addTaskFragment = AddTaskFragment.newInstance(homeFragment);
             addTaskFragment.show(getSupportFragmentManager(), "addTaskFragment");
-        }
-        else {
-            // Xử lý nếu không tìm thấy HomeFragment, ví dụ: Log
+        } else {
             Log.e("MainActivity", "HomeFragment not found!");
         }
     }
 
-    private void addEvent()
-    {
+    private void addEvent() {
         CalendarFragment calendarFragment = (CalendarFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (calendarFragment != null) {
             AddEventFragment addEventFragment = AddEventFragment.newInstance(calendarFragment);
             addEventFragment.show(getSupportFragmentManager(), "addEventFragment");
         }
-
     }
 
     private void createNotificationChannel() {
@@ -58,18 +55,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        // Lấy chế độ đã lưu từ SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("ThemePrefs", Context.MODE_PRIVATE);
         int savedThemeMode = sharedPreferences.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_NO);
-
-        // Áp dụng chế độ trước khi hiển thị giao diện
         AppCompatDelegate.setDefaultNightMode(savedThemeMode);
 
         super.onCreate(savedInstanceState);
@@ -80,55 +69,68 @@ public class MainActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
+
         bottomNavigationView = findViewById(R.id.view_bottom_navigation);
-        FloatingActionButton btn_add = findViewById(R.id.fab_add);
+        btn_add = findViewById(R.id.fab_add);
 
 
+        if (savedInstanceState != null) {
+            savedVisibility = savedInstanceState.getInt(FAB_VISIBILITY_STATE);
+            btn_add.setVisibility(savedVisibility);
+        }
 
-        // Load the default fragment (HomeFragment) initially
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new HomeFragment())
                     .commit();
         }
 
-        // Set up the BottomNavigationView listener to switch between fragments
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment selectedFragment = null;
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> onNavigationItemSelected(item));
 
-                if (item.getItemId() == R.id.nav_calendar) {
-                    selectedFragment = new CalendarFragment();
-                    btn_add.setVisibility(View.VISIBLE);
-                } else if (item.getItemId() == R.id.nav_list) {
-                    selectedFragment = new ListFragment();
-                    btn_add.setVisibility(View.GONE);
-                } else if (item.getItemId() == R.id.nav_settings) {
-                    selectedFragment = new SettingsFragment();
-                    btn_add.setVisibility(View.GONE);
-                } else if (item.getItemId() == R.id.nav_home) { // Assuming there is a home menu item
-                    selectedFragment = new HomeFragment();
-                    btn_add.setVisibility(View.VISIBLE);
-                }
-
-                // Replace the fragment in the container
-                if (selectedFragment != null) {
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, selectedFragment)
-                            .commit();
-                }
-                return true;
-            }
-        });
 
         btn_add.setOnClickListener(v -> {
             if (bottomNavigationView.getSelectedItemId() == R.id.nav_home) {
                 addTask();
-            }
-            else if (bottomNavigationView.getSelectedItemId() == R.id.nav_calendar) {
+            } else if (bottomNavigationView.getSelectedItemId() == R.id.nav_calendar) {
                 addEvent();
             }
         });
     }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(FAB_VISIBILITY_STATE, btn_add.getVisibility());
+    }
+
+
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Fragment selectedFragment = null;
+
+        if (item.getItemId() == R.id.nav_calendar) {
+            selectedFragment = new CalendarFragment();
+        } else if (item.getItemId() == R.id.nav_list) {
+            selectedFragment = new ListFragment();
+        } else if (item.getItemId() == R.id.nav_settings) {
+            selectedFragment = new SettingsFragment();
+        } else if (item.getItemId() == R.id.nav_home) {
+            selectedFragment = new HomeFragment();
+        }
+
+        if (selectedFragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, selectedFragment)
+                    .commit();
+
+            if (item.getItemId() == R.id.nav_home || item.getItemId() == R.id.nav_calendar) {
+                savedVisibility = View.VISIBLE;
+            } else {
+                savedVisibility = View.GONE;
+            }
+            btn_add.setVisibility(savedVisibility); // Đảm bảo đặt lại savedVisibility
+        }
+        return true;
+    }
+
 }
