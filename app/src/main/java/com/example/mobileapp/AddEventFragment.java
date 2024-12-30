@@ -35,7 +35,7 @@ import java.util.Locale;
 public class AddEventFragment extends DialogFragment {
     private static final int MAX_NAME_LENGTH = 50;
     private static final int MAX_DESCRIPTION_LENGTH = 200;
-    private static final List<String> VALID_FREQUENCIES = Arrays.asList("Weekly", "Monthly", "Once");
+    private static final List<String> VALID_FREQUENCIES = Arrays.asList("Once", "Monthly", "Yearly");
     private static final String NOTIFICATION_CHANNEL_ID = "events_channel";
 
     private EditText etEventName;
@@ -170,11 +170,11 @@ public class AddEventFragment extends DialogFragment {
                             pendingIntent
                     );
                     break;
-                case "Weekly":
+                case "Yearly":
                     alarmManager.setRepeating(
                             AlarmManager.RTC_WAKEUP,
                             calendar.getTimeInMillis(),
-                            AlarmManager.INTERVAL_DAY * 7,
+                            AlarmManager.INTERVAL_DAY * 365,
                             pendingIntent
                     );
                     break;

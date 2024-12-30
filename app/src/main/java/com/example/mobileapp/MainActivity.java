@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Lấy theme đã lưu và áp dụng
