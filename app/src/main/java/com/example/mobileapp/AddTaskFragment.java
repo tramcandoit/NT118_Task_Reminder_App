@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,6 +41,8 @@ public class AddTaskFragment extends DialogFragment {
 
 
     TaskDatabaseHandler db;
+    CategoryDatabaseHandler categoryDb;
+    List<CategoriesItem> categories;
     List<Task> tasks;
     ArrayList<Task> taskArrayList;
     TasksArrayAdapter taskAdapter;
@@ -146,6 +149,7 @@ public class AddTaskFragment extends DialogFragment {
         // Khởi tạo biến Task
         final Task task = new Task();
         db = new TaskDatabaseHandler(requireContext());
+        categoryDb = new CategoryDatabaseHandler(requireContext());
 
         // Tạo AlertDialog để hiển thị chi tiết thông tin
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -165,11 +169,12 @@ public class AddTaskFragment extends DialogFragment {
 
 
         // Categories spinner
-        List<CategoriesItem> categories = new ArrayList<>();
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Work"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Health"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Shopping"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Cooking"));
+        categories = new ArrayList<>();
+        categories = categoryDb.getAllCategories();
+//        categories.add(new CategoriesItem(1111, 111, "Work", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(2222, 111, "Health", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(3333, 111, "Shopping", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(4444, 111, "Cooking", R.drawable.icon_user));
         SpinnerAdapter categoryAdapter = new SpinnerAdapter(getContext(), categories);
         spCategories.setAdapter(categoryAdapter);
         spCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -222,71 +227,73 @@ public class AddTaskFragment extends DialogFragment {
         });
 
 
-        // Cài đặt tương tác về thời gian
-        // Tạo một instance của Calendar để lấy ngày hiện tại
-        final Calendar calendar = Calendar.getInstance();
-
-        // Định dạng ngày dd/mm/yyyy
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
 
-        // Chuyển ngày hiện tại thành chuỗi và gán cho etDate
         String currentDate = sdf.format(calendar.getTime());
-
         etDate.setText(currentDate);
-        //Gắn sự kiện chọn ngày
-        etDate.setOnClickListener(v -> {
 
-            // Mở DatePickerDialog
+        etDate.setOnClickListener(v -> {
             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
                     (view, year, monthOfYear, dayOfMonth) -> {
+                        Calendar selectedCalendar = Calendar.getInstance();
+                        selectedCalendar.set(year, monthOfYear, dayOfMonth);
 
-                        calendar.set(year, monthOfYear, dayOfMonth);
-                        String selectedDate = sdf.format(calendar.getTime());
-
-                        // Đặt ngày đã chọn vào etDate
-                        etDate.setText(selectedDate);
+                        if (selectedCalendar.before(calendar)) {
+                            Toast.makeText(getContext(), "Vui lòng chọn ngày sau " + etDate.getText(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            String selectedDate = sdf.format(selectedCalendar.getTime());
+                            etDate.setText(selectedDate);
+                        }
                     },
-                    // Đặt ngày ban đầu cho DatePickerDialog (ngày hiện tại)
                     calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
             );
 
-            // Đặt nút Lưu trong DatePickerDialog
             datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, LanguageManager.getLocalizedText(requireContext(), "save"), datePickerDialog);
-
-            // Đặt nút Hủy trong DatePickerDialog
             datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialog, which) -> dialog.cancel());
-
-            // Hiển thị DatePickerDialog
             datePickerDialog.show();
         });
 
 
-        // Định dạng giờ hiện tại
         SimpleDateFormat sdf_time = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        String currentTime = sdf_time.format(calendar.getTime());
+        SimpleDateFormat sdf_date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()); // Thêm sdf_date
+        SimpleDateFormat sdf_datetime = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()); // Thêm sdf_datetime
 
-        // Gán giờ hiện tại vào etTime
+        String currentTime = sdf_time.format(calendar.getTime());
         etTime.setText(currentTime);
+
         etTime.setOnClickListener(v -> {
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
             int minute = calendar.get(Calendar.MINUTE);
-            // Mở TimePickerDialog
+
             TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
                     (view, selectedHour, selectedMinute) -> {
-                        // Định dạng thời gian đã chọn thành "hh:mm"
-                        String selectedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
+                        try {
+                            // Lấy ngày từ etDate
+                            Date selectedDate = sdf_date.parse(etDate.getText().toString());
+                            Calendar selectedCalendar = Calendar.getInstance();
+                            selectedCalendar.setTime(selectedDate);
 
-                        // Đặt thời gian đã chọn vào etTime
-                        etTime.setText(selectedTime);
+                            // Đặt giờ đã chọn
+                            selectedCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+                            selectedCalendar.set(Calendar.MINUTE, selectedMinute);
+
+                            // So sánh với thời gian hiện tại
+                            if (selectedCalendar.before(Calendar.getInstance())) {
+                                Toast.makeText(getContext(), "Vui lòng chọn giờ sau " + etTime.getText(), Toast.LENGTH_SHORT).show();
+                            } else {
+                                String selectedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
+                                etTime.setText(selectedTime);
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                            // Xử lý lỗi parse date nếu cần
+                            Toast.makeText(getContext(), "Lỗi định dạng ngày", Toast.LENGTH_SHORT).show();
+                        }
                     }, hour, minute, true);
 
-            // Đặt nút Lưu trong TimePickerDialog
-            timePickerDialog.setButton(TimePickerDialog.BUTTON_POSITIVE, LanguageManager.getLocalizedText(requireContext(), "save"), timePickerDialog);
-
-            // Đặt nút Hủy trong TimePickerDialog
-            timePickerDialog.setButton(TimePickerDialog.BUTTON_NEGATIVE, LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialog, which) -> dialog.cancel());
-
-            // Hiển thị TimePickerDialog
+            timePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, LanguageManager.getLocalizedText(requireContext(), "save"), timePickerDialog);
+            timePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialog, which) -> dialog.cancel());
             timePickerDialog.show();
         });
 

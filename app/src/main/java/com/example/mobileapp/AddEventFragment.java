@@ -44,6 +44,7 @@ public class AddEventFragment extends DialogFragment {
     private EditText etDescription;
     private OnEventAddedListener listener;
     private EventDatabaseHandler event_db;
+    private Calendar calendar;
 
     public static AddEventFragment newInstance(OnEventAddedListener listener) {
         AddEventFragment fragment = new AddEventFragment();
@@ -79,8 +80,6 @@ public class AddEventFragment extends DialogFragment {
         spFrequency = view.findViewById(R.id.sp_addevent_frequency_selector);
         event_db = new EventDatabaseHandler(requireContext());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        etDate.setText(sdf.format(Calendar.getInstance().getTime()));
     }
 
     private void setupFrequencySpinner() {
@@ -92,26 +91,48 @@ public class AddEventFragment extends DialogFragment {
         frequencyAdapter.setDropDownViewResource(R.layout.addevent_spinner_item_text);
         spFrequency.setAdapter(frequencyAdapter);
     }
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
     private void setupDatePicker() {
+        calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        etDate.setText(sdf.format(calendar.getTime()));
+
         etDate.setOnClickListener(v -> showDatePicker());
     }
 
     private void showDatePicker() {
-        Calendar calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 getContext(),
                 (view, year, month, dayOfMonth) -> {
-                    String selectedDate = String.format(Locale.getDefault(),
-                            "%02d/%02d/%04d", dayOfMonth, month + 1, year);
-                    etDate.setText(selectedDate);
+                    Calendar selectedCalendar = Calendar.getInstance();
+                    selectedCalendar.set(year, month, dayOfMonth);
+
+                    // So sánh selectedCalendar với ngày hiện tại, bỏ qua giờ phút giây
+                    Calendar tomorrow = Calendar.getInstance();
+                    tomorrow.set(Calendar.HOUR_OF_DAY, 0);
+                    tomorrow.set(Calendar.MINUTE, 0);
+                    tomorrow.set(Calendar.SECOND, 0);
+                    tomorrow.set(Calendar.MILLISECOND, 0);
+                    tomorrow.add(Calendar.DAY_OF_MONTH, 1);
+
+
+                    if (selectedCalendar.compareTo(tomorrow) < 0 ) { // selectedCalendar < tomorrow
+                        Toast.makeText(getContext(), "Vui lòng chọn ngày từ hôm nay trở đi", Toast.LENGTH_SHORT).show();
+                    } else {
+                        String selectedDate = sdf.format(selectedCalendar.getTime());
+                        etDate.setText(selectedDate);
+                        calendar.setTime(selectedCalendar.getTime());
+                    }
+
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
         );
 
-        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, LanguageManager.getLocalizedText(requireContext(), "save"), datePickerDialog);
+        datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialog, which) -> dialog.cancel());
         datePickerDialog.show();
     }
 

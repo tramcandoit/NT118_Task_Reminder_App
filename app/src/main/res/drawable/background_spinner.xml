@@ -2,10 +2,10 @@
     <!-- Background shape with color, corners, and stroke -->
     <item>
         <shape>
-            <solid android:color="@color/light_blue_2" />
+            <solid android:color="@color/light_blue_3" />
             <corners android:radius="8dp" />
             <stroke
-                android:width="2dp"
+                android:width="1dp"
                 android:color="@color/light_gray" />
         </shape>
     </item>

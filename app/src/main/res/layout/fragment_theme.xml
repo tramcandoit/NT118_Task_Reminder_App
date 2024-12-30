@@ -10,16 +10,30 @@
     tools:context=".ThemeFragment">
 
     <!--  Text Settings  -->
-    <TextView
-        android:id="@+id/tv_settings"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settings"
-        android:textColor="@color/blue"
-        android:textSize="20sp"
-        app:drawableLeftCompat="@drawable/ic_arrow_left"
+        android:orientation="horizontal"
+        android:id="@+id/tv_settings"
+
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:tint="@color/blue"
+            android:src="@drawable/ic_arrow_left"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            app:tint="@color/blue"/>
+    </LinearLayout>
 
     <!--  Text theme   -->
     <TextView
@@ -34,17 +48,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
-
-    <!--  Text Save -->
-    <TextView
-        android:id="@+id/tv_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/save"
-        android:textColor="@color/blue"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_settings"
-        app:layout_constraintEnd_toEndOf="parent" />
 
     <!--  Choose theme  -->
     <androidx.constraintlayout.widget.ConstraintLayout
