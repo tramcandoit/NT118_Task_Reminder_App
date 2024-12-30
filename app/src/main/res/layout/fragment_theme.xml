@@ -35,17 +35,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <!--  Text Save -->
-    <TextView
-        android:id="@+id/tv_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/save"
-        android:textColor="@color/blue"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_settings"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <!--  Choose theme  -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_theme"

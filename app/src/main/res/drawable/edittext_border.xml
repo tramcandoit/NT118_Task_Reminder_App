@@ -4,10 +4,10 @@
     <!-- state focus -->
     <item android:state_focused="true">
         <shape>
-            <solid android:color="@color/white" />
+            <solid android:color="@color/light_blue_2" />
             <stroke
                 android:width="2dp"
-                android:color="@color/black" />
+                android:color="@color/grey" />
             <corners android:radius="10dp" />
         </shape>
     </item>
@@ -15,10 +15,10 @@
     <!-- Default state -->
     <item>
         <shape>
-            <solid android:color="@color/white" />
+            <solid android:color="@color/light_blue_3" />
             <stroke
                 android:width="1dp"
-                android:color="@color/grey" />
+                android:color="@color/light_gray" />
             <corners android:radius="10dp" />
         </shape>
     </item>
