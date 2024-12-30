@@ -109,20 +109,22 @@ public class AddEventFragment extends DialogFragment {
                     selectedCalendar.set(year, month, dayOfMonth);
 
                     // So sánh selectedCalendar với ngày hiện tại, bỏ qua giờ phút giây
-                    Calendar today = Calendar.getInstance();
-                    today.set(Calendar.HOUR_OF_DAY, 0);
-                    today.set(Calendar.MINUTE, 0);
-                    today.set(Calendar.SECOND, 0);
-                    today.set(Calendar.MILLISECOND, 0);
+                    Calendar tomorrow = Calendar.getInstance();
+                    tomorrow.set(Calendar.HOUR_OF_DAY, 0);
+                    tomorrow.set(Calendar.MINUTE, 0);
+                    tomorrow.set(Calendar.SECOND, 0);
+                    tomorrow.set(Calendar.MILLISECOND, 0);
+                    tomorrow.add(Calendar.DAY_OF_MONTH, 1);
 
 
-                    if (!selectedCalendar.after(today)) { // Kiểm tra selectedCalendar có sau today không (không bao gồm today)
-                        Toast.makeText(getContext(), "Vui lòng chọn ngày sau ngày hôm nay", Toast.LENGTH_SHORT).show();
+                    if (selectedCalendar.compareTo(tomorrow) < 0 ) { // selectedCalendar < tomorrow
+                        Toast.makeText(getContext(), "Vui lòng chọn ngày từ hôm nay trở đi", Toast.LENGTH_SHORT).show();
                     } else {
                         String selectedDate = sdf.format(selectedCalendar.getTime());
                         etDate.setText(selectedDate);
                         calendar.setTime(selectedCalendar.getTime());
                     }
+
                 },
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
