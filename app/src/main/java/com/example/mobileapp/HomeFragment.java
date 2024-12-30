@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +38,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
     private TasksArrayAdapter lvAdapter;
     private List<Task> tasksList;
     private TaskDatabaseHandler db;
+    private CategoryDatabaseHandler categoryDb;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -92,6 +91,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
         rvCategories = view.findViewById(R.id.rv_home_categories);
         listView = view.findViewById(R.id.lv_Todaytask);
         db = new TaskDatabaseHandler(requireContext());
+        categoryDb = new CategoryDatabaseHandler(requireContext());
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false); // Hoặc "this" nếu trong Activity
         rvCategories.setLayoutManager(layoutManager);
 
@@ -99,14 +99,15 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
         rvCategories.addItemDecoration(new HorizontalSpacingItemDecoration(space));
 
         categories = new ArrayList<>();
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Work"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Health"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Shopping"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Cooking"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Travel"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Music"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Misc"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Study"));
+        categories = categoryDb.getAllCategories();
+//        categories.add(new CategoriesItem(1111, 111, "Work", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(2222, 111, "Health", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(3333, 111, "Shopping", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(4444, 111, "Cooking", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(5555, 111, "Travel", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(6666, 111, "Music", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(7777, 111, "Misc", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(8888, 111, "Study", R.drawable.icon_user));
 
 
 
@@ -130,7 +131,6 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
         // Prepare some test data for list
         tasksList = new ArrayList<>();
         tasksList = db.getAllTasks();
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
 
         lvAdapter = new TasksArrayAdapter(requireActivity(), tasksList);
         listView.setAdapter(lvAdapter);
@@ -144,8 +144,8 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
                 String categoryLabel = null; // Khởi tạo categoryLabel
 
                 // Tìm category theo ID (giả sử categoryId là vị trí trong danh sách)
-                if (categoryId >= 0 && categoryId < categories.size()) {
-                    categoryLabel = categories.get(categoryId).getLabel();
+                if (categoryId >= 0) {
+                    categoryLabel = categories.get(categoryId).getName();
                 } else {
                     // Xử lý trường hợp categoryId không hợp lệ (ví dụ: categoryId = -1)
                     categoryLabel = "Unknown Category"; // Hoặc bất kỳ giá trị mặc định nào

@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
-import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,6 +41,8 @@ public class AddTaskFragment extends DialogFragment {
 
 
     TaskDatabaseHandler db;
+    CategoryDatabaseHandler categoryDb;
+    List<CategoriesItem> categories;
     List<Task> tasks;
     ArrayList<Task> taskArrayList;
     TasksArrayAdapter taskAdapter;
@@ -147,6 +149,7 @@ public class AddTaskFragment extends DialogFragment {
         // Khởi tạo biến Task
         final Task task = new Task();
         db = new TaskDatabaseHandler(requireContext());
+        categoryDb = new CategoryDatabaseHandler(requireContext());
 
         // Tạo AlertDialog để hiển thị chi tiết thông tin
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -166,11 +169,12 @@ public class AddTaskFragment extends DialogFragment {
 
 
         // Categories spinner
-        List<CategoriesItem> categories = new ArrayList<>();
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Work"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Health"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Shopping"));
-        categories.add(new CategoriesItem(R.drawable.icon_user, "Cooking"));
+        categories = new ArrayList<>();
+        categories = categoryDb.getAllCategories();
+//        categories.add(new CategoriesItem(1111, 111, "Work", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(2222, 111, "Health", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(3333, 111, "Shopping", R.drawable.icon_user));
+//        categories.add(new CategoriesItem(4444, 111, "Cooking", R.drawable.icon_user));
         SpinnerAdapter categoryAdapter = new SpinnerAdapter(getContext(), categories);
         spCategories.setAdapter(categoryAdapter);
         spCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

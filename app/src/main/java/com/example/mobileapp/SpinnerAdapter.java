@@ -38,7 +38,7 @@ public class SpinnerAdapter extends ArrayAdapter<CategoriesItem> {
         TextView label = view.findViewById(R.id.tv_dropdownlist_label);
 
         icon.setImageResource(category.getIconResId());
-        label.setText(category.getLabel());
+        label.setText(category.getName());
 
 
         return view;
