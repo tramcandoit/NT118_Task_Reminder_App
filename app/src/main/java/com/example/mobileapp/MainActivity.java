@@ -58,6 +58,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void navigateToCalendarFragment() {
+        // Tạo fragment mới
+        CalendarFragment calendarFragment = new CalendarFragment();
+
+        // Thực hiện transaction
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, calendarFragment)
+                .commit();
+
+        // Chon tab tuong ung
+        BottomNavigationView bottomNav = findViewById(R.id.view_bottom_navigation);
+        if (bottomNav != null) {
+            bottomNav.setSelectedItemId(R.id.nav_calendar); // ID của item calendar trong menu
+        }
+    }
 
 
 

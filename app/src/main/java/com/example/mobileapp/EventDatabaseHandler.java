@@ -147,5 +147,148 @@ public class EventDatabaseHandler extends SQLiteOpenHelper {
         return randomId;
     }
 
+    public List<Event> getEventsByDate(String date) {
+        List<Event> eventList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Truy vấn các event có ngày trùng khớp
+        Cursor cursor = db.query(
+                TABLE_EVENTS,
+                null,
+                KEY_DATE + " = ?",
+                new String[]{date},
+                null,
+                null,
+                null
+        );
+
+        // Đọc dữ liệu từ cursor
+        if (cursor.moveToFirst()) {
+            do {
+                Event ev = new Event();
+                ev.setEventId(cursor.getInt(cursor.getColumnIndex(KEY_EVENTID)));
+                ev.setName(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
+                ev.setDate(cursor.getString(cursor.getColumnIndex(KEY_DATE)));
+                ev.setRepeat_frequency(cursor.getString(cursor.getColumnIndex(KEY_FREQ)));
+                ev.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
+
+                eventList.add(ev);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        // Log các sự kiện được tìm thấy
+        for (Event event : eventList) {
+            Log.d(TAG, "Event on " + date + ": " + event.getName());
+        }
+
+        return eventList;
+    }
+
+    // Phương thức để lấy các sự kiện sắp tới
+    public List<Event> getUpcomingEvents() {
+        List<Event> eventList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // Lấy ngày hiện tại
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String currentDate = sdf.format(new Date());
+
+        // Truy vấn các event từ ngày hiện tại trở đi
+        String query = "SELECT * FROM " + TABLE_EVENTS +
+                " WHERE date(substr(" + KEY_DATE + ", 7, 4) || '-' || " +
+                "substr(" + KEY_DATE + ", 4, 2) || '-' || " +
+                "substr(" + KEY_DATE + ", 1, 2)) >= date(?)";
+
+        Cursor cursor = db.rawQuery(query, new String[]{currentDate});
+
+        if (cursor.moveToFirst()) {
+            do {
+                Event ev = new Event();
+                ev.setEventId(cursor.getInt(cursor.getColumnIndex(KEY_EVENTID)));
+                ev.setName(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
+                ev.setDate(cursor.getString(cursor.getColumnIndex(KEY_DATE)));
+                ev.setRepeat_frequency(cursor.getString(cursor.getColumnIndex(KEY_FREQ)));
+                ev.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
+
+                eventList.add(ev);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return eventList;
+    }
+
+    // Phương thức để đặt lịch nhắc nhở cho các sự kiện
+    public void scheduleEventReminders(Context context) {
+        List<Event> upcomingEvents = getUpcomingEvents();
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        for (Event event : upcomingEvents) {
+            try {
+                // Chuyển đổi ngày sự kiện sang Calendar
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Date eventDate = sdf.parse(event.getDate());
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(eventDate);
+
+                // Tạo Intent cho BroadcastReceiver
+                Intent intent = new Intent(context, EventNotificationReceiver.class);
+                intent.putExtra("eventName", event.getName());
+                intent.putExtra("eventDescription", event.getDescription());
+                intent.putExtra("eventId", event.getEventId());
+
+                // Tạo PendingIntent
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                        context,
+                        event.getEventId(),
+                        intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                );
+
+                // Đặt thời gian nhắc nhở (ví dụ: vào 9 giờ sáng của ngày sự kiện)
+                calendar.set(Calendar.HOUR_OF_DAY, 9);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+
+                // Đặt báo thức
+                if (alarmManager != null) {
+                    alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.getTimeInMillis(),
+                            pendingIntent
+                    );
+                    Log.d(TAG, "Scheduled reminder for event: " + event.getName());
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error scheduling reminder", e);
+            }
+        }
+    }
+
+    // Phương thức hủy báo thức cho một sự kiện cụ thể
+    public void cancelEventReminder(Context context, int eventId) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(context, EventNotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context,
+                eventId,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        if (alarmManager != null) {
+            alarmManager.cancel(pendingIntent);
+            pendingIntent.cancel();
+            Log.d(TAG, "Canceled reminder for event ID: " + eventId);
+        }
+    }
+
+
 
 }
