@@ -76,7 +76,7 @@
         android:layout_marginTop="10dp"
         android:paddingStart="15dp"
         android:paddingEnd="20dp"
-        android:divider="@android:color/white"
+        android:divider="@color/white"
         android:dividerHeight="10dp"
         android:scrollbars="vertical"
         android:scrollbarStyle="insideOverlay"

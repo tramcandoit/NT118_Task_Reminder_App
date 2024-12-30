@@ -60,7 +60,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
-                android:background="@drawable/background_tasks_item"
+                android:background="@drawable/edittext_border"
 
                 app:layout_constraintTop_toBottomOf="@id/tv_addevent_eventname_label"
                 app:layout_constraintStart_toStartOf="parent"
@@ -102,7 +102,7 @@
                     android:layout_height="wrap_content"
 
                     android:id="@+id/et_addevent_date_selector"
-                    android:background="@drawable/background_nostroke"
+                    android:background="@drawable/edittext_border"
                     android:paddingHorizontal="20dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginStart="20dp"
@@ -154,7 +154,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/et_addevent_description"
-                android:background="@drawable/background_categories_item"
+                android:background="@drawable/edittext_border"
                 android:hint="@string/enter_notes"
                 android:textSize="20sp"
                 android:padding="10dp"
