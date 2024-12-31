@@ -179,7 +179,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
                 });
                 builder.setNeutralButton("Edit", (dialog, which) -> {
                     // Chỉnh sửa thông tin task
-                    
+
                 });
 
                 // Hiển thị AlertDialog
