@@ -23,13 +23,13 @@
             android:layout_marginTop="20dp">
 
             <TextView
-                android:id="@+id/tv_addtask_tittle"
+                android:id="@+id/tv_edittask_tittle"
                 android:layout_width="match_parent"
 
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:gravity="center"
-                android:text="Add Task"
+                android:text="Edit Task"
                 android:textColor="@color/blue"
                 android:textSize="25sp"
                 android:textStyle="bold"
@@ -39,7 +39,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_addtask_taskname_label"
+                android:id="@+id/tv_edittask_taskname_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -48,10 +48,10 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_addtask_tittle" />
+                app:layout_constraintTop_toBottomOf="@id/tv_edittask_tittle" />
 
             <EditText
-                android:id="@+id/tv_addtask_addtask_textbox"
+                android:id="@+id/tv_edittask_edittask_textbox"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="7dp"
@@ -66,10 +66,10 @@
                 android:lines="1"
 
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_addtask_taskname_label" />
+                app:layout_constraintTop_toBottomOf="@id/tv_edittask_taskname_label" />
 
             <TextView
-                android:id="@+id/tv_addtask_categories_label"
+                android:id="@+id/tv_edittask_categories_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -78,10 +78,10 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_addtask_addtask_textbox" />
+                app:layout_constraintTop_toBottomOf="@id/tv_edittask_edittask_textbox" />
 
             <Spinner
-                android:id="@+id/sp_addtask_categories"
+                android:id="@+id/sp_edittask_categories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
@@ -92,10 +92,10 @@
                 android:paddingVertical="5dp"
                 android:spinnerMode="dropdown"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_addtask_categories_label" />
+                app:layout_constraintTop_toBottomOf="@id/tv_edittask_categories_label" />
 
             <TextView
-                android:id="@+id/tv_addtask_date_label"
+                android:id="@+id/tv_edittask_date_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -105,7 +105,7 @@
                 android:textStyle="bold"
 
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sp_addtask_categories" />
+                app:layout_constraintTop_toBottomOf="@id/sp_edittask_categories" />
 
             <LinearLayout
                 android:id="@+id/ll_date_input_layout"
@@ -113,10 +113,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_addtask_date_label">
+                app:layout_constraintTop_toBottomOf="@id/tv_edittask_date_label">
 
                 <ImageView
-                    android:id="@+id/img_addtask_date"
+                    android:id="@+id/img_edittask_date"
                     android:layout_width="40dp"
                     android:layout_height="30dp"
                     android:layout_marginTop="14dp"
@@ -125,7 +125,7 @@
                     app:tint="@color/black" />
 
                 <EditText
-                    android:id="@+id/et_addtask_date_selector"
+                    android:id="@+id/et_edittask_date_selector"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -149,7 +149,7 @@
                 app:layout_constraintTop_toBottomOf="@id/ll_date_input_layout">
 
                 <ImageView
-                    android:id="@+id/img_addtask_time"
+                    android:id="@+id/img_edittask_time"
                     android:layout_width="40dp"
                     android:layout_height="30dp"
                     android:layout_marginTop="14dp"
@@ -158,7 +158,7 @@
                     app:tint="@color/black" />
 
                 <EditText
-                    android:id="@+id/et_addtask_time_selector"
+                    android:id="@+id/et_edittask_time_selector"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -175,7 +175,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_addtask_priority_label"
+                android:id="@+id/tv_edittask_priority_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -187,7 +187,7 @@
                 app:layout_constraintTop_toBottomOf="@id/ll_time_input_layout" />
 
             <Spinner
-                android:id="@+id/sp_addtask_priority"
+                android:id="@+id/sp_edittask_priority"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="7dp"
@@ -196,10 +196,10 @@
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_addtask_priority_label" />
+                app:layout_constraintTop_toBottomOf="@id/tv_edittask_priority_label" />
 
             <TextView
-                android:id="@+id/tv_addtask_frequency_label"
+                android:id="@+id/tv_edittask_frequency_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -208,10 +208,10 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sp_addtask_priority" />
+                app:layout_constraintTop_toBottomOf="@id/sp_edittask_priority" />
 
             <Spinner
-                android:id="@+id/sp_addtask_frequency_selector"
+                android:id="@+id/sp_edittask_frequency_selector"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="7dp"
@@ -220,10 +220,10 @@
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_addtask_frequency_label" />
+                app:layout_constraintTop_toBottomOf="@id/tv_edittask_frequency_label" />
 
             <TextView
-                android:id="@+id/tv_addtask_description_label"
+                android:id="@+id/tv_edittask_description_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -232,10 +232,10 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/sp_addtask_frequency_selector" />
+                app:layout_constraintTop_toBottomOf="@id/sp_edittask_frequency_selector" />
 
             <EditText
-                android:id="@+id/et_addtask_description"
+                android:id="@+id/et_edittask_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
@@ -249,13 +249,13 @@
                 android:scrollbars="vertical"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_addtask_description_label" />
+                app:layout_constraintTop_toBottomOf="@id/tv_edittask_description_label" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_addtask_description" />
+                app:layout_constraintTop_toBottomOf="@id/et_edittask_description" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
