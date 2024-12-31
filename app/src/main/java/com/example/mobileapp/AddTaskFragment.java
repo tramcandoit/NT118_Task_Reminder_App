@@ -167,26 +167,26 @@ public class AddTaskFragment extends DialogFragment {
         spFrequency = dialogView.findViewById(R.id.sp_addtask_frequency_selector);
         etDescription = dialogView.findViewById(R.id.et_addtask_description);
 
-
+        // ----------------------------------------------------------------------------------------- //
         // Categories spinner
         categories = new ArrayList<>();
         categories = categoryDb.getAllCategories();
-//        categories.add(new CategoriesItem(1111, 111, "Work", R.drawable.icon_user));
-//        categories.add(new CategoriesItem(2222, 111, "Health", R.drawable.icon_user));
-//        categories.add(new CategoriesItem(3333, 111, "Shopping", R.drawable.icon_user));
-//        categories.add(new CategoriesItem(4444, 111, "Cooking", R.drawable.icon_user));
+
         SpinnerAdapter categoryAdapter = new SpinnerAdapter(getContext(), categories);
         spCategories.setAdapter(categoryAdapter);
         spCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                CategoriesItem selectedCategory = (CategoriesItem) parent.getItemAtPosition(position);
-//                Toast.makeText(getContext(), "Selected Category: " + selectedCategory.getLabel(), Toast.LENGTH_SHORT).show();
+                if (position >= 0 && position < categories.size()) {
+                    CategoriesItem selectedCategory = categories.get(position); // Lấy trực tiếp từ danh sách categories
+                    Toast.makeText(getContext(), "Selected Category: " + selectedCategory.getName(), Toast.LENGTH_SHORT).show();
+                }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        // ----------------------------------------------------------------------------------------- //
         // Priority Spinner
         spPriority = dialogView.findViewById(R.id.sp_addtask_priority);
         List<String> priorities = new ArrayList<>();
@@ -206,12 +206,12 @@ public class AddTaskFragment extends DialogFragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        // ----------------------------------------------------------------------------------------- //
         // Frequency Spinner
         spFrequency = dialogView.findViewById(R.id.sp_addtask_frequency_selector);
         List<String> frequencies = new ArrayList<>();
         frequencies.add("Daily");
         frequencies.add("Weekly");
-//        frequencies.add("Monthly");
         frequencies.add("Once");
         ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, frequencies);
         frequencyAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
@@ -226,7 +226,8 @@ public class AddTaskFragment extends DialogFragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-
+        // ----------------------------------------------------------------------------------------- //
+        // Date Picker
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         Calendar calendar = Calendar.getInstance();
 
@@ -254,7 +255,8 @@ public class AddTaskFragment extends DialogFragment {
             datePickerDialog.show();
         });
 
-
+        // ----------------------------------------------------------------------------------------- //
+        // Time Picker
         SimpleDateFormat sdf_time = new SimpleDateFormat("HH:mm", Locale.getDefault());
         SimpleDateFormat sdf_date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()); // Thêm sdf_date
         SimpleDateFormat sdf_datetime = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()); // Thêm sdf_datetime
@@ -298,13 +300,13 @@ public class AddTaskFragment extends DialogFragment {
         });
 
 
-
+        // ----------------------------------------------------------------------------------------- //
+        // Ghi nhận các tham số và thêm vào Task
         builder.setView(dialogView)
                 .setPositiveButton(LanguageManager.getLocalizedText(requireContext(), "save"), (dialog, id) -> {
                     // Lấy dữ liệu từ các trường EditText, Spinner
-                    // Lấy dữ liệu từ các trường EditText, Spinner
                     task.setName(etName.getText().toString());
-                    task.setCategoryId(spCategories.getSelectedItemPosition());
+                    task.setCategoryId(categories.get(spCategories.getSelectedItemPosition()).getCategoryId()); // Lấy category từ danh sách categories với vị trí tương úng trong spinner spCategories, sau đó dùng getCategoryId()
                     task.setDate(etDate.getText().toString());
                     task.setTime(etTime.getText().toString());
                     task.setPriority(spPriority.getSelectedItem().toString());
