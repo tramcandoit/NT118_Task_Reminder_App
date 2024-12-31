@@ -34,8 +34,9 @@ android {
 
 dependencies {
 
-    implementation ("com.applandeo:material-calendar-view:1.9.2")
-
+    implementation("com.applandeo:material-calendar-view:1.9.2")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
