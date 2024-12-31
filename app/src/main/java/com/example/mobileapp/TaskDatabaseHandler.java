@@ -83,9 +83,9 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
         // Inserting Row
         long id = db.insert(TABLE_TASKS, null, values);
         if (id == -1) {
-            Log.e(TAG, "Failed to insert event: " + task.getName());
+            Log.e(TAG, "Failed to insert task: " + task.getName());
         } else {
-            Log.d(TAG, "Event added with id: ");
+            Log.d(TAG, "Task added with id: ");
         }
         db.close(); // Close database connection
         return id;

@@ -18,7 +18,7 @@ public class TaskNotificationReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String taskName = intent.getStringExtra("taskName");
         String taskDescription = intent.getStringExtra("taskDescription");
-        int taskId = intent.getIntExtra("taskId", 111);
+        int taskId = intent.getIntExtra("taskId", -1);
 
         // Lấy âm thanh thông báo mặc định
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
