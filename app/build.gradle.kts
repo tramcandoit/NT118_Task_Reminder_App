@@ -28,12 +28,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
-
+        isCoreLibraryDesugaringEnabled = true
     }
 }
 
 dependencies {
 
+    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.3") // Hoặc phiên bản mới nhất
     implementation("com.applandeo:material-calendar-view:1.9.2")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.0")

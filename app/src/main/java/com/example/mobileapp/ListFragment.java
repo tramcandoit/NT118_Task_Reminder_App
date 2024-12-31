@@ -128,7 +128,7 @@ public class ListFragment extends Fragment {
         Legend legend = pieChart.getLegend();
         legend.setTextSize(20f);
         legend.setFormSize(15f);
-        legend.setXEntrySpace(120f);
+        legend.setXEntrySpace(90f);
         legend.setFormToTextSpace(15f);
 
         pieChart.invalidate();
@@ -172,9 +172,9 @@ public class ListFragment extends Fragment {
         for (Task task : tasksList) {
             LocalDate dueDate = null;
             String testDate = task.getDate();
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 dueDate = LocalDate.parse(task.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            }
+//            }
             tasksByDate.put(dueDate, tasksByDate.getOrDefault(dueDate, 0) + 1);
         }
 
