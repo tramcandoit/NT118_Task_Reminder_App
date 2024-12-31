@@ -60,7 +60,7 @@ public class AddTaskFragment extends DialogFragment {
         Intent intent = new Intent(context, TaskNotificationReceiver.class);
         intent.putExtra("taskName", task.getName());
         intent.putExtra("taskDescription", task.getDescription());
-        intent.putExtra("taskId", task.getTaskId());
+        intent.putExtra("taskId", (int) task.getTaskId());
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context,
@@ -313,8 +313,9 @@ public class AddTaskFragment extends DialogFragment {
                     task.setRepeat_frequency(spFrequency.getSelectedItem().toString());
                     task.setDescription(etDescription.getText().toString());
 
-                    // Thêm vào Database
-                    db.addTask(task);
+                    // Thêm vào Database và lấy TaskId từ database để gán lại vào Task
+                    long TaskId = db.addTask(task);
+                    task.setTaskId((int) TaskId);
 
                     // Thêm vào danh sách tasks ở HomeFragment
                     if (listener != null) {
