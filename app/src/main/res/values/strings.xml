@@ -91,5 +91,6 @@
     <string name="wr_task_name_here">Write your task name here ...</string>
     <string name="priority">Priority</string>
     <string name="search_here">Search here</string>
+    <string name="delete">Delete</string>
 
 </resources>

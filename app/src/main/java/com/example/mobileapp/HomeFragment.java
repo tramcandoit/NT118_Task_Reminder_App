@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -147,17 +148,38 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
 
                 // Tạo AlertDialog để hiển thị chi tiết task
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                builder.setTitle(clickedTask.getName());
+                View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_taskdetails, null);
+                builder.setView(dialogView);
+
+                // Tìm các TextView trong dialog layout và thiết lập giá trị
+                TextView tvTaskdetailTaskdetailTextbox = dialogView.findViewById(R.id.tv_taskdetail_taskdetail_textbox);
+                TextView tvTaskdetailCategories = dialogView.findViewById(R.id.tv_taskdetail_categories);
+                TextView tvTaskdetailDateSelector = dialogView.findViewById(R.id.tv_taskdetail_date_selector);
+                TextView tvTaskdetailTimeSelector = dialogView.findViewById(R.id.tv_taskdetail_time_selector);
+                TextView tvTaskdetailPriority = dialogView.findViewById(R.id.sp_taskdetail_priority);
+                TextView tvTaskdetailFrequencySelector = dialogView.findViewById(R.id.tv_taskdetail_frequency_selector);
+                TextView tvTaskdetailDescription = dialogView.findViewById(R.id.tv_taskdetail_description);
 
                 // Tạo layout cho AlertDialog (nếu cần hiển thị nhiều thông tin hơn)
-                String taskDetails = "Time: " + clickedTask.getTime() + "\n" +
-                        "Category: " + categoryLabel + "\n" + //  Lấy tên category từ ID
-                        "Priority: " + clickedTask.getPriority() + "\n" +
-                        "Frequency: " + clickedTask.getRepeat_frequency() + "\n" +
-                        "Description: " + clickedTask.getDescription();
-                builder.setMessage(taskDetails);
+                tvTaskdetailTaskdetailTextbox.setText(clickedTask.getName());
+                tvTaskdetailCategories.setText(categoryLabel);
+                tvTaskdetailDateSelector.setText(clickedTask.getDate());
+                tvTaskdetailTimeSelector.setText(clickedTask.getTime());
+                tvTaskdetailPriority.setText(clickedTask.getPriority());
+                tvTaskdetailFrequencySelector.setText(clickedTask.getRepeat_frequency());
+                tvTaskdetailDescription.setText(clickedTask.getDescription());
+
                 builder.setPositiveButton("OK", null);
-                builder.show();
+                builder.setNeutralButton("Delete", (dialog, which) -> {
+                    // Xử lý xóa student
+                    cancelNotification(clickedTask);   // Hủy thông báo trước khi xóa
+                    db.deleteTask(clickedTask); // Xóa khỏi database
+                    tasksList.remove(position);
+                    lvAdapter.notifyDataSetChanged();
+                });
+                // Hiển thị AlertDialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
