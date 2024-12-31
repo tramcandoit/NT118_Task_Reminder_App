@@ -316,7 +316,7 @@ public class AddTaskFragment extends DialogFragment {
                     // Thêm vào Database và lấy TaskId từ database để gán lại vào Task
                     long TaskId = db.addTask(task);
                     task.setTaskId((int) TaskId);
-                    
+
                     // Thêm vào danh sách tasks ở HomeFragment
                     if (listener != null) {
                         listener.onTaskAdded(task);

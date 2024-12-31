@@ -14,7 +14,7 @@ public class Task {
 
     public Task() {
         this.userId = 111;
-        this.status = "incompleted"; // Mặc định là "incompleted"
+        this.status = "incomplete"; // Mặc định là "incomplete"
     }
 
     public Task(int categoryId, String name, String priority, String repeat_frequency, String date, String time, String description) {
@@ -22,7 +22,7 @@ public class Task {
         this.categoryId = categoryId;
         this.name = name;
         this.priority = priority;
-        this.status = "incompleted";
+        this.status = "incomplete";
         this.repeat_frequency = repeat_frequency;
         this.date = date;
         this.time = time;
