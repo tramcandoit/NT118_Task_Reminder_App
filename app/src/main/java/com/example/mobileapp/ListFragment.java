@@ -1,207 +1,209 @@
 package com.example.mobileapp;
 
-import android.content.Context;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.ListView;
-import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ListFragment #newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ListFragment extends Fragment {
 
-//    // TODO: Rename parameter arguments, choose names that match
-//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-//    private String mParam2;
-//
-//    public ListFragment() {
-//        // Required empty public constructor
-//    }
-//
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment ListFragment.
-//     */
-//    // TODO: Rename and change types and number of parameters
-//    public static ListFragment newInstance(String param1, String param2) {
-//        ListFragment fragment = new ListFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
+    private TaskDatabaseHandler taskDb;
+    private PieChart pieChart;
+    private BarChart barChart;
 
-    private ListView upcoming_task_ListView;
-    private List<String> upcoming_task_List;
-
-    private ListView overdue_task_ListView;
-    private List<String> overdue_task_List;
-
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-//        // Inflate the layout for this fragment
-//        View view = inflater.inflate(R.layout.fragment_list, container, false);
-//
-//        // Initialize the ListView for upcoming tasks
-//        upcoming_task_ListView = view.findViewById(R.id.upcoming_task_ListView);
-//
-//        // Create a list of sample events (using String for simplicity)
-//        upcoming_task_List = new ArrayList<>();
-//        upcoming_task_List.add("Sample upcoming task 1");
-//        upcoming_task_List.add("Sample upcoming task 2");
-//        upcoming_task_List.add("Sample upcoming task 3");
-//        upcoming_task_List.add("Sample upcoming task 4");
-//        upcoming_task_List.add("Sample upcoming task 5");
-//        upcoming_task_List.add("Sample upcoming task 6");
-//        upcoming_task_List.add("Sample upcoming task 7");
-//        upcoming_task_List.add("Sample upcoming task 8");
-//
-//        // Set up ArrayAdapter with the sample event list
-//        ArrayAdapter<String> upcoming_task_adapter = new ArrayAdapter<>(
-//                getContext(),
-//                android.R.layout.simple_list_item_1,
-//                upcoming_task_List
-//        );
-//
-//        // Attach the adapter to the ListView
-//        upcoming_task_ListView.setAdapter(upcoming_task_adapter);
-//
-//        // Set long click listener for deleting items
-//        upcoming_task_ListView.setOnItemLongClickListener((parent, view1, position, id) -> {
-//            // Remove the item from the list
-//            upcoming_task_List.remove(position);
-//            // Notify the adapter that the data has changed to refresh the ListView
-//            upcoming_task_adapter.notifyDataSetChanged();
-//            return true;
-//        });
-//
-//
-//        // Initialize the ListView for overdue tasks
-//        overdue_task_ListView = view.findViewById(R.id.overdue_task_ListView);
-//
-//        // Create a list of sample events (using String for simplicity)
-//        overdue_task_List = new ArrayList<>();
-//        overdue_task_List.add("Sample overdue task 1");
-//        overdue_task_List.add("Sample overdue task 2");
-//        overdue_task_List.add("Sample overdue task 3");
-//        overdue_task_List.add("Sample overdue task 4");
-//        overdue_task_List.add("Sample overdue task 5");
-//
-//        // Set up ArrayAdapter with the sample event list
-//        ArrayAdapter<String> overdue_task_adapter = new ArrayAdapter<>(
-//                getContext(),
-//                android.R.layout.simple_list_item_1,
-//                overdue_task_List
-//        );
-//
-//        // Attach the adapter to the ListView
-//        overdue_task_ListView.setAdapter(overdue_task_adapter);
-//
-//        // Set long click listener for deleting items
-//        overdue_task_ListView.setOnItemLongClickListener((parent, view1, position, id) -> {
-//            // Remove the item from the list
-//            overdue_task_List.remove(position);
-//            // Notify the adapter that the data has changed to refresh the ListView
-//            overdue_task_adapter.notifyDataSetChanged();
-//            return true;
-//        });
-//
-//        return view;
-        View view = inflater.inflate(R.layout.fragment_list, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_list, container, false); // Inflate layout cho fragment
 
-        // Initialize and set up upcoming tasks
-        upcoming_task_ListView = view.findViewById(R.id.upcoming_task_ListView);
-        upcoming_task_List = new ArrayList<>();
-        upcoming_task_List.add("Sample upcoming task 1");
-        upcoming_task_List.add("Sample upcoming task 2");
-        upcoming_task_List.add("Sample upcoming task 4");
-        upcoming_task_List.add("Sample upcoming task 5");
-        upcoming_task_List.add("Sample upcoming task 6");
-        upcoming_task_List.add("Sample upcoming task 7");
-        upcoming_task_List.add("Sample upcoming task 8");
-        upcoming_task_List.add("Sample upcoming task 9");
-        upcoming_task_List.add("Sample upcoming task 10");
+        pieChart = view.findViewById(R.id.pieChart); //  Lấy PieChart từ layout
+        barChart = view.findViewById(R.id.barChart);
+        taskDb = new TaskDatabaseHandler(requireContext()); // Khởi tạo database handler
+
+        setupPieChart(); // Thiết lập biểu đồ
+        loadPieChartData();  // Load dữ liệu cho biểu đồ
+
+        setupBarChart();
+        loadBarChartData(); // Load dữ liệu cho BarChart
 
 
-        // Set custom adapter for upcoming tasks
-        TaskAdapter upcoming_task_adapter = new TaskAdapter(getContext(), upcoming_task_List);
-        upcoming_task_ListView.setAdapter(upcoming_task_adapter);
 
-        // Initialize and set up overdue tasks
-        overdue_task_ListView = view.findViewById(R.id.overdue_task_ListView);
-        overdue_task_List = new ArrayList<>();
-        overdue_task_List.add("Sample overdue task 1");
-        overdue_task_List.add("Sample overdue task 2");
-        overdue_task_List.add("Sample overdue task 3");
-        overdue_task_List.add("Sample overdue task 4");
-        overdue_task_List.add("Sample overdue task 5");
-
-        // Set custom adapter for overdue tasks
-        TaskAdapter overdue_task_adapter = new TaskAdapter(getContext(), overdue_task_List);
-        overdue_task_ListView.setAdapter(overdue_task_adapter);
 
         return view;
     }
 
-    // Custom ArrayAdapter with CheckBox
-    private static class TaskAdapter extends ArrayAdapter<String> {
-
-        public TaskAdapter(Context context, List<String> tasks) {
-            super(context, 0, tasks);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_task_with_checkbox, parent, false);
-            }
-
-            CheckBox checkBox = convertView.findViewById(R.id.item_checkbox);
-            TextView textView = convertView.findViewById(R.id.item_text);
-
-            // Set task text
-            String task = getItem(position);
-            textView.setText(task);
-
-            // Handle checkbox state change if needed
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                // Perform action on checkbox checked state change, if necessary
-            });
-
-            return convertView;
-        }
+    // --------------------------------------------------------------------------------------------- //
+    private void setupPieChart() {
+        pieChart.setUsePercentValues(true); // Hiển thị phần trăm
+        pieChart.getDescription().setEnabled(false); // Ẩn mô tả
+        pieChart.setExtraOffsets(5, 10, 5, 5); // Khoảng cách giữa biểu đồ và viền
+        pieChart.setDragDecelerationFrictionCoef(0.95f);
+        pieChart.setDrawHoleEnabled(true); // Có lỗ ở giữa
+        pieChart.setHoleColor(Color.WHITE); // Màu sắc của lỗ
+        pieChart.setHoleRadius(30f);
+        pieChart.setTransparentCircleRadius(41f);
     }
+
+    private void loadPieChartData() {
+        List<Task> tasksList = taskDb.getAllTasks();
+        List<Task> incompleteTasks = new ArrayList<>();
+        List<Task> completedTasks = new ArrayList<>();
+
+        for (Task task : tasksList) {
+            String status = task.getStatus();
+            if (Objects.equals(task.getStatus(), "completed")) {
+                completedTasks.add(task);
+            } else {
+                incompleteTasks.add(task);
+            }
+        }
+        // Add some sample data for testing
+        Task completedTask_1 = new Task();
+        Task completedTask_2 = new Task();
+        Task completedTask_3 = new Task();
+        completedTask_1.setStatus("completed");
+        completedTask_2.setStatus("completed");
+        completedTask_3.setStatus("completed");
+        completedTasks.add(completedTask_1);
+        completedTasks.add(completedTask_2);
+        completedTasks.add(completedTask_3);
+
+        // Create pie entries for incomplete and completed tasks
+        List<PieEntry> entries = new ArrayList<>();
+        entries.add(new PieEntry(incompleteTasks.size(), "Incomplete"));
+        entries.add(new PieEntry(completedTasks.size(), "Completed"));
+
+        ArrayList<Integer> colors = new ArrayList<>();
+        for (int color: ColorTemplate.MATERIAL_COLORS) {
+            colors.add(color);
+        }
+
+        for (int color: ColorTemplate.VORDIPLOM_COLORS) {
+            colors.add(color);
+        }
+
+        // Thiết lập cỡ chữ cho incomplete và completed trên biểu đồ (chữ màu trắng)
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setColors(colors);
+        dataSet.setValueTextSize(20f);
+        dataSet.setValueTextColor(Color.WHITE);
+
+        // Thiết lập cỡ chữ cho phần trăm trên biểu đồ (chữ màu đen)
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter(pieChart));
+        data.setValueTextSize(20f);
+        data.setValueTextColor(Color.BLACK);
+        pieChart.setData(data);
+
+        // Thiết lập cỡ chữ cho phần chú thích dưới biểu đồ
+        Legend legend = pieChart.getLegend();
+        legend.setTextSize(20f);
+        legend.setFormSize(15f);
+        legend.setXEntrySpace(120f);
+        legend.setFormToTextSpace(15f);
+
+        pieChart.invalidate();
+    }
+    // --------------------------------------------------------------------------------------------- //
+    private void setupBarChart() {
+        barChart.getDescription().setEnabled(false); // Ẩn mô tả
+        barChart.setPinchZoom(false); // Không cho phép zoom
+        barChart.setDrawBarShadow(false); // Không vẽ bóng cho cột
+        barChart.setDrawGridBackground(false); // Không vẽ grid background
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM); // Đặt nhãn ngày ở dưới cùng
+        xAxis.setGranularity(1f); // Khoảng cách giữa các nhãn
+        xAxis.setDrawGridLines(false);
+
+
+        YAxis leftAxis = barChart.getAxisLeft();
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setAxisMinimum(0f); // Giá trị tối thiểu của trục y
+
+        YAxis rightAxis = barChart.getAxisRight();
+        rightAxis.setEnabled(false);
+
+        Legend legend = barChart.getLegend();
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setDrawInside(false);
+        legend.setForm(Legend.LegendForm.SQUARE);
+        legend.setFormSize(9f);
+        legend.setTextSize(18f);
+        legend.setXEntrySpace(4f);
+    }
+
+    private void loadBarChartData() {
+
+        List<Task> tasksList = taskDb.getAllTasks(); // Lấy tất cả task từ database
+
+        HashMap<LocalDate, Integer> tasksByDate = new HashMap<>();
+        for (Task task : tasksList) {
+            LocalDate dueDate = null;
+            String testDate = task.getDate();
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                dueDate = LocalDate.parse(task.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            }
+            tasksByDate.put(dueDate, tasksByDate.getOrDefault(dueDate, 0) + 1);
+        }
+
+        List<BarEntry> entries = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
+
+        int i = 0;
+        for (Map.Entry<LocalDate, Integer> entry : tasksByDate.entrySet()) {
+            entries.add(new BarEntry(i, entry.getValue()));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                labels.add(entry.getKey().format(DateTimeFormatter.ofPattern("dd/MM")));
+            }
+            i++;
+        }
+
+        BarDataSet dataSet = new BarDataSet(entries, "Tasks");
+        dataSet.setColors(ColorTemplate.MATERIAL_COLORS); // Tùy chỉnh màu sắc
+        dataSet.setValueTextColor(Color.BLACK);
+        dataSet.setValueTextSize(20f);
+
+        BarData data = new BarData(dataSet);
+        barChart.setData(data);
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
+        xAxis.setLabelCount(labels.size());
+
+
+        barChart.invalidate(); // Refresh biểu đồ
+    }
+    // --------------------------------------------------------------------------------------------- //
 }

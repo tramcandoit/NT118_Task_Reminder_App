@@ -61,7 +61,7 @@
     <string name="categories">Thể loại</string>
     <string name="no_ev_today">Không có sự kiện hôm nay</string>
     <string name="no_ev_on">Không có sự kiện vào</string>
-    <string name="all_task">Tất cả nhiệm vụ</string>
+    <string name="progress_overview">Tổng quan tiến độ</string>
     <string name="upcoming">Sắp tới</string>
     <string name="overdue">Quá hạn</string>
     <string name="calendar">Lịch</string>
