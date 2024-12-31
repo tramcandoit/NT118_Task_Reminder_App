@@ -170,13 +170,18 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
                 tvTaskdetailDescription.setText(clickedTask.getDescription());
 
                 builder.setPositiveButton("OK", null);
-                builder.setNeutralButton("Delete", (dialog, which) -> {
+                builder.setNegativeButton("Delete", (dialog, which) -> {
                     // Xử lý xóa student
                     cancelNotification(clickedTask);   // Hủy thông báo trước khi xóa
                     db.deleteTask(clickedTask); // Xóa khỏi database
                     tasksList.remove(position);
                     lvAdapter.notifyDataSetChanged();
                 });
+                builder.setNeutralButton("Edit", (dialog, which) -> {
+                    // Chỉnh sửa thông tin task
+                    
+                });
+
                 // Hiển thị AlertDialog
                 AlertDialog dialog = builder.create();
                 dialog.show();
