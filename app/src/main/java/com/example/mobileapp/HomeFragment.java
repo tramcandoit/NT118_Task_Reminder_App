@@ -139,17 +139,12 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Task clickedTask = tasksList.get(position);
-                int categoryId = clickedTask.getCategoryId();
+                CategoriesItem selectedCategory = categoryDb.getCategory(clickedTask.getCategoryId());
 
+                // Tìm category theo ID trong database của Category
                 String categoryLabel = null; // Khởi tạo categoryLabel
+                categoryLabel = selectedCategory.getName();
 
-                // Tìm category theo ID (giả sử categoryId là vị trí trong danh sách)
-                if (categoryId >= 0) {
-                    categoryLabel = categories.get(categoryId).getName();
-                } else {
-                    // Xử lý trường hợp categoryId không hợp lệ (ví dụ: categoryId = -1)
-                    categoryLabel = "Unknown Category"; // Hoặc bất kỳ giá trị mặc định nào
-                }
                 // Tạo AlertDialog để hiển thị chi tiết task
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
                 builder.setTitle(clickedTask.getName());
