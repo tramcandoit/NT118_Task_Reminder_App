@@ -1,22 +1,23 @@
 package com.example.mobileapp;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mobileapp.CategoriesItem;
-import com.example.mobileapp.R;
-
+import java.util.HashMap;
 import java.util.List;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
 
     private final List<CategoriesItem> categories;
     private final Context context;
+    private HashMap<String, Integer> categoryPositions = new HashMap<>();
 
     public CategoriesAdapter(Context context, List<CategoriesItem> categories) {
         this.context = context;
@@ -33,6 +34,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         CategoriesItem category = categories.get(position);
+        categoryPositions.put(category.getName(), position);
         holder.imageView.setImageResource(category.getIconResId());
         holder.textView.setText(category.getName());
     }
@@ -52,6 +54,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
             textView = itemView.findViewById(R.id.tv_home_categories);
         }
     }
-
+    public int getItemPositionByName(String categoryName) {
+        return categoryPositions.getOrDefault(categoryName, -1); // Trả về -1 nếu không tìm thấy
+    }
 
 }

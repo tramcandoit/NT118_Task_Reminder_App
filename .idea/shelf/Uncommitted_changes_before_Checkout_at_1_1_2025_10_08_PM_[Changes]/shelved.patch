@@ -1,0 +1,551 @@
+Index: app/src/main/java/com/example/mobileapp/HomeFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.mobileapp;\r\n\r\nimport android.app.AlarmManager;\r\nimport android.app.PendingIntent;\r\nimport android.content.Context;\r\nimport android.content.Intent;\r\nimport android.os.Bundle;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.AdapterView;\r\nimport android.widget.ListView;\r\nimport android.widget.TextView;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.AlertDialog;\r\nimport androidx.fragment.app.Fragment;\r\nimport androidx.fragment.app.FragmentTransaction;\r\nimport androidx.recyclerview.widget.LinearLayoutManager;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\n/**\r\n * A simple {@link Fragment} subclass.\r\n * Use the {@link HomeFragment#newInstance} factory method to\r\n * create an instance of this fragment.\r\n */\r\npublic class HomeFragment extends Fragment implements OnTaskAddedListener{\r\n\r\n    private static final String ARG_PARAM1 = \"param1\";\r\n    private static final String ARG_PARAM2 = \"param2\";\r\n\r\n    RecyclerView rvCategories;\r\n    CategoriesAdapter categoriesAdapter;\r\n    private List<CategoriesItem> categories;\r\n    private ListView listView;\r\n    private TasksArrayAdapter lvAdapter;\r\n    private List<Task> tasksList;\r\n    private TaskDatabaseHandler db;\r\n    private CategoryDatabaseHandler categoryDb;\r\n    private TextView tvCategoriesMenu;\r\n\r\n    public HomeFragment() {\r\n        // Required empty public constructor\r\n    }\r\n\r\n    public static HomeFragment newInstance(String param1, String param2) {\r\n        HomeFragment fragment = new HomeFragment();\r\n        Bundle args = new Bundle();\r\n        args.putString(ARG_PARAM1, param1);\r\n        args.putString(ARG_PARAM2, param2);\r\n        fragment.setArguments(args);\r\n        return fragment;\r\n    }\r\n    private void cancelNotification(Task task) {\r\n        Context context = requireContext();\r\n        Intent intent = new Intent(context, TaskNotificationReceiver.class);\r\n        intent.putExtra(\"taskName\", task.getName());\r\n        intent.putExtra(\"taskDescription\", task.getDescription());\r\n        intent.putExtra(\"taskId\", task.getTaskId());\r\n\r\n        PendingIntent pendingIntent = PendingIntent.getBroadcast(\r\n                context,\r\n                task.getTaskId(),\r\n                intent,\r\n                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE\r\n        );\r\n\r\n        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);\r\n        alarmManager.cancel(pendingIntent);\r\n    }\r\n\r\n    @Override\r\n    public void onTaskAdded(Task task) {\r\n        tasksList.add(task);\r\n        lvAdapter.notifyDataSetChanged();\r\n    }\r\n\r\n\r\n    @Override\r\n    public void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n    }\r\n\r\n    @Override\r\n    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {\r\n        // Inflate the layout for this fragment\r\n\r\n        View view = inflater.inflate(R.layout.fragment_home, container, false);\r\n\r\n        rvCategories = view.findViewById(R.id.rv_home_categories);\r\n        listView = view.findViewById(R.id.lv_Todaytask);\r\n        tvCategoriesMenu = view.findViewById(R.id.tv_home_categories_menu);\r\n        db = new TaskDatabaseHandler(requireContext());\r\n        categoryDb = new CategoryDatabaseHandler(requireContext());\r\n        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false); // Hoặc \"this\" nếu trong Activity\r\n        rvCategories.setLayoutManager(layoutManager);\r\n\r\n        int space = 35; // Khoảng cách giữa các item (trong pixel)\r\n        rvCategories.addItemDecoration(new HorizontalSpacingItemDecoration(space));\r\n\r\n        categories = new ArrayList<>();\r\n        categories = categoryDb.getAllCategories();\r\n//        categories.add(new CategoriesItem(1111, 111, \"Work\", R.drawable.icon_user));\r\n//        categories.add(new CategoriesItem(2222, 111, \"Health\", R.drawable.icon_user));\r\n//        categories.add(new CategoriesItem(3333, 111, \"Shopping\", R.drawable.icon_user));\r\n//        categories.add(new CategoriesItem(4444, 111, \"Cooking\", R.drawable.icon_user));\r\n//        categories.add(new CategoriesItem(5555, 111, \"Travel\", R.drawable.icon_user));\r\n//        categories.add(new CategoriesItem(6666, 111, \"Music\", R.drawable.icon_user));\r\n//        categories.add(new CategoriesItem(7777, 111, \"Misc\", R.drawable.icon_user));\r\n//        categories.add(new CategoriesItem(8888, 111, \"Study\", R.drawable.icon_user));\r\n\r\n\r\n\r\n\r\n        categoriesAdapter = new CategoriesAdapter(requireContext(), categories); // Hoặc \"this\" nếu trong Activity\r\n        rvCategories.setAdapter(categoriesAdapter);\r\n\r\n        if (categories.size() > 4) {\r\n            rvCategories.setHorizontalScrollBarEnabled(true);\r\n        } else {\r\n            rvCategories.setHorizontalScrollBarEnabled(false);\r\n        }\r\n\r\n        rvCategories.addOnScrollListener(new RecyclerView.OnScrollListener() {\r\n            @Override\r\n            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {\r\n                    super.onScrolled(recyclerView, dx, dy);\r\n            }\r\n        });\r\n\r\n        // Prepare some test data for list\r\n        tasksList = new ArrayList<>();\r\n        tasksList = db.getAllTasks();\r\n\r\n        lvAdapter = new TasksArrayAdapter(requireActivity(), tasksList);\r\n        listView.setAdapter(lvAdapter);\r\n\r\n        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {\r\n            @Override\r\n            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {\r\n                Task clickedTask = tasksList.get(position);\r\n                CategoriesItem selectedCategory = categoryDb.getCategory(clickedTask.getCategoryId());\r\n\r\n                // Tìm category theo ID trong database của Category\r\n                String categoryLabel = null; // Khởi tạo categoryLabel\r\n                categoryLabel = selectedCategory.getName();\r\n\r\n                // Tạo AlertDialog để hiển thị chi tiết task\r\n                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());\r\n                View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_taskdetails, null);\r\n                builder.setView(dialogView);\r\n\r\n                // Tìm các TextView trong dialog layout và thiết lập giá trị\r\n                TextView tvTaskdetailTaskdetailTextbox = dialogView.findViewById(R.id.tv_taskdetail_taskdetail_textbox);\r\n                TextView tvTaskdetailCategories = dialogView.findViewById(R.id.tv_taskdetail_categories);\r\n                TextView tvTaskdetailDateSelector = dialogView.findViewById(R.id.tv_taskdetail_date_selector);\r\n                TextView tvTaskdetailTimeSelector = dialogView.findViewById(R.id.tv_taskdetail_time_selector);\r\n                TextView tvTaskdetailPriority = dialogView.findViewById(R.id.sp_taskdetail_priority);\r\n                TextView tvTaskdetailFrequencySelector = dialogView.findViewById(R.id.tv_taskdetail_frequency_selector);\r\n                TextView tvTaskdetailDescription = dialogView.findViewById(R.id.tv_taskdetail_description);\r\n\r\n                // Tạo layout cho AlertDialog (nếu cần hiển thị nhiều thông tin hơn)\r\n                tvTaskdetailTaskdetailTextbox.setText(clickedTask.getName());\r\n                tvTaskdetailCategories.setText(categoryLabel);\r\n                tvTaskdetailDateSelector.setText(clickedTask.getDate());\r\n                tvTaskdetailTimeSelector.setText(clickedTask.getTime());\r\n                tvTaskdetailPriority.setText(clickedTask.getPriority());\r\n                tvTaskdetailFrequencySelector.setText(clickedTask.getRepeat_frequency());\r\n                tvTaskdetailDescription.setText(clickedTask.getDescription());\r\n\r\n                builder.setPositiveButton(\"OK\", null);\r\n                builder.setNegativeButton(\"Delete\", (dialog, which) -> {\r\n                    // Xử lý xóa student\r\n                    cancelNotification(clickedTask);   // Hủy thông báo trước khi xóa\r\n                    db.deleteTask(clickedTask); // Xóa khỏi database\r\n                    tasksList.remove(position);\r\n                    lvAdapter.notifyDataSetChanged();\r\n                });\r\n                builder.setNeutralButton(\"Edit\", (dialog, which) -> {\r\n                    // Chỉnh sửa thông tin task\r\n\r\n                });\r\n\r\n                // Hiển thị AlertDialog\r\n                AlertDialog dialog = builder.create();\r\n                dialog.show();\r\n            }\r\n        });\r\n\r\n        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {\r\n            @Override\r\n            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {\r\n                Task task = tasksList.get(position);\r\n\r\n                cancelNotification(task);   // Hủy thông báo trước khi xóa\r\n                db.deleteTask(task); // Xóa khỏi database\r\n                tasksList.remove(position);\r\n                lvAdapter.notifyDataSetChanged();\r\n\r\n                return false;\r\n            }\r\n        });\r\n\r\n        tvCategoriesMenu.setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                CategoriesMenuFragment categoriesMenuFragment = new CategoriesMenuFragment();\r\n                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();\r\n                transaction.replace(R.id.fragment_container, categoriesMenuFragment); // Thay \"R.id.fragment_container\" bằng ID của container Fragment trong layout chính của bạn.\r\n                transaction.addToBackStack(null); // Cho phép quay lại fragment Home khi nhấn nút Back.\r\n                transaction.commit();\r\n            }\r\n        });\r\n\r\n        return view;\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/mobileapp/HomeFragment.java b/app/src/main/java/com/example/mobileapp/HomeFragment.java
+--- a/app/src/main/java/com/example/mobileapp/HomeFragment.java	(revision 0d8aa76aed642ed47354562bf3d3b798d315dcb6)
++++ b/app/src/main/java/com/example/mobileapp/HomeFragment.java	(date 1735743389406)
+@@ -9,8 +9,13 @@
+ import android.view.View;
+ import android.view.ViewGroup;
+ import android.widget.AdapterView;
++import android.widget.ArrayAdapter;
++import android.widget.Button;
++import android.widget.EditText;
+ import android.widget.ListView;
++import android.widget.Spinner;
+ import android.widget.TextView;
++import android.widget.Toast;
+ 
+ import androidx.annotation.NonNull;
+ import androidx.annotation.Nullable;
+@@ -20,8 +25,12 @@
+ import androidx.recyclerview.widget.LinearLayoutManager;
+ import androidx.recyclerview.widget.RecyclerView;
+ 
++import java.text.ParseException;
++import java.text.SimpleDateFormat;
+ import java.util.ArrayList;
++import java.util.Calendar;
+ import java.util.List;
++import java.util.Locale;
+ 
+ /**
+  * A simple {@link Fragment} subclass.
+@@ -72,6 +81,82 @@
+         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+         alarmManager.cancel(pendingIntent);
+     }
++    public void scheduleNotification(Task task) {
++        Context context = requireContext();
++        Intent intent = new Intent(context, TaskNotificationReceiver.class);
++        intent.putExtra("taskName", task.getName());
++        intent.putExtra("taskDescription", task.getDescription());
++        intent.putExtra("taskId", (int) task.getTaskId());
++
++        PendingIntent pendingIntent = PendingIntent.getBroadcast(
++                context,
++                task.getTaskId(),
++                intent,
++                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
++        );
++
++        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
++
++        try {
++            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()); // Kết hợp date và time
++            // Kết hợp ngày và giờ từ EditText
++            String dateTimeString = task.getDate() + " " + task.getTime();
++
++            Calendar calendar = Calendar.getInstance();
++            calendar.setTime(sdf.parse(dateTimeString)); // Parse cả ngày và giờ
++
++            switch (task.getRepeat_frequency()) {
++                case "Once":
++                    alarmManager.setExactAndAllowWhileIdle(
++                            AlarmManager.RTC_WAKEUP,
++                            calendar.getTimeInMillis(),
++                            pendingIntent);
++                    break;
++                case "Daily":
++                    scheduleRepeatingNotification(
++                            alarmManager,
++                            pendingIntent,
++                            calendar,
++                            task.getRepeat_frequency()
++                    );
++                    break;
++                case "Weekly":
++                    scheduleRepeatingNotification(
++                            alarmManager,
++                            pendingIntent,
++                            calendar,
++                            task.getRepeat_frequency()
++                    );
++                    break;
++            }
++        } catch (ParseException e) {
++            // Xử lý ParseException
++            Toast.makeText(getContext(), "Invalid date/time format", Toast.LENGTH_SHORT).show();
++            e.printStackTrace();
++        }
++    }
++    private void scheduleRepeatingNotification(AlarmManager alarmManager, PendingIntent pendingIntent, Calendar calendar, String frequency) {
++        long interval;
++        if ("Daily".equals(frequency)) {
++            interval = AlarmManager.INTERVAL_DAY;
++        } else if ("Weekly".equals(frequency)) {
++            interval = AlarmManager.INTERVAL_DAY * 7;
++        } else {
++            return; // Không hỗ trợ tần suất khác
++        }
++
++        alarmManager.setExactAndAllowWhileIdle(
++                AlarmManager.RTC_WAKEUP,
++                calendar.getTimeInMillis(),
++                pendingIntent
++        );
++
++        calendar.add(Calendar.MILLISECOND, (int) interval); // Cập nhật thời gian cho lần lặp tiếp theo
++        AlarmManager finalAlarmManager = alarmManager;
++        new android.os.Handler().postDelayed(() -> {
++            scheduleRepeatingNotification(finalAlarmManager, pendingIntent, calendar, frequency);
++        }, interval);
++    }
+ 
+     @Override
+     public void onTaskAdded(Task task) {
+@@ -151,42 +236,123 @@
+ 
+                 // Tạo AlertDialog để hiển thị chi tiết task
+                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+-                View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_taskdetails, null);
++                View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_addtask, null);
+                 builder.setView(dialogView);
+ 
+                 // Tìm các TextView trong dialog layout và thiết lập giá trị
+-                TextView tvTaskdetailTaskdetailTextbox = dialogView.findViewById(R.id.tv_taskdetail_taskdetail_textbox);
+-                TextView tvTaskdetailCategories = dialogView.findViewById(R.id.tv_taskdetail_categories);
+-                TextView tvTaskdetailDateSelector = dialogView.findViewById(R.id.tv_taskdetail_date_selector);
+-                TextView tvTaskdetailTimeSelector = dialogView.findViewById(R.id.tv_taskdetail_time_selector);
+-                TextView tvTaskdetailPriority = dialogView.findViewById(R.id.sp_taskdetail_priority);
+-                TextView tvTaskdetailFrequencySelector = dialogView.findViewById(R.id.tv_taskdetail_frequency_selector);
+-                TextView tvTaskdetailDescription = dialogView.findViewById(R.id.tv_taskdetail_description);
++                EditText etTaskdetailName = dialogView.findViewById(R.id.tv_addtask_addtask_textbox);
++                Spinner spTaskdetailCategories = dialogView.findViewById(R.id.sp_addtask_categories);
++                EditText etTaskdetailDateSelector = dialogView.findViewById(R.id.et_addtask_date_selector);
++                EditText etTaskdetailTimeSelector = dialogView.findViewById(R.id.et_addtask_time_selector);
++                Spinner spTaskdetailPriority = dialogView.findViewById(R.id.sp_addtask_priority);
++                Spinner spTaskdetailFrequencySelector = dialogView.findViewById(R.id.sp_addtask_frequency_selector);
++                EditText etTaskdetailDescription = dialogView.findViewById(R.id.et_addtask_description);
++
++                int spinnerCategoryPosition = categoriesAdapter.getItemPositionByName(categoryLabel);
++                SpinnerAdapter categoriesSpAdapter = new SpinnerAdapter(getContext(), categories);
++                spTaskdetailCategories.setAdapter(categoriesSpAdapter);
++
++                List<String> priorities = new ArrayList<>();
++                priorities.add("High");
++                priorities.add("Medium");
++                priorities.add("Low");
++                ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, priorities);
++                priorityAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
++                spTaskdetailPriority.setAdapter(priorityAdapter);
++                int spinnerPriorityPosition = priorityAdapter.getPosition(clickedTask.getPriority());
++
++                List<String> frequencies = new ArrayList<>();
++                frequencies.add("Daily");
++                frequencies.add("Weekly");
++                frequencies.add("Once");
++                ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, frequencies);
++                frequencyAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
++                spTaskdetailFrequencySelector.setAdapter(frequencyAdapter);
++                int spinnerFrequencyPosition = frequencyAdapter.getPosition(clickedTask.getRepeat_frequency());
++
+ 
+                 // Tạo layout cho AlertDialog (nếu cần hiển thị nhiều thông tin hơn)
+-                tvTaskdetailTaskdetailTextbox.setText(clickedTask.getName());
+-                tvTaskdetailCategories.setText(categoryLabel);
+-                tvTaskdetailDateSelector.setText(clickedTask.getDate());
+-                tvTaskdetailTimeSelector.setText(clickedTask.getTime());
+-                tvTaskdetailPriority.setText(clickedTask.getPriority());
+-                tvTaskdetailFrequencySelector.setText(clickedTask.getRepeat_frequency());
+-                tvTaskdetailDescription.setText(clickedTask.getDescription());
++                etTaskdetailName.setText(clickedTask.getName());
++                spTaskdetailCategories.setSelection(spinnerCategoryPosition);
++                etTaskdetailDateSelector.setText(clickedTask.getDate());
++                etTaskdetailTimeSelector.setText(clickedTask.getTime());
++                spTaskdetailPriority.setSelection(spinnerPriorityPosition);
++                spTaskdetailFrequencySelector.setSelection(spinnerFrequencyPosition);
++                etTaskdetailDescription.setText(clickedTask.getDescription());
++
++                // Khóa các trường không cho phép chỉnh sửa
++                etTaskdetailName.setFocusable(false);
++                etTaskdetailName.setFocusableInTouchMode(false);
++
++                etTaskdetailDateSelector.setFocusable(false);
++                etTaskdetailDateSelector.setFocusableInTouchMode(false);
++
++                etTaskdetailTimeSelector.setFocusable(false);
++                etTaskdetailTimeSelector.setFocusableInTouchMode(false);
+ 
+-                builder.setPositiveButton("OK", null);
+-                builder.setNegativeButton("Delete", (dialog, which) -> {
+-                    // Xử lý xóa student
+-                    cancelNotification(clickedTask);   // Hủy thông báo trước khi xóa
+-                    db.deleteTask(clickedTask); // Xóa khỏi database
+-                    tasksList.remove(position);
++                etTaskdetailDescription.setFocusable(false);
++                etTaskdetailDescription.setFocusableInTouchMode(false);
++
++                spTaskdetailCategories.setOnTouchListener((v, event) -> true);
++                spTaskdetailPriority.setOnTouchListener((v, event) -> true);
++                spTaskdetailFrequencySelector.setOnTouchListener((v, event) -> true);
++
++                // Thiết lập các sự kiện cho các nút
++                builder.setPositiveButton("OK", (dialog, which) -> {
++                    // Lấy dữ liệu từ các trường EditText, Spinner
++                    clickedTask.setName(etTaskdetailName.getText().toString());
++                    clickedTask.setCategoryId(categories.get(spTaskdetailCategories.getSelectedItemPosition()).getCategoryId()); // Lấy category từ danh sách categories với vị trí tương úng trong spinner spCategories, sau đó dùng getCategoryId()
++                    clickedTask.setDate(etTaskdetailDateSelector.getText().toString());
++                    clickedTask.setTime(etTaskdetailTimeSelector.getText().toString());
++                    clickedTask.setPriority(spTaskdetailPriority.getSelectedItem().toString());
++                    clickedTask.setRepeat_frequency(spTaskdetailFrequencySelector.getSelectedItem().toString());
++                    clickedTask.setDescription(etTaskdetailDescription.getText().toString());
++
++                    // Cập nhật Task trong Database
++                    db.updateTask(clickedTask);
++
++                    // Thêm vào danh sách tasks ở HomeFragment
++                    tasksList.set(position, clickedTask);
++                    cancelNotification(clickedTask);
++                    scheduleNotification(clickedTask);
+                     lvAdapter.notifyDataSetChanged();
++
++                    // Sau khi lưu, đóng dialog
++                    dialog.dismiss();
++                });
++
++                builder.setNegativeButton("Cancel", (dialog, which) -> {
++                    dialog.dismiss();
+                 });
+                 builder.setNeutralButton("Edit", (dialog, which) -> {
+-                    // Chỉnh sửa thông tin task
+-
++                    // Khởi tạo nút Edit
+                 });
+ 
+                 // Hiển thị AlertDialog
+                 AlertDialog dialog = builder.create();
++                dialog.setOnShowListener(dialogInterface -> {
++                    Button editButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
++
++                    editButton.setOnClickListener(v -> {
++                        // Chỉnh sửa thông tin task
++                        etTaskdetailName.setFocusable(true);
++                        etTaskdetailName.setFocusableInTouchMode(true);
++
++                        etTaskdetailDateSelector.setFocusable(true);
++                        etTaskdetailDateSelector.setFocusableInTouchMode(true);
++
++                        etTaskdetailTimeSelector.setFocusable(true);
++                        etTaskdetailTimeSelector.setFocusableInTouchMode(true);
++
++                        etTaskdetailDescription.setFocusable(true);
++                        etTaskdetailDescription.setFocusableInTouchMode(true);
++
++                        spTaskdetailCategories.setOnTouchListener(null);
++                        spTaskdetailPriority.setOnTouchListener(null);
++                        spTaskdetailFrequencySelector.setOnTouchListener(null);
++
++                    });
++                });
+                 dialog.show();
+             }
+         });
+Index: app/src/main/java/com/example/mobileapp/CategoriesAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.mobileapp;\r\nimport android.content.Context;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\nimport android.widget.ImageView;\r\nimport android.widget.TextView;\r\nimport androidx.annotation.NonNull;\r\nimport androidx.recyclerview.widget.RecyclerView;\r\n\r\nimport com.example.mobileapp.CategoriesItem;\r\nimport com.example.mobileapp.R;\r\n\r\nimport java.util.List;\r\n\r\npublic class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {\r\n\r\n    private final List<CategoriesItem> categories;\r\n    private final Context context;\r\n\r\n    public CategoriesAdapter(Context context, List<CategoriesItem> categories) {\r\n        this.context = context;\r\n        this.categories = categories;\r\n    }\r\n\r\n    @NonNull\r\n    @Override\r\n    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\r\n        View view = LayoutInflater.from(context).inflate(R.drawable.home_item_categories, parent, false);\r\n        return new ViewHolder(view);\r\n    }\r\n\r\n    @Override\r\n    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {\r\n        CategoriesItem category = categories.get(position);\r\n        holder.imageView.setImageResource(category.getIconResId());\r\n        holder.textView.setText(category.getName());\r\n    }\r\n\r\n    @Override\r\n    public int getItemCount() {\r\n        return categories.size();\r\n    }\r\n\r\n    public static class ViewHolder extends RecyclerView.ViewHolder {\r\n        ImageView imageView;\r\n        TextView textView;\r\n\r\n        public ViewHolder(@NonNull View itemView) {\r\n            super(itemView);\r\n            imageView = itemView.findViewById(R.id.img_home_categories);\r\n            textView = itemView.findViewById(R.id.tv_home_categories);\r\n        }\r\n    }\r\n\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/mobileapp/CategoriesAdapter.java b/app/src/main/java/com/example/mobileapp/CategoriesAdapter.java
+--- a/app/src/main/java/com/example/mobileapp/CategoriesAdapter.java	(revision 0d8aa76aed642ed47354562bf3d3b798d315dcb6)
++++ b/app/src/main/java/com/example/mobileapp/CategoriesAdapter.java	(date 1735737301558)
+@@ -1,22 +1,23 @@
+ package com.example.mobileapp;
++
+ import android.content.Context;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+ import android.widget.ImageView;
+ import android.widget.TextView;
++
+ import androidx.annotation.NonNull;
+ import androidx.recyclerview.widget.RecyclerView;
+ 
+-import com.example.mobileapp.CategoriesItem;
+-import com.example.mobileapp.R;
+-
++import java.util.HashMap;
+ import java.util.List;
+ 
+ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
+ 
+     private final List<CategoriesItem> categories;
+     private final Context context;
++    private HashMap<String, Integer> categoryPositions = new HashMap<>();
+ 
+     public CategoriesAdapter(Context context, List<CategoriesItem> categories) {
+         this.context = context;
+@@ -33,6 +34,7 @@
+     @Override
+     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+         CategoriesItem category = categories.get(position);
++        categoryPositions.put(category.getName(), position);
+         holder.imageView.setImageResource(category.getIconResId());
+         holder.textView.setText(category.getName());
+     }
+@@ -52,6 +54,8 @@
+             textView = itemView.findViewById(R.id.tv_home_categories);
+         }
+     }
+-
++    public int getItemPositionByName(String categoryName) {
++        return categoryPositions.getOrDefault(categoryName, -1); // Trả về -1 nếu không tìm thấy
++    }
+ 
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/example/mobileapp/ListFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.mobileapp;\r\n\r\nimport android.graphics.Color;\r\nimport android.os.Build;\r\nimport android.os.Bundle;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.view.ViewGroup;\r\n\r\nimport androidx.annotation.NonNull;\r\nimport androidx.annotation.Nullable;\r\nimport androidx.fragment.app.Fragment;\r\n\r\nimport com.github.mikephil.charting.charts.BarChart;\r\nimport com.github.mikephil.charting.charts.PieChart;\r\nimport com.github.mikephil.charting.components.Legend;\r\nimport com.github.mikephil.charting.components.XAxis;\r\nimport com.github.mikephil.charting.components.YAxis;\r\nimport com.github.mikephil.charting.data.BarData;\r\nimport com.github.mikephil.charting.data.BarDataSet;\r\nimport com.github.mikephil.charting.data.BarEntry;\r\nimport com.github.mikephil.charting.data.PieData;\r\nimport com.github.mikephil.charting.data.PieDataSet;\r\nimport com.github.mikephil.charting.data.PieEntry;\r\nimport com.github.mikephil.charting.formatter.IndexAxisValueFormatter;\r\nimport com.github.mikephil.charting.formatter.PercentFormatter;\r\nimport com.github.mikephil.charting.utils.ColorTemplate;\r\n\r\nimport java.time.LocalDate;\r\nimport java.time.format.DateTimeFormatter;\r\nimport java.util.ArrayList;\r\nimport java.util.HashMap;\r\nimport java.util.List;\r\nimport java.util.Map;\r\nimport java.util.Objects;\r\n\r\npublic class ListFragment extends Fragment {\r\n\r\n    private TaskDatabaseHandler taskDb;\r\n    private PieChart pieChart;\r\n    private BarChart barChart;\r\n\r\n    @Nullable\r\n    @Override\r\n    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {\r\n        View view = inflater.inflate(R.layout.fragment_list, container, false); // Inflate layout cho fragment\r\n\r\n        pieChart = view.findViewById(R.id.pieChart); //  Lấy PieChart từ layout\r\n        barChart = view.findViewById(R.id.barChart);\r\n        taskDb = new TaskDatabaseHandler(requireContext()); // Khởi tạo database handler\r\n\r\n        setupPieChart(); // Thiết lập biểu đồ\r\n        loadPieChartData();  // Load dữ liệu cho biểu đồ\r\n\r\n        setupBarChart();\r\n        loadBarChartData(); // Load dữ liệu cho BarChart\r\n\r\n\r\n\r\n\r\n        return view;\r\n    }\r\n\r\n    // --------------------------------------------------------------------------------------------- //\r\n    private void setupPieChart() {\r\n        pieChart.setUsePercentValues(true); // Hiển thị phần trăm\r\n        pieChart.getDescription().setEnabled(false); // Ẩn mô tả\r\n        pieChart.setExtraOffsets(5, 10, 5, 5); // Khoảng cách giữa biểu đồ và viền\r\n        pieChart.setDragDecelerationFrictionCoef(0.95f);\r\n        pieChart.setDrawHoleEnabled(true); // Có lỗ ở giữa\r\n        pieChart.setHoleColor(Color.WHITE); // Màu sắc của lỗ\r\n        pieChart.setHoleRadius(30f);\r\n        pieChart.setTransparentCircleRadius(41f);\r\n    }\r\n\r\n    private void loadPieChartData() {\r\n        List<Task> tasksList = taskDb.getAllTasks();\r\n        List<Task> incompleteTasks = new ArrayList<>();\r\n        List<Task> completedTasks = new ArrayList<>();\r\n\r\n        for (Task task : tasksList) {\r\n            String status = task.getStatus();\r\n            if (Objects.equals(task.getStatus(), \"completed\")) {\r\n                completedTasks.add(task);\r\n            } else {\r\n                incompleteTasks.add(task);\r\n            }\r\n        }\r\n        // Add some sample data for testing\r\n        Task completedTask_1 = new Task();\r\n        Task completedTask_2 = new Task();\r\n        Task completedTask_3 = new Task();\r\n        completedTask_1.setStatus(\"completed\");\r\n        completedTask_2.setStatus(\"completed\");\r\n        completedTask_3.setStatus(\"completed\");\r\n        completedTasks.add(completedTask_1);\r\n        completedTasks.add(completedTask_2);\r\n        completedTasks.add(completedTask_3);\r\n\r\n        // Create pie entries for incomplete and completed tasks\r\n        List<PieEntry> entries = new ArrayList<>();\r\n        entries.add(new PieEntry(incompleteTasks.size(), \"Incomplete\"));\r\n        entries.add(new PieEntry(completedTasks.size(), \"Completed\"));\r\n\r\n        ArrayList<Integer> colors = new ArrayList<>();\r\n        for (int color: ColorTemplate.MATERIAL_COLORS) {\r\n            colors.add(color);\r\n        }\r\n\r\n        for (int color: ColorTemplate.VORDIPLOM_COLORS) {\r\n            colors.add(color);\r\n        }\r\n\r\n        // Thiết lập cỡ chữ cho incomplete và completed trên biểu đồ (chữ màu trắng)\r\n        PieDataSet dataSet = new PieDataSet(entries, \"\");\r\n        dataSet.setColors(colors);\r\n        dataSet.setValueTextSize(20f);\r\n        dataSet.setValueTextColor(Color.WHITE);\r\n\r\n        // Thiết lập cỡ chữ cho phần trăm trên biểu đồ (chữ màu đen)\r\n        PieData data = new PieData(dataSet);\r\n        data.setValueFormatter(new PercentFormatter(pieChart));\r\n        data.setValueTextSize(20f);\r\n        data.setValueTextColor(Color.BLACK);\r\n        pieChart.setData(data);\r\n\r\n        // Thiết lập cỡ chữ cho phần chú thích dưới biểu đồ\r\n        Legend legend = pieChart.getLegend();\r\n        legend.setTextSize(20f);\r\n        legend.setFormSize(15f);\r\n        legend.setXEntrySpace(90f);\r\n        legend.setFormToTextSpace(15f);\r\n\r\n        pieChart.invalidate();\r\n    }\r\n    // --------------------------------------------------------------------------------------------- //\r\n    private void setupBarChart() {\r\n        barChart.getDescription().setEnabled(false); // Ẩn mô tả\r\n        barChart.setPinchZoom(false); // Không cho phép zoom\r\n        barChart.setDrawBarShadow(false); // Không vẽ bóng cho cột\r\n        barChart.setDrawGridBackground(false); // Không vẽ grid background\r\n\r\n        XAxis xAxis = barChart.getXAxis();\r\n        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM); // Đặt nhãn ngày ở dưới cùng\r\n        xAxis.setGranularity(1f); // Khoảng cách giữa các nhãn\r\n        xAxis.setDrawGridLines(false);\r\n\r\n\r\n        YAxis leftAxis = barChart.getAxisLeft();\r\n        leftAxis.setDrawGridLines(false);\r\n        leftAxis.setAxisMinimum(0f); // Giá trị tối thiểu của trục y\r\n\r\n        YAxis rightAxis = barChart.getAxisRight();\r\n        rightAxis.setEnabled(false);\r\n\r\n        Legend legend = barChart.getLegend();\r\n        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);\r\n        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);\r\n        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);\r\n        legend.setDrawInside(false);\r\n        legend.setForm(Legend.LegendForm.SQUARE);\r\n        legend.setFormSize(9f);\r\n        legend.setTextSize(18f);\r\n        legend.setXEntrySpace(4f);\r\n    }\r\n\r\n    private void loadBarChartData() {\r\n\r\n        List<Task> tasksList = taskDb.getAllTasks(); // Lấy tất cả task từ database\r\n\r\n        HashMap<LocalDate, Integer> tasksByDate = new HashMap<>();\r\n        for (Task task : tasksList) {\r\n            LocalDate dueDate = null;\r\n            String testDate = task.getDate();\r\n//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {\r\n                dueDate = LocalDate.parse(task.getDate(), DateTimeFormatter.ofPattern(\"dd/MM/yyyy\"));\r\n//            }\r\n            tasksByDate.put(dueDate, tasksByDate.getOrDefault(dueDate, 0) + 1);\r\n        }\r\n\r\n        List<BarEntry> entries = new ArrayList<>();\r\n        List<String> labels = new ArrayList<>();\r\n\r\n        int i = 0;\r\n        for (Map.Entry<LocalDate, Integer> entry : tasksByDate.entrySet()) {\r\n            entries.add(new BarEntry(i, entry.getValue()));\r\n            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {\r\n                labels.add(entry.getKey().format(DateTimeFormatter.ofPattern(\"dd/MM\")));\r\n            }\r\n            i++;\r\n        }\r\n\r\n        BarDataSet dataSet = new BarDataSet(entries, \"Tasks\");\r\n        dataSet.setColors(ColorTemplate.MATERIAL_COLORS); // Tùy chỉnh màu sắc\r\n        dataSet.setValueTextColor(Color.BLACK);\r\n        dataSet.setValueTextSize(20f);\r\n\r\n        BarData data = new BarData(dataSet);\r\n        barChart.setData(data);\r\n\r\n        XAxis xAxis = barChart.getXAxis();\r\n        xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));\r\n        xAxis.setLabelCount(labels.size());\r\n\r\n\r\n        barChart.invalidate(); // Refresh biểu đồ\r\n    }\r\n    // --------------------------------------------------------------------------------------------- //\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/mobileapp/ListFragment.java b/app/src/main/java/com/example/mobileapp/ListFragment.java
+--- a/app/src/main/java/com/example/mobileapp/ListFragment.java	(revision 0d8aa76aed642ed47354562bf3d3b798d315dcb6)
++++ b/app/src/main/java/com/example/mobileapp/ListFragment.java	(date 1735726801234)
+@@ -1,7 +1,6 @@
+ package com.example.mobileapp;
+ 
+ import android.graphics.Color;
+-import android.os.Build;
+ import android.os.Bundle;
+ import android.view.LayoutInflater;
+ import android.view.View;
+@@ -22,17 +21,20 @@
+ import com.github.mikephil.charting.data.PieData;
+ import com.github.mikephil.charting.data.PieDataSet;
+ import com.github.mikephil.charting.data.PieEntry;
++import com.github.mikephil.charting.formatter.DefaultValueFormatter;
+ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+ import com.github.mikephil.charting.formatter.PercentFormatter;
+ import com.github.mikephil.charting.utils.ColorTemplate;
+ 
+ import java.time.LocalDate;
+ import java.time.format.DateTimeFormatter;
++import java.time.temporal.ChronoUnit;
+ import java.util.ArrayList;
+-import java.util.HashMap;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Objects;
++import java.util.TreeMap;
++import java.util.stream.Collectors;
+ 
+ public class ListFragment extends Fragment {
+ 
+@@ -49,15 +51,6 @@
+         barChart = view.findViewById(R.id.barChart);
+         taskDb = new TaskDatabaseHandler(requireContext()); // Khởi tạo database handler
+ 
+-        setupPieChart(); // Thiết lập biểu đồ
+-        loadPieChartData();  // Load dữ liệu cho biểu đồ
+-
+-        setupBarChart();
+-        loadBarChartData(); // Load dữ liệu cho BarChart
+-
+-
+-
+-
+         return view;
+     }
+ 
+@@ -164,38 +157,65 @@
+         legend.setXEntrySpace(4f);
+     }
+ 
+-    private void loadBarChartData() {
++    private void loadBarChartData(int numberOfDays) {
++
++        LocalDate currentDate = LocalDate.now();
++        LocalDate sevenDaysAgo = currentDate.minusDays(numberOfDays -1) ;
++
++        List<Task> tasksList = taskDb.getAllTasks();
++
++        // Lọc task theo khoảng thời gian
++        List<Task> filteredTasks = tasksList.stream()
++                .filter(task -> {
++                    try {
++                        LocalDate dueDate = LocalDate.parse(task.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
++                        return dueDate.isAfter(sevenDaysAgo.minusDays(1)) && dueDate.isBefore(currentDate.plusDays(1));
++                    } catch (Exception e) {
++                        return false;
++                    }
++                })
++                .collect(Collectors.toList());
++
++        // Tạo map chứa dữ liệu cho numberOfDays ngày
++        Map<LocalDate, Integer> tasksForDays = new TreeMap<>();
++
++        for (int i = 0; i < numberOfDays; i++) {
++            LocalDate date = currentDate.minusDays(i);
++            tasksForDays.put(date, 0); // Khởi tạo số lượng task là 0 cho mỗi ngày
++        }
+ 
+-        List<Task> tasksList = taskDb.getAllTasks(); // Lấy tất cả task từ database
+ 
+-        HashMap<LocalDate, Integer> tasksByDate = new HashMap<>();
+-        for (Task task : tasksList) {
+-            LocalDate dueDate = null;
+-            String testDate = task.getDate();
+-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+-                dueDate = LocalDate.parse(task.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+-//            }
+-            tasksByDate.put(dueDate, tasksByDate.getOrDefault(dueDate, 0) + 1);
++        // Đếm số task cho mỗi ngày trong filteredTasks
++        for (Task task : filteredTasks) {
++            try {
++                LocalDate dueDate = LocalDate.parse(task.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
++                tasksForDays.put(dueDate, tasksForDays.getOrDefault(dueDate, 0) + 1);
++            }
++            catch (Exception e) {
++                // Do nothing
++            }
+         }
++
+ 
+         List<BarEntry> entries = new ArrayList<>();
+         List<String> labels = new ArrayList<>();
+ 
+         int i = 0;
+-        for (Map.Entry<LocalDate, Integer> entry : tasksByDate.entrySet()) {
++        // Duyệt tasksForDays theo thứ tự (do đã được sắp xếp bởi TreeMap)
++        for (Map.Entry<LocalDate, Integer> entry : tasksForDays.entrySet()) {
+             entries.add(new BarEntry(i, entry.getValue()));
+-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+-                labels.add(entry.getKey().format(DateTimeFormatter.ofPattern("dd/MM")));
+-            }
++            labels.add(entry.getKey().format(DateTimeFormatter.ofPattern("dd/MM")));
+             i++;
+         }
+-
+         BarDataSet dataSet = new BarDataSet(entries, "Tasks");
+         dataSet.setColors(ColorTemplate.MATERIAL_COLORS); // Tùy chỉnh màu sắc
+         dataSet.setValueTextColor(Color.BLACK);
+-        dataSet.setValueTextSize(20f);
++        dataSet.setValueTextSize(16f);
++        dataSet.setValueFormatter(new DefaultValueFormatter(0));
++        dataSet.setBarBorderWidth(0.9f); // Đặt độ dày cho đường viền cột
+ 
+         BarData data = new BarData(dataSet);
++        data.setBarWidth(0.5f); // Đặt chiều rộng cột
+         barChart.setData(data);
+ 
+         XAxis xAxis = barChart.getXAxis();
+@@ -205,5 +225,31 @@
+ 
+         barChart.invalidate(); // Refresh biểu đồ
+     }
++
++    @Override
++    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
++        super.onViewCreated(view, savedInstanceState);
++        LocalDate firstUseDate = taskDb.getFirstTaskCreatedDate();
++        LocalDate currentDate = LocalDate.now();
++
++        setupPieChart();
++        loadPieChartData();
++
++        setupBarChart();
++        if (firstUseDate == null) {
++            // Người dùng mới cài app
++            barChart.clear(); // Xóa dữ liệu hiện tại của biểu đồ (nếu có)
++            barChart.setNoDataText("Chưa có task nào trong khoảng thời gian này."); // Hiển thị thông báo trên biểu đồ
++            barChart.invalidate(); // Refresh biểu đồ
++
++        }
++        else {
++            long daysSinceFirstUse = ChronoUnit.DAYS.between(firstUseDate, currentDate) + 1;
++            // Biểu đồ thống kê số lượng task trong 7 ngày
++            loadBarChartData(7);
++
++        }
++
++    }
+     // --------------------------------------------------------------------------------------------- //
+ }
+\ No newline at end of file
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"CHOOSE_PER_TEST\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n        <option name=\"resolveExternalAnnotations\" value=\"false\" />\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	(revision 0d8aa76aed642ed47354562bf3d3b798d315dcb6)
++++ b/.idea/gradle.xml	(date 1735720638971)
+@@ -4,7 +4,6 @@
+   <component name="GradleSettings">
+     <option name="linkedExternalProjectsSettings">
+       <GradleProjectSettings>
+-        <option name="testRunner" value="CHOOSE_PER_TEST" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+         <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+         <option name="modules">
+Index: app/src/main/java/com/example/mobileapp/TaskDatabaseHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.mobileapp;\r\n\r\nimport static android.content.ContentValues.TAG;\r\n\r\nimport android.content.ContentValues;\r\nimport android.content.Context;\r\nimport android.database.Cursor;\r\nimport android.database.sqlite.SQLiteDatabase;\r\nimport android.database.sqlite.SQLiteOpenHelper;\r\nimport android.util.Log;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class TaskDatabaseHandler extends SQLiteOpenHelper {\r\n    // All Static variables\r\n    private static final int ID_BOUND = 100000;\r\n    // Database Version\r\n    private static final int DATABASE_VERSION = 1;\r\n    // Database Name\r\n    private static final String DATABASE_NAME = \"TasksManager\";\r\n    // Contacts table name\r\n    private static final String TABLE_TASKS = \"Tasks\";\r\n    // Contacts Table Columns names\r\n    private static final String KEY_TASKID = \"taskId\";\r\n    private static final String KEY_USERID = \"userId\";\r\n    private static final String KEY_CATEGORYID = \"categoryId\";\r\n    private static final String KEY_NAME = \"ten_nhiem_vu\";\r\n    private static final String KEY_PRIORITY = \"muc_do_uu_tien\";\r\n    private static final String KEY_STATUS = \"trang_thai\";\r\n    private static final String KEY_DATE = \"ngay_thuc_hien\";\r\n    private static final String KEY_TIME = \"thoi_gian_thuc_hien\";\r\n    private static final String KEY_FREQUENCY = \"tan_suat_lap_lai\";\r\n    private static final String KEY_DESCRIPTION = \"mo_ta\";\r\n\r\n    public TaskDatabaseHandler(Context context) {\r\n        super(context, DATABASE_NAME, null, DATABASE_VERSION);\r\n    }\r\n\r\n    // Creating Tables\r\n    @Override\r\n    public void onCreate(SQLiteDatabase db) {\r\n        String CREATE_TASKS_TABLE = \"CREATE TABLE \" +\r\n                TABLE_TASKS + \"(\"\r\n                + KEY_TASKID + \" INTEGER PRIMARY KEY AUTOINCREMENT,\"\r\n                + KEY_USERID + \" INTEGER ,\"\r\n                + KEY_CATEGORYID + \" INTEGER,\"\r\n                + KEY_NAME + \" TEXT,\"\r\n                + KEY_PRIORITY + \" INTEGER,\"\r\n                + KEY_STATUS + \" INTEGER,\"\r\n                + KEY_DATE + \" TEXT,\"\r\n                + KEY_TIME + \" TEXT,\"\r\n                + KEY_FREQUENCY + \" INTEGER,\"\r\n                + KEY_DESCRIPTION + \" TEXT\"\r\n                + \")\";\r\n        db.execSQL(CREATE_TASKS_TABLE);\r\n    }\r\n\r\n    // Upgrading database\r\n    @Override\r\n    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {\r\n        // Drop older table if existed\r\n        db.execSQL(\"DROP TABLE IF EXISTS \" + TABLE_TASKS);\r\n        // Create tables again\r\n        onCreate(db);\r\n    }\r\n\r\n    // Adding new contact\r\n    public long addTask(Task task) {\r\n        Log.d(TAG, \"Adding event: \" + task.getName() + \" on \" +task.getDate());\r\n        SQLiteDatabase db = this.getWritableDatabase();\r\n        ContentValues values = new ContentValues();\r\n        values.put(KEY_USERID, task.getUserId());\r\n        values.put(KEY_CATEGORYID, task.getCategoryId());\r\n        values.put(KEY_NAME, task.getName());\r\n        values.put(KEY_PRIORITY, task.getPriority());\r\n        values.put(KEY_STATUS, task.getStatus());\r\n        values.put(KEY_DATE, task.getDate());\r\n        values.put(KEY_TIME, task.getTime());\r\n        values.put(KEY_FREQUENCY, task.getRepeat_frequency());\r\n        values.put(KEY_DESCRIPTION, task.getDescription());\r\n\r\n        // Inserting Row\r\n        long id = db.insert(TABLE_TASKS, null, values);\r\n        if (id == -1) {\r\n            Log.e(TAG, \"Failed to insert task: \" + task.getName());\r\n        } else {\r\n            Log.d(TAG, \"Task added with id: \");\r\n        }\r\n        db.close(); // Close database connection\r\n        return id;\r\n    }\r\n\r\n    // Getting single Task\r\n    public Task getTask(int id) {\r\n        SQLiteDatabase db = this.getReadableDatabase();\r\n        Cursor cursor = db.query(TABLE_TASKS,\r\n                new String[] { KEY_TASKID, KEY_USERID, KEY_CATEGORYID, KEY_NAME, KEY_PRIORITY, KEY_STATUS, KEY_DATE, KEY_TIME, KEY_FREQUENCY, KEY_DESCRIPTION },\r\n                KEY_TASKID + \"=?\",\r\n                new String[] { String.valueOf(id) },\r\n                null,\r\n                null,\r\n                null,\r\n                null);\r\n        if (cursor != null) {\r\n            cursor.moveToFirst();\r\n        }\r\n        // Return null nếu không tìm thấy Contact\r\n        if (cursor == null || !cursor.moveToFirst()) {\r\n            return null;\r\n        }\r\n\r\n        Task task = new Task(\r\n                Integer.parseInt(cursor.getString(0)),   // getTaskId\r\n                Integer.parseInt(cursor.getString(1)),    // getUserId\r\n                Integer.parseInt(cursor.getString(2)),    // getCategoryId\r\n                cursor.getString(3),    // getName\r\n                cursor.getString(4),    // getPriority\r\n                cursor.getString(5),    // getStatus\r\n                cursor.getString(6),    // getDate\r\n                cursor.getString(7),    // getTime\r\n                cursor.getString(8),    // getRepeat_frequency\r\n                cursor.getString(9)    // getDescription\r\n        );\r\n        return task;\r\n    }\r\n\r\n    // Getting All Tasks\r\n    public List<Task> getAllTasks() {\r\n        List<Task> TaskList = new ArrayList<Task>();\r\n        // Select All Query\r\n        String selectQuery = \"SELECT  * FROM \" + TABLE_TASKS;\r\n        SQLiteDatabase db = this.getWritableDatabase();\r\n        Cursor cursor = db.rawQuery(selectQuery, null);\r\n        // looping through all rows and adding to list\r\n        if (cursor.moveToFirst()) {\r\n            do {\r\n                Task Task = new Task();\r\n                Task.setTaskId(Integer.parseInt(cursor.getString(0)));\r\n//                Task.setUserId(Integer.parseInt(cursor.getString(1)));\r\n                Task.setCategoryId(Integer.parseInt(cursor.getString(2)));\r\n                Task.setName(cursor.getString(3));\r\n                Task.setPriority(cursor.getString(4));\r\n                Task.setStatus(cursor.getString(5));\r\n                Task.setDate(cursor.getString(6));\r\n                Task.setTime(cursor.getString(7));\r\n                Task.setRepeat_frequency(cursor.getString(8));\r\n                Task.setDescription(cursor.getString(9));\r\n                // Adding Contact to list\r\n                TaskList.add(Task);\r\n            } while (cursor.moveToNext());\r\n        }\r\n        cursor.close();\r\n        // return Task list\r\n        return TaskList;\r\n    }\r\n\r\n    // Updating single contact\r\n    public int updateTask(Task task) {\r\n        SQLiteDatabase db = this.getWritableDatabase();\r\n\r\n        ContentValues values = new ContentValues();\r\n        values.put(KEY_USERID, task.getUserId());\r\n        values.put(KEY_CATEGORYID, task.getCategoryId());\r\n        values.put(KEY_NAME, task.getName());\r\n        values.put(KEY_PRIORITY, task.getPriority());\r\n        values.put(KEY_STATUS, task.getStatus());\r\n        values.put(KEY_DATE, task.getDate());\r\n        values.put(KEY_TIME, task.getTime());\r\n        values.put(KEY_FREQUENCY, task.getRepeat_frequency());\r\n        values.put(KEY_DESCRIPTION, task.getDescription());\r\n\r\n\r\n        // Updating row\r\n        return db.update(TABLE_TASKS, values,\r\n                KEY_TASKID + \" = ?\",\r\n                new String[]{String.valueOf(task.getTaskId())}\r\n        );\r\n    }\r\n\r\n    // Deleting single contact\r\n    public void deleteTask(Task task) {\r\n        SQLiteDatabase db = this.getWritableDatabase();\r\n        db.delete(TABLE_TASKS, KEY_TASKID + \" = ?\",\r\n                new String[] { String.valueOf(task.getTaskId()) });\r\n        db.close();\r\n    }\r\n\r\n    // Deleting all Tasks\r\n    public void deleteAllTasks() {\r\n        SQLiteDatabase db = this.getWritableDatabase();\r\n        db.delete(TABLE_TASKS, null, null); // Xóa tất cả các hàng trong bảng Tasks\r\n        db.close();\r\n    }\r\n\r\n    private boolean checkIfIdExists(int id) {\r\n        SQLiteDatabase db = this.getReadableDatabase();\r\n        String query = \"SELECT 1 FROM \" + TABLE_TASKS + \" WHERE event_id = ?\";\r\n        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(id)});\r\n        boolean exists = cursor.moveToFirst(); // Returns true if the cursor found a record\r\n        cursor.close();\r\n        return exists;\r\n    }\r\n\r\n    public int generateUniqueRandomId() {\r\n        int randomId;\r\n        boolean idExists;\r\n        do {\r\n            randomId = (int) (Math.random() * ID_BOUND) + 1; // Generating a random number between 1 and ID_BOUND\r\n            idExists = checkIfIdExists(randomId);\r\n        } while (idExists);\r\n        return randomId;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/mobileapp/TaskDatabaseHandler.java b/app/src/main/java/com/example/mobileapp/TaskDatabaseHandler.java
+--- a/app/src/main/java/com/example/mobileapp/TaskDatabaseHandler.java	(revision 0d8aa76aed642ed47354562bf3d3b798d315dcb6)
++++ b/app/src/main/java/com/example/mobileapp/TaskDatabaseHandler.java	(date 1735699155314)
+@@ -9,6 +9,8 @@
+ import android.database.sqlite.SQLiteOpenHelper;
+ import android.util.Log;
+ 
++import java.time.LocalDate;
++import java.time.format.DateTimeFormatter;
+ import java.util.ArrayList;
+ import java.util.List;
+ 
+@@ -211,4 +213,19 @@
+         } while (idExists);
+         return randomId;
+     }
++
++    public LocalDate getFirstTaskCreatedDate() {
++        String query = "SELECT " + KEY_DATE + " FROM " + TABLE_TASKS + " ORDER BY " + KEY_TASKID + " ASC LIMIT 1";   // Lấy date của task đầu tiên theo thứ tự id tăng dần
++
++        try (Cursor cursor = getReadableDatabase().rawQuery(query, null)) {
++            if (cursor.moveToFirst()) {
++                String dateString = cursor.getString(0);
++                return LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
++            }
++        } catch (Exception e) {
++            // Xử lý lỗi, ví dụ: log lỗi
++            e.printStackTrace();
++        }
++        return null; // Trả về null nếu không có task nào
++    }
+ }

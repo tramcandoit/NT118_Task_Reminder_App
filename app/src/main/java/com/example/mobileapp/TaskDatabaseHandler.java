@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -210,5 +212,20 @@ public class TaskDatabaseHandler extends SQLiteOpenHelper {
             idExists = checkIfIdExists(randomId);
         } while (idExists);
         return randomId;
+    }
+
+    public LocalDate getFirstTaskCreatedDate() {
+        String query = "SELECT " + KEY_DATE + " FROM " + TABLE_TASKS + " ORDER BY " + KEY_TASKID + " ASC LIMIT 1";   // Lấy date của task đầu tiên theo thứ tự id tăng dần
+
+        try (Cursor cursor = getReadableDatabase().rawQuery(query, null)) {
+            if (cursor.moveToFirst()) {
+                String dateString = cursor.getString(0);
+                return LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            }
+        } catch (Exception e) {
+            // Xử lý lỗi, ví dụ: log lỗi
+            e.printStackTrace();
+        }
+        return null; // Trả về null nếu không có task nào
     }
 }
