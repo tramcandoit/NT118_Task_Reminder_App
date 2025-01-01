@@ -51,19 +51,44 @@ public class AddCategoriesFragment extends DialogFragment {
 
         // Tạo danh sách icon (thay thế bằng danh sách icon của bạn)
         iconList = new ArrayList<>();
-        iconList.add(R.drawable.icon_user); // Thay bằng các drawable icon của bạn.
         iconList.add(R.drawable.icon_user);
-        iconList.add(R.drawable.icon_user);
-        iconList.add(R.drawable.icon_user); // Thay bằng các drawable icon của bạn.
-        iconList.add(R.drawable.icon_user);
-        iconList.add(R.drawable.icon_user);// Thay bằng các drawable icon của bạn.
-        iconList.add(R.drawable.icon_user);
-        iconList.add(R.drawable.icon_user);
-        iconList.add(R.drawable.icon_user); // Thay bằng các drawable icon của bạn.
-        iconList.add(R.drawable.icon_user);
-        iconList.add(R.drawable.icon_user);
+        iconList.add(R.drawable.icon_work);
+        iconList.add(R.drawable.icon_workflow);
+        iconList.add(R.drawable.icon_health);
+        iconList.add(R.drawable.icon_shopping);
+        iconList.add(R.drawable.icon_cooking);
+        iconList.add(R.drawable.icon_train);
+        iconList.add(R.drawable.icon_music);
+        iconList.add(R.drawable.icon_education);
+        iconList.add(R.drawable.icon_gym);
+        iconList.add(R.drawable.icon_running);
+        iconList.add(R.drawable.icon_finance);
+        iconList.add(R.drawable.icon_hobby);
+        iconList.add(R.drawable.icon_meeting);
+        iconList.add(R.drawable.icon_birthday);
+        iconList.add(R.drawable.icon_relax);
+        iconList.add(R.drawable.icon_yoga);
+        iconList.add(R.drawable.icon_reading);
+        iconList.add(R.drawable.icon_writing);
+        iconList.add(R.drawable.icon_gardening);
+        iconList.add(R.drawable.icon_housework);
+        iconList.add(R.drawable.icon_photography);
+        iconList.add(R.drawable.icon_socialmedia);
+        iconList.add(R.drawable.icon_technology);
+        iconList.add(R.drawable.icon_fashion);
+        iconList.add(R.drawable.icon_beauty);
+        iconList.add(R.drawable.icon_home2);
+        iconList.add(R.drawable.icon_volunteer);
+        iconList.add(R.drawable.icon_schedule);
+        iconList.add(R.drawable.icon_relationship);
+        iconList.add(R.drawable.icon_car_maintenance);
+        iconList.add(R.drawable.icon_food_delivery);
+        iconList.add(R.drawable.icon_watchtv);
+        iconList.add(R.drawable.icon_laptop);
+        iconList.add(R.drawable.icon_contact);
+        iconList.add(R.drawable.icon_goal);
+        iconList.add(R.drawable.icon_eating);
 
-        // ... thêm các icon khác
 
         iconAdapter = new IconAdapter(requireContext(), iconList);
         spCategoryIcon.setAdapter(iconAdapter);
