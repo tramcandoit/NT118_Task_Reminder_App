@@ -91,6 +91,8 @@ public class LanguageManager {
                 return language.equals("vi") ? "Đã thêm sự kiện thành công" : "Event added successfully";
             case "task_added":
                 return language.equals("vi") ? "Đã thêm nhiệm vụ thành công" : "Task added successfully";
+            case "logout_success":
+                return language.equals("vi") ? "Đã đăng xuất thành công" : "Log out successfully";
 
             default:
                 return key;

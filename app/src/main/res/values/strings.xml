@@ -92,5 +92,6 @@
     <string name="priority">Priority</string>
     <string name="search_here">Search here</string>
     <string name="delete">Delete</string>
+    <string name="your_current_user">Your current user is: </string>
 
 </resources>

@@ -78,4 +78,5 @@
     <string name="priority">Mức độ ưu tiên</string>
     <string name="search_here">Tìm kiếm ở đây</string>
     <string name="delete">Xóa</string>
+    <string name="your_current_user">"Tài khoản hiện tại là: "</string>
 </resources>

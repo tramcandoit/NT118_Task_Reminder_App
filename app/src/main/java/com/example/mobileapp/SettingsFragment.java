@@ -5,10 +5,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,6 +62,8 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+
+
     // Khai báo các view
     private TextView tvAccount;
     private TextView tvNotiSound;
@@ -65,6 +72,8 @@ public class SettingsFragment extends Fragment {
     private TextView tvLanguage;
     private TextView tvHelpFeed;
     private TextView tvAbout;
+    private Button btnLogOut;
+    private FirebaseAuth auth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,19 +89,37 @@ public class SettingsFragment extends Fragment {
         tvLanguage = view.findViewById(R.id.tv_language);
         tvHelpFeed = view.findViewById(R.id.tv_help_feed);
         tvAbout = view.findViewById(R.id.tv_about);
+        auth = FirebaseAuth.getInstance();
+
+        btnLogOut = view.findViewById(R.id.btn_logout);
 
         // Xử lý sự kiện click
         tvAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Chuyển sang class AccountFragment
-                AccountFragment accountFragment = new AccountFragment();
+                FirebaseUser currentUser = auth.getCurrentUser();
+                if (currentUser == null)
+                {
+                    // Chuyển sang class AccountFragment
+                    LoginFragment loginFragment = new LoginFragment();
 
-                // Thực hiện transaction để thay thế fragment hiện tại
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, accountFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                    // Thực hiện transaction để thay thế fragment hiện tại
+                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, loginFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+                else
+                {
+                    AccountFragment accountFragment = new AccountFragment();
+
+                    // Thực hiện transaction để thay thế fragment hiện tại
+                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, accountFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+
             }
         });
 
@@ -166,6 +193,17 @@ public class SettingsFragment extends Fragment {
 
             }
         });
+
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(getContext(), LanguageManager.getLocalizedText(requireContext(), "logout_success"), Toast.LENGTH_SHORT).show();
+                btnLogOut.setVisibility(View.GONE);
+            }
+        });
+
+
 
         return view;
     }
