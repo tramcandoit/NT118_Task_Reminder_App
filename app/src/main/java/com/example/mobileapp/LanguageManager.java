@@ -93,7 +93,48 @@ public class LanguageManager {
                 return language.equals("vi") ? "Đã thêm nhiệm vụ thành công" : "Task added successfully";
             case "logout_success":
                 return language.equals("vi") ? "Đã đăng xuất thành công" : "Log out successfully";
-
+            case "email_sent":
+                return language.equals("vi") ? "Đã gửi thư đặt lại mật khẩu tới email của bạn"
+                        : "Reset password email sent successfully";
+            case "email_sent_failed":
+                return  language.equals("vi") ? "Không thể gửi thư đặt lại mật khẩu !" :
+                        "Cannot sent password reset email !";
+            case "email_is_sending":
+                return language.equals("vi") ? "Đang gửi email đặt lại mật khẩu..."
+                        : "Sending reset password email ...";
+            case "please_input_email":
+                return language.equals("vi") ? "Vui lòng nhập email !"
+                        : "Please input your email !";
+            case "email_format_not_eligible":
+                return language.equals("vi") ? "Định dạng email không hợp lệ !"
+                        : "Email format is not eligible !";
+            case "password_empty":
+                return  language.equals("vi") ? "Vui lòng nhập mật khẩu !"
+                        : "Please enter your password !";
+            case "repassword_empty":
+                return  language.equals("vi") ? "Vui lòng nhập lại mật khẩu !"
+                        : "Please re-enter your password !";
+            case "password_not_match":
+                return  language.equals("vi") ? "Mật khẩu không trùng khớp !"
+                        : "Password does not match !";
+            case "creating_account":
+                return language.equals("vi") ? "Đang tạo tài khoản ..."
+                        : "Creating account ...";
+            case "login_success":
+                return language.equals("vi") ? "Đăng nhập thành công !"
+                        : "Log in successfully !";
+            case "login_fail":
+                return language.equals("vi") ? "Đăng nhập thất bại !"
+                        : "Log in failed !";
+            case "password_weak":
+                return language.equals("vi") ? "Mật khẩu quá yếu !"
+                        : "Password is too weak !";
+            case "email_already_exists":
+                return language.equals("vi") ? "Email này đã tồn tại !"
+                        : "Email is already exist !";
+            case "account_created":
+                return language.equals("vi") ? "Tài khoản đã được tạo thành công !"
+                        : "Sign up successfully !";
             default:
                 return key;
         }

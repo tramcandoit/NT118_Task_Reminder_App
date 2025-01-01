@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    // Tạo kênh thông báo cho các sự kiện (cần thiết cho Android Oreo trở lên)
+    // Tạo kênh thông báo cho các sự kiện
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Event Notifications";
@@ -99,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private FirebaseDatabase fbdb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

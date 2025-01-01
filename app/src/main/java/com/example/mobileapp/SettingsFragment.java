@@ -72,7 +72,6 @@ public class SettingsFragment extends Fragment {
     private TextView tvLanguage;
     private TextView tvHelpFeed;
     private TextView tvAbout;
-    private Button btnLogOut;
     private FirebaseAuth auth;
 
     @Override
@@ -90,8 +89,6 @@ public class SettingsFragment extends Fragment {
         tvHelpFeed = view.findViewById(R.id.tv_help_feed);
         tvAbout = view.findViewById(R.id.tv_about);
         auth = FirebaseAuth.getInstance();
-
-        btnLogOut = view.findViewById(R.id.btn_logout);
 
         // Xử lý sự kiện click
         tvAccount.setOnClickListener(new View.OnClickListener() {
@@ -194,14 +191,6 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        btnLogOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().signOut();
-                Toast.makeText(getContext(), LanguageManager.getLocalizedText(requireContext(), "logout_success"), Toast.LENGTH_SHORT).show();
-                btnLogOut.setVisibility(View.GONE);
-            }
-        });
 
 
 
