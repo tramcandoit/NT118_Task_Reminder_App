@@ -3,12 +3,14 @@ package com.example.mobileapp;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,9 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView; // Dùng để điều hướng giữa các fragment
@@ -25,6 +30,22 @@ public class MainActivity extends AppCompatActivity {
     // Biến để lưu trạng thái hiển thị của FAB (VISIBLE hoặc GONE)
     private static final String FAB_VISIBILITY_STATE = "fab_visibility_state";
     private int savedVisibility = View.VISIBLE; // Mặc định là hiển thị
+    private FirebaseAuth auth;
+
+
+
+    private void checkLoginStatus() {
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            // Người dùng đã đăng nhập
+            String email = currentUser.getEmail();
+            Toast.makeText(this, "Đã đăng nhập với tài khoản: " + email, Toast.LENGTH_SHORT).show();
+        } else {
+            // Người dùng chưa đăng nhập
+            Toast.makeText(this, "Hãy đăng nhập để lưu thông tin của bạn !", Toast.LENGTH_LONG).show();
+        }
+    }
+
 
 
     // Hàm để thêm task mới (sử dụng trong HomeFragment)
@@ -63,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    // Tạo kênh thông báo cho các sự kiện (cần thiết cho Android Oreo trở lên)
+
+    // Tạo kênh thông báo cho các sự kiện
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Event Notifications";
@@ -85,8 +107,16 @@ public class MainActivity extends AppCompatActivity {
         int savedThemeMode = sharedPreferences.getInt("theme_mode", AppCompatDelegate.MODE_NIGHT_NO);
         AppCompatDelegate.setDefaultNightMode(savedThemeMode);
 
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Khởi tạo Firebase Authentication
+        auth = FirebaseAuth.getInstance();
+
+        // Kiểm tra trạng thái đăng nhập
+        checkLoginStatus();
+
 
         // Áp dụng ngôn ngữ
         LanguageManager.applyLanguage(this);

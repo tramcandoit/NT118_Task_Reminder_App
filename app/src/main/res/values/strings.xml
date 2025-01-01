@@ -4,7 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- TRANG   -->
-    <string name="welcome_back">Welcome Back</string>
+    <string name="welcome_back">Welcome back !</string>
     <string name="login">Login</string>
     <string name="your_email">Your email</string>
     <string name="hint_email">Email address</string>
@@ -92,5 +92,9 @@
     <string name="priority">Priority</string>
     <string name="search_here">Search here</string>
     <string name="delete">Delete</string>
+    <string name="your_current_user">Your current user is: </string>
+    <string name="enter_your_email_here">Enter your email here ...</string>
+    <string name="reset_password">Reset password</string>
+    <string name="re_password">Re-enter password</string>
 
 </resources>

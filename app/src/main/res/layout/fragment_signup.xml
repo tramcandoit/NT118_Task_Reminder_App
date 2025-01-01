@@ -9,6 +9,29 @@
     android:padding="20dp"
     tools:context=".SignupFragment">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/tv_settings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:tint="@color/blue"
+            android:src="@drawable/ic_arrow_left"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            app:tint="@color/blue"/>
+    </LinearLayout>
+
     <!--  Text Create Account   -->
     <TextView
         android:id="@+id/tv_create"
@@ -37,49 +60,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--  TextView Your Username   -->
-    <TextView
-        android:id="@+id/tv_your_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="30dp"
-        android:drawablePadding="8dp"
-        android:text="@string/your_username"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:drawableLeftCompat="@drawable/ic_user"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signup" />
-
-    <!--  EditText Input username  -->
-    <EditText
-        android:id="@+id/et_username_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/edittext_border"
-        android:hint="@string/hint_username"
-        android:padding="15dp"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@+id/tv_your_username"
-        tools:layout_editor_absoluteX="19dp" />
-
     <!--  TextView Your email   -->
+
+    <!--  EditText Input email  -->
+
     <TextView
         android:id="@+id/tv_your_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="12dp"
         android:drawablePadding="8dp"
         android:text="@string/your_email"
         android:textColor="@color/black"
         android:textSize="18sp"
         app:drawableLeftCompat="@drawable/ic_email"
-        app:layout_constraintStart_toStartOf="@+id/tv_your_username"
-        app:layout_constraintTop_toBottomOf="@+id/et_username_input" />
+        app:layout_constraintTop_toBottomOf="@id/tv_signup"
+        tools:layout_editor_absoluteX="3dp" />
 
-    <!--  EditText Input email  -->
     <EditText
         android:id="@+id/et_email_input"
         android:layout_width="match_parent"
@@ -147,6 +144,57 @@
         app:layout_constraintEnd_toEndOf="@+id/et_pass_input"
         app:layout_constraintTop_toTopOf="@+id/et_pass_input" />
 
+    <TextView
+        android:id="@+id/tv_repassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:drawablePadding="8dp"
+        android:text="@string/re_password"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:drawableLeftCompat="@drawable/ic_pass"
+        app:layout_constraintStart_toStartOf="@+id/tv_your_email"
+        app:layout_constraintTop_toBottomOf="@+id/ic_show" />
+    <!--  EditText Re-Input email  -->
+    <EditText
+        android:id="@+id/et_pass_reinput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:autofillHints=""
+        android:background="@drawable/edittext_border"
+        android:hint="@string/hint_password"
+        android:inputType="textPassword"
+        android:padding="15dp"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_repassword"
+        tools:layout_editor_absoluteX="19dp" />
+
+    <!--  icon hide password  -->
+    <ImageView
+        android:id="@+id/ic_hide_re"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_hide"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/et_pass_reinput"
+        app:layout_constraintEnd_toEndOf="@+id/et_pass_reinput"
+        app:layout_constraintTop_toTopOf="@+id/et_pass_reinput" />
+
+    <!--  icon show password  -->
+    <ImageView
+        android:id="@+id/ic_show_re"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_show"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/et_pass_input"
+        app:layout_constraintEnd_toEndOf="@+id/et_pass_input"
+        app:layout_constraintTop_toTopOf="@+id/et_pass_input" />
+
     <!-- Login Button -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_signup"
@@ -159,7 +207,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@+id/et_pass_input"
+        app:layout_constraintTop_toBottomOf="@+id/et_pass_reinput"
         tools:layout_editor_absoluteX="19dp" />
 
     <!-- Text Already a user -->
