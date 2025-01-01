@@ -49,7 +49,7 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
                 "(" + generateCategoryId() + ", 111, 'Work', " + R.drawable.icon_user + "), " +
                 "(" + generateCategoryId() + ", 111, 'Health', " + R.drawable.icon_user + "), " +
                 "(" + generateCategoryId() + ", 111, 'Shopping', " + R.drawable.icon_user + "), " +
-                "(" + generateCategoryId() + ", 111, 'Exercise', " + R.drawable.icon_user + "), ");
+                "(" + generateCategoryId() + ", 111, 'Exercise', " + R.drawable.icon_user + ")");
 
 
 
