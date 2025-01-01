@@ -136,7 +136,8 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
         tasksList = new ArrayList<>();
         tasksList = db.getAllTasks();
 
-        lvAdapter = new TasksArrayAdapter(requireActivity(), tasksList);
+        // In HomeFragment's onCreateView():
+        lvAdapter = new TasksArrayAdapter(requireActivity(), tasksList, categoryDb); // Pass categoryDb
         listView.setAdapter(lvAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
