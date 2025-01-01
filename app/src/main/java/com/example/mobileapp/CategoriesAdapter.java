@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import java.util.HashMap;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,7 +19,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     private final Context context;
     private SparseBooleanArray selectedCategories; // Add this
     private OnItemClickListener onItemClickListener; // Add listener
-
+    private HashMap<String, Integer> categoryPositions = new HashMap<>();
 
     public CategoriesAdapter(Context context, List<CategoriesItem> categories, SparseBooleanArray selectedCategories) {
         this.context = context;
@@ -80,5 +80,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
             imageView = itemView.findViewById(R.id.img_home_categories);
             textView = itemView.findViewById(R.id.tv_home_categories);
         }
+    }
+
+    public int getItemPositionByName(String categoryName) {
+        return categoryPositions.getOrDefault(categoryName, -1); // Trả về -1 nếu không tìm thấy
     }
 }
