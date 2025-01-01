@@ -49,7 +49,11 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
                 "(" + generateCategoryId() + ", 111, 'Work', " + R.drawable.icon_user + "), " +
                 "(" + generateCategoryId() + ", 111, 'Health', " + R.drawable.icon_user + "), " +
                 "(" + generateCategoryId() + ", 111, 'Shopping', " + R.drawable.icon_user + "), " +
-                "(" + generateCategoryId() + ", 111, 'Cooking', " + R.drawable.icon_user + ")");
+                "(" + generateCategoryId() + ", 111, 'Exercise', " + R.drawable.icon_user + "), ");
+
+
+
+
     }
 
     // Upgrading database
@@ -179,9 +183,9 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
 
     private boolean checkIfIdExists(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT 1 FROM " + TABLE_CATEGORIES + " WHERE event_id = ?";
+        String query = "SELECT 1 FROM " + TABLE_CATEGORIES + " WHERE " + KEY_CATEGORYID + " = ?";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(id)});
-        boolean exists = cursor.moveToFirst(); // Returns true if the cursor found a record
+        boolean exists = cursor.moveToFirst();
         cursor.close();
         return exists;
     }

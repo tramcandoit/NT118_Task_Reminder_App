@@ -19,8 +19,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class MainActivity extends AppCompatActivity {
-    private BottomNavigationView bottomNavigationView; // Dùng để điều hướng giữa các fragment
-    private FloatingActionButton btn_add; // Nút floating action button
+    BottomNavigationView bottomNavigationView; // Dùng để điều hướng giữa các fragment
+    FloatingActionButton btn_add; // Nút floating action button
 
     // Biến để lưu trạng thái hiển thị của FAB (VISIBLE hoặc GONE)
     private static final String FAB_VISIBILITY_STATE = "fab_visibility_state";
@@ -47,6 +47,21 @@ public class MainActivity extends AppCompatActivity {
             addEventFragment.show(getSupportFragmentManager(), "addEventFragment");
         }
     }
+
+    private void addCategory() {
+        CategoriesMenuFragment categoriesMenuFragment = (CategoriesMenuFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (categoriesMenuFragment != null) {
+            AddCategoriesFragment addCategoriesFragment = AddCategoriesFragment.newInstance(new AddCategoriesFragment.OnCategoryAddedListener() {
+                @Override
+                public void onCategoryAdded(CategoriesItem category) {
+                    categoriesMenuFragment.onCategoryAdded(category); // Gọi phương thức onCategoryAdded() trong CategoriesMenuFragment
+                }
+            });
+
+            addCategoriesFragment.show(getSupportFragmentManager(), "addCategoriesFragment");
+        }
+    }
+
 
     // Tạo kênh thông báo cho các sự kiện (cần thiết cho Android Oreo trở lên)
     private void createNotificationChannel() {
@@ -105,10 +120,14 @@ public class MainActivity extends AppCompatActivity {
 
         // Xử lý sự kiện click cho FAB
         btn_add.setOnClickListener(v -> {
-            if (bottomNavigationView.getSelectedItemId() == R.id.nav_home) {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+            if (currentFragment instanceof HomeFragment) {
                 addTask();
-            } else if (bottomNavigationView.getSelectedItemId() == R.id.nav_calendar) {
+            } else if (currentFragment instanceof CalendarFragment) {
                 addEvent();
+            } else if (currentFragment instanceof CategoriesMenuFragment) {
+                addCategory();
             }
         });
     }

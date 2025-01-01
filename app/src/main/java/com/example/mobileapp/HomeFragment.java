@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,6 +41,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
     private List<Task> tasksList;
     private TaskDatabaseHandler db;
     private CategoryDatabaseHandler categoryDb;
+    private TextView tvCategoriesMenu;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -91,6 +93,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
 
         rvCategories = view.findViewById(R.id.rv_home_categories);
         listView = view.findViewById(R.id.lv_Todaytask);
+        tvCategoriesMenu = view.findViewById(R.id.tv_home_categories_menu);
         db = new TaskDatabaseHandler(requireContext());
         categoryDb = new CategoryDatabaseHandler(requireContext());
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false); // Hoặc "this" nếu trong Activity
@@ -199,6 +202,17 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
                 lvAdapter.notifyDataSetChanged();
 
                 return false;
+            }
+        });
+
+        tvCategoriesMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CategoriesMenuFragment categoriesMenuFragment = new CategoriesMenuFragment();
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, categoriesMenuFragment); // Thay "R.id.fragment_container" bằng ID của container Fragment trong layout chính của bạn.
+                transaction.addToBackStack(null); // Cho phép quay lại fragment Home khi nhấn nút Back.
+                transaction.commit();
             }
         });
 
