@@ -277,18 +277,12 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
                             .show();
                 })
                 .setNeutralButton(LanguageManager.getLocalizedText(requireContext(), "edit"), (dialog, which) -> {
-                    EditEventFragment editEventFragment = EditEventFragment.newInstance(event);
-                    editEventFragment.setTargetFragment(CalendarFragment.this, EDIT_EVENT_REQUEST_CODE); // Đặt request code
-                    editEventFragment.show(getParentFragmentManager(), "EditEventFragment");
-                    dialog.dismiss(); // Đóng dialog details sau khi mở dialog edit
+
                 });
 
 
         AlertDialog dialog = builder.create();
         dialog.show();;
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
 
