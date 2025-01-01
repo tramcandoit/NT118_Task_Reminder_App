@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +26,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
+
+ A simple {@link Fragment} subclass.
+
+ Use the {@link HomeFragment#newInstance} factory method to
+
+ create an instance of this fragment.
  */
-public class HomeFragment extends Fragment implements OnTaskAddedListener{
+public class HomeFragment extends Fragment implements OnTaskAddedListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -42,9 +47,10 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
     private TaskDatabaseHandler db;
     private CategoryDatabaseHandler categoryDb;
     private TextView tvCategoriesMenu;
+    private SparseBooleanArray selectedCategories;
 
     public HomeFragment() {
-        // Required empty public constructor
+// Required empty public constructor
     }
 
     public static HomeFragment newInstance(String param1, String param2) {
@@ -55,6 +61,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
         fragment.setArguments(args);
         return fragment;
     }
+
     private void cancelNotification(Task task) {
         Context context = requireContext();
         Intent intent = new Intent(context, TaskNotificationReceiver.class);
@@ -79,7 +86,6 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
         lvAdapter.notifyDataSetChanged();
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,9 +93,10 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+// Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
 
         rvCategories = view.findViewById(R.id.rv_home_categories);
         listView = view.findViewById(R.id.lv_Todaytask);
@@ -104,6 +111,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
 
         categories = new ArrayList<>();
         categories = categoryDb.getAllCategories();
+
 //        categories.add(new CategoriesItem(1111, 111, "Work", R.drawable.icon_user));
 //        categories.add(new CategoriesItem(2222, 111, "Health", R.drawable.icon_user));
 //        categories.add(new CategoriesItem(3333, 111, "Shopping", R.drawable.icon_user));
@@ -113,13 +121,13 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
 //        categories.add(new CategoriesItem(7777, 111, "Misc", R.drawable.icon_user));
 //        categories.add(new CategoriesItem(8888, 111, "Study", R.drawable.icon_user));
 
+        selectedCategories = new SparseBooleanArray();
+        filterTasksBySelectedCategories();
 
-
-
-        categoriesAdapter = new CategoriesAdapter(requireContext(), categories); // Hoặc "this" nếu trong Activity
+        categoriesAdapter = new CategoriesAdapter(requireContext(), categories, selectedCategories);
         rvCategories.setAdapter(categoriesAdapter);
 
-        if (categories.size() > 4) {
+        if (categories.size() > 3) {
             rvCategories.setHorizontalScrollBarEnabled(true);
         } else {
             rvCategories.setHorizontalScrollBarEnabled(false);
@@ -128,9 +136,26 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
         rvCategories.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
+                super.onScrolled(recyclerView, dx, dy);
             }
         });
+
+
+        categoriesAdapter.setOnItemClickListener(position -> {
+            int categoryId = categories.get(position).getCategoryId();
+
+            if (selectedCategories.get(categoryId, false)) {
+                // Nếu category đã được chọn, bỏ chọn (xóa khỏi selectedCategories)
+                selectedCategories.delete(categoryId);
+            } else {
+                // Nếu category chưa được chọn, thêm vào selectedCategories
+                selectedCategories.put(categoryId, true);
+            }
+
+            filterTasksBySelectedCategories(); // Call your filtering method
+            categoriesAdapter.notifyDataSetChanged();
+        });
+
 
         // Prepare some test data for list
         tasksList = new ArrayList<>();
@@ -222,5 +247,28 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
         return view;
     }
 
+    private void filterTasksBySelectedCategories() {
+        List<Task> filteredTasks = new ArrayList<>();
+        List<Task> allTasks = db.getAllTasks();
+        Log.d("HomeFragment", "All tasks: " + allTasks.size());
+        // Check if no categories are selected
+        if (selectedCategories.size() == 0) {
+            // If no category is selected, show all tasks
+
+            filteredTasks.addAll(db.getAllTasks());
+        } else {
+            // Otherwise, filter tasks based on selected categories
+            for (Task task : db.getAllTasks()) {
+                if (selectedCategories.get(task.getCategoryId(), false)) {
+                    filteredTasks.add(task);
+                }
+            }
+        }
+        Log.d("Suuuuuuuuuuuuuuuuu", selectedCategories.size() + "");
+
+        // Update the ListView with filtered tasks
+        lvAdapter = new TasksArrayAdapter(requireActivity(), filteredTasks, categoryDb);
+        listView.setAdapter(lvAdapter);
+    }
 
 }
