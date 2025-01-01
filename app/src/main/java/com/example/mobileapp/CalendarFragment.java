@@ -221,64 +221,70 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Event clickedEvent = eventList.get(position);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                builder.setTitle(clickedEvent.getName());
-
-                String taskDetails =
-                        LanguageManager.getLocalizedText(requireContext(), "date") + ": " + clickedEvent.getDate() + "\n" +
-                                LanguageManager.getLocalizedText(requireContext(), "frequency") + ": " + clickedEvent.getRepeat_frequency() + "\n" +
-                                LanguageManager.getLocalizedText(requireContext(), "description") + ": " + clickedEvent.getDescription();
-
-                builder.setMessage(taskDetails);
-                builder.setPositiveButton(
-                        LanguageManager.getLocalizedText(requireContext(), "ok"),
-                        null
-                );
-
-                builder.setNegativeButton(
-                        LanguageManager.getLocalizedText(requireContext(), "delete"),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                new AlertDialog.Builder(requireContext())
-                                        .setTitle(LanguageManager.getLocalizedText(requireContext(), "confirm_delete"))
-                                        .setMessage(LanguageManager.getLocalizedText(requireContext(), "confirm_delete_message"))
-                                        .setPositiveButton(
-                                                LanguageManager.getLocalizedText(requireContext(), "yes"),
-                                                new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface confirmDialog, int which) {
-                                                        Event eventToRemove = eventList.get(position);
-                                                        event_db.RemoveEvent(eventToRemove.getEventId());
-                                                        fullEventList.remove(eventToRemove);
-                                                        eventList.remove(position);
-                                                        adapter.notifyDataSetChanged();
-                                                        addEventsToCalendar();
-
-                                                        Toast.makeText(
-                                                                requireContext(),
-                                                                LanguageManager.getLocalizedText(requireContext(), "event_deleted"),
-                                                                Toast.LENGTH_SHORT
-                                                        ).show();
-                                                    }
-                                                }
-                                        )
-                                        .setNegativeButton(
-                                                LanguageManager.getLocalizedText(requireContext(), "no"),
-                                                null
-                                        )
-                                        .show();
-                            }
-                        }
-                );
-
-                builder.show();
+                showEventDetailsDialog(clickedEvent);
             }
         });
 
+
         return view;
     }
+
+    private void showEventDetailsDialog(Event event) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.fragment_eventdetails, null);
+
+        // Ánh xạ các view trong dialog
+        TextView tvEventName = dialogView.findViewById(R.id.tv_eventdetail_eventdetail_textbox);
+        TextView tvEventDate = dialogView.findViewById(R.id.tv_eventdetail_date_selector);
+        TextView tvEventFrequency = dialogView.findViewById(R.id.tv_eventdetail_frequency_selector);
+        TextView tvEventDescription = dialogView.findViewById(R.id.tv_eventdetail_description);
+
+
+        // Đặt giá trị cho các view
+        tvEventName.setText(event.getName());
+        tvEventDate.setText(event.getDate());
+        tvEventFrequency.setText(event.getRepeat_frequency());
+        tvEventDescription.setText(event.getDescription());
+
+
+        builder.setView(dialogView)
+                .setPositiveButton(LanguageManager.getLocalizedText(requireContext(), "ok"), null)
+                .setNegativeButton(LanguageManager.getLocalizedText(requireContext(), "delete"), (dialog, which) -> {
+                    new AlertDialog.Builder(requireContext())
+                            .setTitle(LanguageManager.getLocalizedText(requireContext(), "confirm_delete"))
+                            .setMessage(LanguageManager.getLocalizedText(requireContext(), "confirm_delete_message"))
+                            .setPositiveButton(LanguageManager.getLocalizedText(requireContext(), "yes"), (confirmDialog, whichButton) -> {
+                                event_db.RemoveEvent(event.getEventId());
+
+                                // Cập nhật eventList và fullEventList
+                                eventList.remove(event);
+                                fullEventList.remove(event);
+
+                                // Cập nhật lại giao diện
+                                adapter.notifyDataSetChanged();
+                                addEventsToCalendar();
+
+                                Toast.makeText(
+                                        requireContext(),
+                                        LanguageManager.getLocalizedText(requireContext(), "event_deleted"),
+                                        Toast.LENGTH_SHORT
+                                ).show();
+
+                                dialog.dismiss(); // Đóng dialog details sau khi xóa
+                            })
+                            .setNegativeButton(LanguageManager.getLocalizedText(requireContext(), "no"), null)
+                            .show();
+                })
+                .setNeutralButton(LanguageManager.getLocalizedText(requireContext(), "edit"), (dialog, which) -> {
+
+                });
+
+
+        AlertDialog dialog = builder.create();
+        dialog.show();;
+    }
+
 
     private void showTodayEvents() {
         // Định dạng ngày hiện tại
