@@ -4,92 +4,122 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="85dp"
-    android:background="@drawable/background_tasks_item">
+
+    android:background="@drawable/background_tasks_item"
+    android:descendantFocusability="blocksDescendants"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/checkbox_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
 
 
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
     <CheckBox
         android:id="@+id/checkbox_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
+
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/ll_item_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/background_tasks_item"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="3dp"
-
-        app:layout_constraintStart_toEndOf="@+id/checkbox_item"
-        app:layout_constraintTop_toBottomOf="@id/checkbox_item"
-        >
-
-        <ImageView
-            android:id="@+id/img_item_category_image"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/icon_user"
-            android:textColor="@color/black"
-            android:layout_marginEnd="8dp"
-            />
-
-        <TextView
-            android:id="@+id/tv_item_category_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Work"
-            android:textStyle="italic"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
-    </LinearLayout>
-
-
-
-    <HorizontalScrollView
-        android:id="@+id/horizontalScrollView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="20dp"
-        android:scrollbars="none"
-        android:layout_marginTop="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/checkbox_item"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/tv_item_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:text="TaskName with a very long description that needs to scroll"
-            android:textColor="@color/black"
-            android:textSize="21sp"
-             />
-
-    </HorizontalScrollView>
-
-    <TextView
-        android:id="@+id/tv_item_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="25dp"
-        android:gravity="center_vertical"
-        android:text="Time"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         />
+    </androidx.constraintlayout.widget.ConstraintLayout>>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_item_priority"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+
+        app:layout_constraintStart_toEndOf="@+id/checkbox_container"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/ll_item_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/background_tasks_item"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="3dp"
+
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            >
+
+            <ImageView
+                android:id="@+id/img_item_category_image"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/icon_user"
+                android:textColor="@color/black"
+                android:layout_marginEnd="8dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_item_category_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Work"
+                android:textStyle="italic"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tv_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="40dp"
+                android:text="TaskName with a very long description that needs to scroll"
+                android:textColor="@color/black"
+                android:textSize="21sp"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:scrollHorizontally="true"
+
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <TextView
+            android:id="@+id/tv_item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="25dp"
+
+            android:gravity="center_vertical"
+            android:text="Time"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

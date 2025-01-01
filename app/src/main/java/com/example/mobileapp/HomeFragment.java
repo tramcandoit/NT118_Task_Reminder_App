@@ -144,6 +144,8 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Task clickedTask = tasksList.get(position);
+
+
                 CategoriesItem selectedCategory = categoryDb.getCategory(clickedTask.getCategoryId());
 
                 // Tìm category theo ID trong database của Category

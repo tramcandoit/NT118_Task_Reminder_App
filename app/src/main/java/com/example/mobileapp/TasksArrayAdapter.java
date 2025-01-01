@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -30,11 +31,14 @@ public class TasksArrayAdapter extends ArrayAdapter<Task> {
         }
 
         TextView tvItemName = convertView.findViewById(R.id.tv_item_name);
+        tvItemName.setSelected(true);
         TextView tvItemTime = convertView.findViewById(R.id.tv_item_time);
         TextView tvCategoryName = convertView.findViewById(R.id.tv_item_category_name);  // Category name
         ImageView imgCategoryIcon = convertView.findViewById(R.id.img_item_category_image); // Category image
 
         Task task = getItem(position);
+
+
 
         if (task != null) {
             tvItemName.setText(task.getName());
