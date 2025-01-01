@@ -72,7 +72,7 @@
 
             <TextView
                 android:id="@+id/tv_addcategories_categories_label"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="Icon"
@@ -84,17 +84,18 @@
 
             <Spinner
                 android:id="@+id/sp_addcategories_categories"
-                android:layout_width="match_parent"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
                 android:background="@drawable/background_spinner"
                 android:gravity="center_vertical"
                 android:minHeight="48dp"
+                android:layout_marginStart="20dp"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp"
                 android:spinnerMode="dropdown"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_addcategories_categories_label" />
+                app:layout_constraintStart_toEndOf="@+id/tv_addcategories_categories_label"
+                app:layout_constraintTop_toBottomOf="@+id/tv_addcategories_addcategories_textbox" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
