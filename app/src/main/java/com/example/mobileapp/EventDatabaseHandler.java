@@ -289,6 +289,18 @@ public class EventDatabaseHandler extends SQLiteOpenHelper {
         }
     }
 
+    public void UpdateEvent(Event event) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, event.getName());
+        values.put(KEY_DATE, event.getDate());
+        values.put(KEY_FREQ, event.getRepeat_frequency());
+        values.put(KEY_DESCRIPTION, event.getDescription());
+
+        db.update(TABLE_EVENTS, values, KEY_EVENTID + " = ?", new String[]{String.valueOf(event.getEventId())});
+        db.close();
+    }
+
 
 
 }

@@ -51,39 +51,42 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_taskdetail_tittle" />
 
-            <TextView
-                android:id="@+id/tv_taskdetail_taskdetail_textbox"
-                android:layout_width="wrap_content"
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollViewTaskName"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:fontFamily="sans-serif"
-                android:background="@drawable/background_tasks_item"
-                android:gravity="center_vertical"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="5dp"
-                android:textSize="18sp"
-                android:inputType="text"
-                android:maxLines="1"
-                android:lines="1"
-                android:scrollHorizontally="true"
-                android:ellipsize="none"
-
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_taskdetail_taskname_label"
-                app:layout_constraintBaseline_toBaselineOf="@id/tv_taskdetail_taskname_label" />
+                app:layout_constraintTop_toBottomOf="@id/tv_taskdetail_tittle">
 
+                <TextView
+                    android:id="@+id/tv_taskdetail_taskdetail_textbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_tasks_item"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"
+                    android:textSize="20sp"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:scrollHorizontally="true"
+                    android:ellipsize="none" />
 
+            </HorizontalScrollView>
             <TextView
                 android:id="@+id/tv_taskdetail_categories_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/category"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:paddingRight="10dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_taskdetail_taskdetail_textbox" />
+                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollViewTaskName" />
 
             <TextView
                 android:id="@+id/tv_taskdetail_categories"
@@ -93,6 +96,7 @@
                 android:background="@drawable/background_tasks_item"
                 android:gravity="center_vertical"
                 android:minHeight="48dp"
+                android:textSize="18sp"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp"
                 android:spinnerMode="dropdown"
@@ -123,7 +127,7 @@
 
                 <ImageView
                     android:id="@+id/img_taskdetail_date"
-                    android:layout_width="40dp"
+                    android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginTop="14dp"
                     android:gravity="center"
@@ -139,11 +143,12 @@
                     android:background="@drawable/background_nostroke"
                     android:clickable="false"
                     android:focusable="false"
+                    android:gravity="center_vertical"
                     android:hint="01/01/2001"
                     android:minHeight="48dp"
                     android:paddingHorizontal="20dp"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -156,7 +161,7 @@
 
                 <ImageView
                     android:id="@+id/img_taskdetail_time"
-                    android:layout_width="40dp"
+                    android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginTop="14dp"
                     android:gravity="center"
@@ -177,15 +182,16 @@
                     android:minHeight="48dp"
                     android:paddingHorizontal="20dp"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_taskdetail_priority_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="14dp"
                 android:text="@string/priority"
+                android:layout_marginRight="10dp"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -195,8 +201,9 @@
             <TextView
                 android:id="@+id/sp_taskdetail_priority"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="7dp"
+                android:textSize="18sp"
                 android:background="@drawable/background_tasks_item"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="10dp"
@@ -209,7 +216,7 @@
                 android:id="@+id/tv_taskdetail_frequency_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="14dp"
                 android:text="@string/freq"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -221,12 +228,13 @@
             <TextView
                 android:id="@+id/tv_taskdetail_frequency_selector"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="7dp"
                 android:background="@drawable/background_tasks_item"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp"
+                android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@id/tv_taskdetail_frequency_label"
                 app:layout_constraintBaseline_toBaselineOf="@id/tv_taskdetail_frequency_label" />
 
