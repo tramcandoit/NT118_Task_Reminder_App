@@ -1,7 +1,6 @@
 package com.example.mobileapp;
 
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,17 +21,20 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.DefaultValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class ListFragment extends Fragment {
 
@@ -48,15 +50,6 @@ public class ListFragment extends Fragment {
         pieChart = view.findViewById(R.id.pieChart); //  Lấy PieChart từ layout
         barChart = view.findViewById(R.id.barChart);
         taskDb = new TaskDatabaseHandler(requireContext()); // Khởi tạo database handler
-
-        setupPieChart(); // Thiết lập biểu đồ
-        loadPieChartData();  // Load dữ liệu cho biểu đồ
-
-        setupBarChart();
-        loadBarChartData(); // Load dữ liệu cho BarChart
-
-
-
 
         return view;
     }
@@ -164,38 +157,65 @@ public class ListFragment extends Fragment {
         legend.setXEntrySpace(4f);
     }
 
-    private void loadBarChartData() {
+    private void loadBarChartData(int numberOfDays) {
 
-        List<Task> tasksList = taskDb.getAllTasks(); // Lấy tất cả task từ database
+        LocalDate currentDate = LocalDate.now();
+        LocalDate sevenDaysAgo = currentDate.minusDays(numberOfDays -1) ;
 
-        HashMap<LocalDate, Integer> tasksByDate = new HashMap<>();
-        for (Task task : tasksList) {
-            LocalDate dueDate = null;
-            String testDate = task.getDate();
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                dueDate = LocalDate.parse(task.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-//            }
-            tasksByDate.put(dueDate, tasksByDate.getOrDefault(dueDate, 0) + 1);
+        List<Task> tasksList = taskDb.getAllTasks();
+
+        // Lọc task theo khoảng thời gian
+        List<Task> filteredTasks = tasksList.stream()
+                .filter(task -> {
+                    try {
+                        LocalDate dueDate = LocalDate.parse(task.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        return dueDate.isAfter(sevenDaysAgo.minusDays(1)) && dueDate.isBefore(currentDate.plusDays(1));
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
+
+        // Tạo map chứa dữ liệu cho numberOfDays ngày
+        Map<LocalDate, Integer> tasksForDays = new TreeMap<>();
+
+        for (int i = 0; i < numberOfDays; i++) {
+            LocalDate date = currentDate.minusDays(i);
+            tasksForDays.put(date, 0); // Khởi tạo số lượng task là 0 cho mỗi ngày
         }
+
+
+        // Đếm số task cho mỗi ngày trong filteredTasks
+        for (Task task : filteredTasks) {
+            try {
+                LocalDate dueDate = LocalDate.parse(task.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                tasksForDays.put(dueDate, tasksForDays.getOrDefault(dueDate, 0) + 1);
+            }
+            catch (Exception e) {
+                // Do nothing
+            }
+        }
+
 
         List<BarEntry> entries = new ArrayList<>();
         List<String> labels = new ArrayList<>();
 
         int i = 0;
-        for (Map.Entry<LocalDate, Integer> entry : tasksByDate.entrySet()) {
+        // Duyệt tasksForDays theo thứ tự (do đã được sắp xếp bởi TreeMap)
+        for (Map.Entry<LocalDate, Integer> entry : tasksForDays.entrySet()) {
             entries.add(new BarEntry(i, entry.getValue()));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                labels.add(entry.getKey().format(DateTimeFormatter.ofPattern("dd/MM")));
-            }
+            labels.add(entry.getKey().format(DateTimeFormatter.ofPattern("dd/MM")));
             i++;
         }
-
         BarDataSet dataSet = new BarDataSet(entries, "Tasks");
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS); // Tùy chỉnh màu sắc
         dataSet.setValueTextColor(Color.BLACK);
-        dataSet.setValueTextSize(20f);
+        dataSet.setValueTextSize(16f);
+        dataSet.setValueFormatter(new DefaultValueFormatter(0));
+        dataSet.setBarBorderWidth(0.9f); // Đặt độ dày cho đường viền cột
 
         BarData data = new BarData(dataSet);
+        data.setBarWidth(0.5f); // Đặt chiều rộng cột
         barChart.setData(data);
 
         XAxis xAxis = barChart.getXAxis();
@@ -204,6 +224,32 @@ public class ListFragment extends Fragment {
 
 
         barChart.invalidate(); // Refresh biểu đồ
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        LocalDate firstUseDate = taskDb.getFirstTaskCreatedDate();
+        LocalDate currentDate = LocalDate.now();
+
+        setupPieChart();
+        loadPieChartData();
+
+        setupBarChart();
+        if (firstUseDate == null) {
+            // Người dùng mới cài app
+            barChart.clear(); // Xóa dữ liệu hiện tại của biểu đồ (nếu có)
+            barChart.setNoDataText("Chưa có task nào trong khoảng thời gian này."); // Hiển thị thông báo trên biểu đồ
+            barChart.invalidate(); // Refresh biểu đồ
+
+        }
+        else {
+            long daysSinceFirstUse = ChronoUnit.DAYS.between(firstUseDate, currentDate) + 1;
+            // Biểu đồ thống kê số lượng task trong 7 ngày
+            loadBarChartData(7);
+
+        }
+
     }
     // --------------------------------------------------------------------------------------------- //
 }

@@ -11,8 +11,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +27,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 /**
 
@@ -78,6 +87,82 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
+    }
+    public void scheduleNotification(Task task) {
+        Context context = requireContext();
+        Intent intent = new Intent(context, TaskNotificationReceiver.class);
+        intent.putExtra("taskName", task.getName());
+        intent.putExtra("taskDescription", task.getDescription());
+        intent.putExtra("taskId", (int) task.getTaskId());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context,
+                task.getTaskId(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()); // Kết hợp date và time
+            // Kết hợp ngày và giờ từ EditText
+            String dateTimeString = task.getDate() + " " + task.getTime();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(dateTimeString)); // Parse cả ngày và giờ
+
+            switch (task.getRepeat_frequency()) {
+                case "Once":
+                    alarmManager.setExactAndAllowWhileIdle(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.getTimeInMillis(),
+                            pendingIntent);
+                    break;
+                case "Daily":
+                    scheduleRepeatingNotification(
+                            alarmManager,
+                            pendingIntent,
+                            calendar,
+                            task.getRepeat_frequency()
+                    );
+                    break;
+                case "Weekly":
+                    scheduleRepeatingNotification(
+                            alarmManager,
+                            pendingIntent,
+                            calendar,
+                            task.getRepeat_frequency()
+                    );
+                    break;
+            }
+        } catch (ParseException e) {
+            // Xử lý ParseException
+            Toast.makeText(getContext(), "Invalid date/time format", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+    private void scheduleRepeatingNotification(AlarmManager alarmManager, PendingIntent pendingIntent, Calendar calendar, String frequency) {
+        long interval;
+        if ("Daily".equals(frequency)) {
+            interval = AlarmManager.INTERVAL_DAY;
+        } else if ("Weekly".equals(frequency)) {
+            interval = AlarmManager.INTERVAL_DAY * 7;
+        } else {
+            return; // Không hỗ trợ tần suất khác
+        }
+
+        alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(),
+                pendingIntent
+        );
+
+        calendar.add(Calendar.MILLISECOND, (int) interval); // Cập nhật thời gian cho lần lặp tiếp theo
+        AlarmManager finalAlarmManager = alarmManager;
+        new android.os.Handler().postDelayed(() -> {
+            scheduleRepeatingNotification(finalAlarmManager, pendingIntent, calendar, frequency);
+        }, interval);
     }
 
     @Override
@@ -179,42 +264,123 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
 
                 // Tạo AlertDialog để hiển thị chi tiết task
                 AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-                View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_taskdetails, null);
+                View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_addtask, null);
                 builder.setView(dialogView);
 
                 // Tìm các TextView trong dialog layout và thiết lập giá trị
-                TextView tvTaskdetailTaskdetailTextbox = dialogView.findViewById(R.id.tv_taskdetail_taskdetail_textbox);
-                TextView tvTaskdetailCategories = dialogView.findViewById(R.id.tv_taskdetail_categories);
-                TextView tvTaskdetailDateSelector = dialogView.findViewById(R.id.tv_taskdetail_date_selector);
-                TextView tvTaskdetailTimeSelector = dialogView.findViewById(R.id.tv_taskdetail_time_selector);
-                TextView tvTaskdetailPriority = dialogView.findViewById(R.id.sp_taskdetail_priority);
-                TextView tvTaskdetailFrequencySelector = dialogView.findViewById(R.id.tv_taskdetail_frequency_selector);
-                TextView tvTaskdetailDescription = dialogView.findViewById(R.id.tv_taskdetail_description);
+                EditText etTaskdetailName = dialogView.findViewById(R.id.tv_addtask_addtask_textbox);
+                Spinner spTaskdetailCategories = dialogView.findViewById(R.id.sp_addtask_categories);
+                EditText etTaskdetailDateSelector = dialogView.findViewById(R.id.et_addtask_date_selector);
+                EditText etTaskdetailTimeSelector = dialogView.findViewById(R.id.et_addtask_time_selector);
+                Spinner spTaskdetailPriority = dialogView.findViewById(R.id.sp_addtask_priority);
+                Spinner spTaskdetailFrequencySelector = dialogView.findViewById(R.id.sp_addtask_frequency_selector);
+                EditText etTaskdetailDescription = dialogView.findViewById(R.id.et_addtask_description);
+
+                int spinnerCategoryPosition = categoriesAdapter.getItemPositionByName(categoryLabel);
+                SpinnerAdapter categoriesSpAdapter = new SpinnerAdapter(getContext(), categories);
+                spTaskdetailCategories.setAdapter(categoriesSpAdapter);
+
+                List<String> priorities = new ArrayList<>();
+                priorities.add("High");
+                priorities.add("Medium");
+                priorities.add("Low");
+                ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, priorities);
+                priorityAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
+                spTaskdetailPriority.setAdapter(priorityAdapter);
+                int spinnerPriorityPosition = priorityAdapter.getPosition(clickedTask.getPriority());
+
+                List<String> frequencies = new ArrayList<>();
+                frequencies.add("Daily");
+                frequencies.add("Weekly");
+                frequencies.add("Once");
+                ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, frequencies);
+                frequencyAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
+                spTaskdetailFrequencySelector.setAdapter(frequencyAdapter);
+                int spinnerFrequencyPosition = frequencyAdapter.getPosition(clickedTask.getRepeat_frequency());
+
 
                 // Tạo layout cho AlertDialog (nếu cần hiển thị nhiều thông tin hơn)
-                tvTaskdetailTaskdetailTextbox.setText(clickedTask.getName());
-                tvTaskdetailCategories.setText(categoryLabel);
-                tvTaskdetailDateSelector.setText(clickedTask.getDate());
-                tvTaskdetailTimeSelector.setText(clickedTask.getTime());
-                tvTaskdetailPriority.setText(clickedTask.getPriority());
-                tvTaskdetailFrequencySelector.setText(clickedTask.getRepeat_frequency());
-                tvTaskdetailDescription.setText(clickedTask.getDescription());
+                etTaskdetailName.setText(clickedTask.getName());
+                spTaskdetailCategories.setSelection(spinnerCategoryPosition);
+                etTaskdetailDateSelector.setText(clickedTask.getDate());
+                etTaskdetailTimeSelector.setText(clickedTask.getTime());
+                spTaskdetailPriority.setSelection(spinnerPriorityPosition);
+                spTaskdetailFrequencySelector.setSelection(spinnerFrequencyPosition);
+                etTaskdetailDescription.setText(clickedTask.getDescription());
 
-                builder.setPositiveButton("OK", null);
-                builder.setNegativeButton("Delete", (dialog, which) -> {
-                    // Xử lý xóa student
-                    cancelNotification(clickedTask);   // Hủy thông báo trước khi xóa
-                    db.deleteTask(clickedTask); // Xóa khỏi database
-                    tasksList.remove(position);
+                // Khóa các trường không cho phép chỉnh sửa
+                etTaskdetailName.setFocusable(false);
+                etTaskdetailName.setFocusableInTouchMode(false);
+
+                etTaskdetailDateSelector.setFocusable(false);
+                etTaskdetailDateSelector.setFocusableInTouchMode(false);
+
+                etTaskdetailTimeSelector.setFocusable(false);
+                etTaskdetailTimeSelector.setFocusableInTouchMode(false);
+
+                etTaskdetailDescription.setFocusable(false);
+                etTaskdetailDescription.setFocusableInTouchMode(false);
+
+                spTaskdetailCategories.setOnTouchListener((v, event) -> true);
+                spTaskdetailPriority.setOnTouchListener((v, event) -> true);
+                spTaskdetailFrequencySelector.setOnTouchListener((v, event) -> true);
+
+                // Thiết lập các sự kiện cho các nút
+                builder.setPositiveButton("OK", (dialog, which) -> {
+                    // Lấy dữ liệu từ các trường EditText, Spinner
+                    clickedTask.setName(etTaskdetailName.getText().toString());
+                    clickedTask.setCategoryId(categories.get(spTaskdetailCategories.getSelectedItemPosition()).getCategoryId()); // Lấy category từ danh sách categories với vị trí tương úng trong spinner spCategories, sau đó dùng getCategoryId()
+                    clickedTask.setDate(etTaskdetailDateSelector.getText().toString());
+                    clickedTask.setTime(etTaskdetailTimeSelector.getText().toString());
+                    clickedTask.setPriority(spTaskdetailPriority.getSelectedItem().toString());
+                    clickedTask.setRepeat_frequency(spTaskdetailFrequencySelector.getSelectedItem().toString());
+                    clickedTask.setDescription(etTaskdetailDescription.getText().toString());
+
+                    // Cập nhật Task trong Database
+                    db.updateTask(clickedTask);
+
+                    // Thêm vào danh sách tasks ở HomeFragment
+                    tasksList.set(position, clickedTask);
+                    cancelNotification(clickedTask);
+                    scheduleNotification(clickedTask);
                     lvAdapter.notifyDataSetChanged();
+
+                    // Sau khi lưu, đóng dialog
+                    dialog.dismiss();
+                });
+
+                builder.setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.dismiss();
                 });
                 builder.setNeutralButton("Edit", (dialog, which) -> {
-                    // Chỉnh sửa thông tin task
-
+                    // Khởi tạo nút Edit
                 });
 
                 // Hiển thị AlertDialog
                 AlertDialog dialog = builder.create();
+                dialog.setOnShowListener(dialogInterface -> {
+                    Button editButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+
+                    editButton.setOnClickListener(v -> {
+                        // Chỉnh sửa thông tin task
+                        etTaskdetailName.setFocusable(true);
+                        etTaskdetailName.setFocusableInTouchMode(true);
+
+                        etTaskdetailDateSelector.setFocusable(true);
+                        etTaskdetailDateSelector.setFocusableInTouchMode(true);
+
+                        etTaskdetailTimeSelector.setFocusable(true);
+                        etTaskdetailTimeSelector.setFocusableInTouchMode(true);
+
+                        etTaskdetailDescription.setFocusable(true);
+                        etTaskdetailDescription.setFocusableInTouchMode(true);
+
+                        spTaskdetailCategories.setOnTouchListener(null);
+                        spTaskdetailPriority.setOnTouchListener(null);
+                        spTaskdetailFrequencySelector.setOnTouchListener(null);
+
+                    });
+                });
                 dialog.show();
             }
         });
