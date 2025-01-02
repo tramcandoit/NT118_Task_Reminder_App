@@ -16,6 +16,7 @@
         android:orientation="horizontal"
         android:id="@+id/tv_settings"
         android:background="@drawable/ripple_item_effect"
+        android:padding="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -57,6 +58,8 @@
         android:text="@string/save"
         android:textColor="@color/blue"
         android:textSize="20sp"
+        android:background="@drawable/ripple_item_effect"
+        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_settings"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -95,6 +98,8 @@
                 android:id="@+id/rb_none_sound"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ripple_item_effect"
+                android:padding="10dp"
                 android:text="@string/none"
                 android:textSize="20sp"/>
 
@@ -102,6 +107,8 @@
                 android:id="@+id/rb_sound1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ripple_item_effect"
+                android:padding="10dp"
                 android:text="@string/sound_1"
                 android:textSize="20sp"/>
 
@@ -109,6 +116,8 @@
                 android:id="@+id/rb_sound2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ripple_item_effect"
+                android:padding="10dp"
                 android:text="@string/sound_2"
                 android:textSize="20sp"/>
 
@@ -116,6 +125,8 @@
                 android:id="@+id/rb_sound3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ripple_item_effect"
+                android:padding="10dp"
                 android:text="@string/sound_3"
                 android:textSize="20sp"/>
 
@@ -157,6 +168,8 @@
                 android:id="@+id/rb_none_vibration"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ripple_item_effect"
+                android:padding="10dp"
                 android:text="@string/none"
                 android:textSize="20sp" />
 
@@ -164,6 +177,8 @@
                 android:id="@+id/rb_one_shot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ripple_item_effect"
+                android:padding="10dp"
                 android:text="@string/one_shot"
                 android:textSize="20sp" />
 
@@ -171,6 +186,8 @@
                 android:id="@+id/rb_waveform"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ripple_item_effect"
+                android:padding="10dp"
                 android:text="@string/waveform"
                 android:textSize="20sp" />
 
