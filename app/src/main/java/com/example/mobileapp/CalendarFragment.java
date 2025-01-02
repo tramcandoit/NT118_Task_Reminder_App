@@ -449,17 +449,20 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
 
 
         builder.setPositiveButton("Save", (dialog, which) -> {
-                event.setName(etEventName.getText().toString());
-                event.setDate(etEventDate.getText().toString());
-                event.setRepeat_frequency(spEventFrequency.getSelectedItem().toString());
-                event.setDescription(etEventDescription.getText().toString());
+            event.setName(etEventName.getText().toString());
+            event.setDate(etEventDate.getText().toString());
+            event.setRepeat_frequency(spEventFrequency.getSelectedItem().toString());
+            event.setDescription(etEventDescription.getText().toString());
 
-                event_db.updateEvent(event);
-                eventList.set(position, event);
-                scheduleNotification(event);
-                adapter.notifyDataSetChanged();
+            event_db.updateEvent(event);
+            eventList.set(position, event);
 
-                dialog.dismiss();
+            scheduleNotification(event);
+            adapter.notifyDataSetChanged();
+            loadListEvent();
+            addEventsToCalendar();
+            showTodayEvents();
+            dialog.dismiss();
 
         });
 
