@@ -1,8 +1,12 @@
 package com.example.mobileapp;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -253,15 +257,9 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
                     }
                 });
 
-                builder.setNegativeButton("Cancel", (dialog, which) -> {
-                    editFlag.set(false);
-                    dialog.dismiss();
-                });
 
-                builder.setNeutralButton("Edit", (dialog, which) -> {
-                    // Khởi tạo nút Edit
 
-                });
+
 
                 AlertDialog dialog = builder.create();
                 dialog.setOnShowListener(dialogInterface -> {
@@ -311,6 +309,9 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
                             event_db.deleteEvent(longClickedEvent); // Xóa khỏi database
                             eventList.remove(position);
                             adapter.notifyDataSetChanged();
+                            loadListEvent();
+                            addEventsToCalendar();
+                            showTodayEvents();
                             break;
                     }
                 });
@@ -322,6 +323,62 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
         });
 
         return view;
+    }
+
+    private void scheduleNotification(Event event) {
+        Context context = requireContext();
+        Intent intent = new Intent(context, EventNotificationReceiver.class);
+        intent.putExtra("eventName", event.getName());
+        intent.putExtra("eventDescription", event.getDescription());
+        intent.putExtra("eventId", event.getEventId());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context,
+                event.getEventId(),
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(sdf.parse(event.getDate()));
+
+            // Set notification time to 8:00 AM
+            calendar.set(Calendar.HOUR_OF_DAY, 8);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+
+            switch (event.getRepeat_frequency()) {
+                case "Once":
+                    alarmManager.setExact(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.getTimeInMillis(),
+                            pendingIntent
+                    );
+                    break;
+                case "Yearly":
+                    alarmManager.setRepeating(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.getTimeInMillis(),
+                            AlarmManager.INTERVAL_DAY * 365,
+                            pendingIntent
+                    );
+                    break;
+                case "Monthly":
+                    alarmManager.setRepeating(
+                            AlarmManager.RTC_WAKEUP,
+                            calendar.getTimeInMillis(),
+                            AlarmManager.INTERVAL_DAY * 30,
+                            pendingIntent
+                    );
+                    break;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     private void showEditDialog(Event event, int position) {
@@ -399,6 +456,7 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
 
                 event_db.updateEvent(event);
                 eventList.set(position, event);
+                scheduleNotification(event);
                 adapter.notifyDataSetChanged();
 
                 dialog.dismiss();

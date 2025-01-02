@@ -66,7 +66,6 @@ public class SettingsFragment extends Fragment {
 
     // Khai báo các view
     private TextView tvAccount;
-    private TextView tvNotiSound;
     private TextView tvProductivity;
     private TextView tvTheme;
     private TextView tvLanguage;
@@ -82,7 +81,6 @@ public class SettingsFragment extends Fragment {
 
         // lấy ra các view
         tvAccount = view.findViewById(R.id.tv_account);
-        tvNotiSound= view.findViewById(R.id.tv_noti_sound);
         tvProductivity = view.findViewById(R.id.tv_productivity);
         tvTheme = view.findViewById(R.id.tv_theme);
         tvLanguage = view.findViewById(R.id.tv_language);
@@ -113,20 +111,6 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        tvNotiSound.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NotiSoundFragment notiSoundFragment = new NotiSoundFragment();
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-
-                // Áp dụng hiệu ứng slide sang phải
-                transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
-
-                transaction.replace(R.id.fragment_container, notiSoundFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
 
         tvProductivity.setOnClickListener(new View.OnClickListener() {
             @Override

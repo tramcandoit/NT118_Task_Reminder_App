@@ -52,55 +52,23 @@
 
 
     <TextView
-        android:id="@+id/tv_help"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/help"
-        android:textColor="@color/blue"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_help_feed" />
-
-    <View
-        android:id="@+id/span_help"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_help" />
-
-
-    <TextView
         android:id="@+id/tv_feedback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/feedback"
         android:textColor="@color/blue"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/span_help" />
-
-    <TextView
-        android:id="@+id/tv_feed_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/feedback_type"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/tv_feedback"
-        app:layout_constraintTop_toBottomOf="@+id/tv_feedback" />
+        app:layout_constraintTop_toBottomOf="@id/tv_help_feed" />
 
     <EditText
         android:id="@+id/et_feed_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/edittext_border"
         android:hint="@string/feedback_type"
         android:padding="15dp"
@@ -112,7 +80,8 @@
         android:id="@+id/tv_feed_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
         android:text="@string/feedback_content"
         android:textColor="@color/black"
         android:textSize="20sp"
@@ -123,14 +92,26 @@
         android:id="@+id/et_feed_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="100dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/edittext_border"
         android:hint="@string/feedback_content"
+        android:maxHeight="100dp"
         android:padding="15dp"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/tv_feed_content"
         app:layout_constraintTop_toBottomOf="@+id/tv_feed_content" />
+
+    <TextView
+        android:id="@+id/tv_feed_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/feedback_type"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_feedback"
+        app:layout_constraintTop_toBottomOf="@+id/tv_feedback" />
 
     <!-- Send feedback Button -->
     <androidx.appcompat.widget.AppCompatButton
