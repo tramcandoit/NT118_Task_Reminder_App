@@ -9,10 +9,12 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import java.util.List;
 
 public class IconAdapter extends ArrayAdapter<Integer> {
+    private int selectedPosition = -1;  // Biến để lưu vị trí đã chọn
 
     public IconAdapter(Context context, List<Integer> iconList) {
         super(context, 0, iconList);
@@ -41,6 +43,22 @@ public class IconAdapter extends ArrayAdapter<Integer> {
             imageView.setImageResource(iconResId);
         }
 
+        // Nếu item này được chọn, tô màu nền của item
+        if (position == selectedPosition) {
+            convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.light_blue));
+        } else {
+            convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.light_blue_2));
+        }
+
         return convertView;
+    }
+
+    public int getSelectedPosition() {
+        return selectedPosition;
+    }
+
+    public void setSelectedPosition(int selectedPosition) {
+        this.selectedPosition = selectedPosition;
+        notifyDataSetChanged(); // Cập nhật lại giao diện khi có sự thay đổi
     }
 }

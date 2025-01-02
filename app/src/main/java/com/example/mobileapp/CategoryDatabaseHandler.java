@@ -46,10 +46,10 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
 
         // Thêm 4 categories mặc định sau khi tạo bảng
         db.execSQL("INSERT INTO " + TABLE_CATEGORIES + " (" + KEY_CATEGORYID + ", " + KEY_USERID + ", " + KEY_NAME + ", " + KEY_ICONRESID + ") VALUES " +
-                "(" + generateCategoryId() + ", 111, 'Work', " + R.drawable.icon_user + "), " +
+                "(" + generateCategoryId() + ", 111, 'Work', " + R.drawable.icon_work + "), " +
                 "(" + generateCategoryId() + ", 111, 'Health', " + R.drawable.icon_user + "), " +
-                "(" + generateCategoryId() + ", 111, 'Shopping', " + R.drawable.icon_user + "), " +
-                "(" + generateCategoryId() + ", 111, 'Exercise', " + R.drawable.icon_user + ")");
+                "(" + generateCategoryId() + ", 111, 'Finance', " + R.drawable.icon_finance + "), " +
+                "(" + generateCategoryId() + ", 111, 'Education', " + R.drawable.icon_education + ")");
 
 
 

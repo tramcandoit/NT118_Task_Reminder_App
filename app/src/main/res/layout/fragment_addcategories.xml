@@ -82,21 +82,27 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_addcategories_addcategories_textbox" />
 
-            <Spinner
-                android:id="@+id/sp_addcategories_categories"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:background="@drawable/background_spinner"
-                android:gravity="center_vertical"
-                android:minHeight="48dp"
+            <LinearLayout
+                android:layout_width="70dp"
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="20dp"
-                android:paddingHorizontal="10dp"
-                android:paddingVertical="5dp"
-                android:spinnerMode="dropdown"
-                app:layout_constraintStart_toEndOf="@+id/tv_addcategories_categories_label"
-                app:layout_constraintTop_toBottomOf="@+id/tv_addcategories_addcategories_textbox" />
+                android:gravity="left"
+                android:background="@drawable/background_spinner"
 
+                app:layout_constraintStart_toEndOf="@+id/tv_addcategories_categories_label"
+                app:layout_constraintTop_toBottomOf="@+id/tv_addcategories_addcategories_textbox">
+            <ImageView
+                android:id="@+id/tv_addcategories_selected_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="Select Icon"
+
+                android:layout_marginStart="5dp"
+                android:textSize="16sp"
+                 />
+            </LinearLayout>/
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
