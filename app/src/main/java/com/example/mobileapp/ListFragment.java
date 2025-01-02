@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -86,8 +87,8 @@ public class ListFragment extends Fragment {
 
         // Create pie entries for incomplete and completed tasks
         List<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(incompleteTasks.size(), "Incomplete"));
         entries.add(new PieEntry(completedTasks.size(), "Completed"));
+        entries.add(new PieEntry(incompleteTasks.size(), "Incomplete"));
 
         ArrayList<Integer> colors = new ArrayList<>();
         for (int color: ColorTemplate.MATERIAL_COLORS) {
@@ -102,7 +103,7 @@ public class ListFragment extends Fragment {
         PieDataSet dataSet = new PieDataSet(entries, "");
         dataSet.setColors(colors);
         dataSet.setValueTextSize(20f);
-        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setValueTextColor(Color.BLACK);
 
         // Thiết lập cỡ chữ cho phần trăm trên biểu đồ (chữ màu đen)
         PieData data = new PieData(dataSet);
@@ -120,7 +121,7 @@ public class ListFragment extends Fragment {
         legend.setOrientation(Legend.LegendOrientation.HORIZONTAL); // Dạng ngang
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM); // Nằm dưới
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER); // Căn giữa dưới biểu đồ
-
+        legend.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
         pieChart.invalidate();
     }
     // --------------------------------------------------------------------------------------------- //
@@ -129,16 +130,21 @@ public class ListFragment extends Fragment {
         barChart.setPinchZoom(false); // Không cho phép zoom
         barChart.setDrawBarShadow(false); // Không vẽ bóng cho cột
         barChart.setDrawGridBackground(false); // Không vẽ grid background
+        barChart.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_blue_2)); // Đổi nền sang màu light_blue_2
 
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM); // Đặt nhãn ngày ở dưới cùng
         xAxis.setGranularity(1f); // Khoảng cách giữa các nhãn
         xAxis.setDrawGridLines(false);
-
+        xAxis.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
+        xAxis.setAxisLineColor(ContextCompat.getColor(requireContext(), R.color.black));
 
         YAxis leftAxis = barChart.getAxisLeft();
         leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinimum(0f); // Giá trị tối thiểu của trục y
+        leftAxis.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
+        leftAxis.setGranularity(1f); // Đặt khoảng cách giữa các giá trị là 1
+        leftAxis.setAxisLineColor(ContextCompat.getColor(requireContext(), R.color.black));
 
         YAxis rightAxis = barChart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -152,6 +158,7 @@ public class ListFragment extends Fragment {
         legend.setFormSize(9f);
         legend.setTextSize(18f);
         legend.setXEntrySpace(4f);
+        legend.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
     }
 
     private void loadBarChartData(int numberOfDays) {
@@ -206,7 +213,7 @@ public class ListFragment extends Fragment {
         }
         BarDataSet dataSet = new BarDataSet(entries, "Tasks");
         dataSet.setColors(ColorTemplate.MATERIAL_COLORS); // Tùy chỉnh màu sắc
-        dataSet.setValueTextColor(Color.BLACK);
+        dataSet.setValueTextColor(ContextCompat.getColor(requireContext(), R.color.black));
         dataSet.setValueTextSize(16f);
         dataSet.setValueFormatter(new DefaultValueFormatter(0));
         dataSet.setBarBorderWidth(0.9f); // Đặt độ dày cho đường viền cột
@@ -282,11 +289,12 @@ public class ListFragment extends Fragment {
         PieDataSet dataSet = new PieDataSet(entries, "");
         dataSet.setColors(colors);
         dataSet.setValueTextSize(16f);
-        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setValueTextColor(Color.BLACK);
 
         // Thiết lập PieData
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter(typePieChart));
+        data.setValueTextColor(Color.BLACK);
         typePieChart.setData(data);
 
         // Thiết lập cỡ chữ cho phần chú thích dưới biểu đồ
@@ -299,6 +307,7 @@ public class ListFragment extends Fragment {
         legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM); // Nằm dưới
         legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER); // Căn giữa dưới biểu đồ
         legend.setWordWrapEnabled(true); // Cho phép tự động xuống dòng nếu không đủ chỗ
+        legend.setTextColor(ContextCompat.getColor(requireContext(), R.color.black));
 
         // Cập nhật biểu đồ
         typePieChart.invalidate();
