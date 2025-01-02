@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "106408507765",
+    "firebase_url": "https://nt118taskreminderapp-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "nt118taskreminderapp",
+    "storage_bucket": "nt118taskreminderapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:106408507765:android:ccb7c4d281de3afe54fb3c",
+        "android_client_info": {
+          "package_name": "com.example.mobileapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFStMH7GY4pfdbFow56NyFVMeeVEyHZ74"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
