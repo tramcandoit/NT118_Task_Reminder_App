@@ -96,5 +96,8 @@
     <string name="enter_your_email_here">Enter your email here ...</string>
     <string name="reset_password">Reset password</string>
     <string name="re_password">Re-enter password</string>
+    <string name="task_completion_ratio">Task Completion Ratio</string>
+    <string name="number_of_tasks">Number of tasks</string>
+    <string name="task_statistics_by_category">Task Statistics by category</string>
 
 </resources>
