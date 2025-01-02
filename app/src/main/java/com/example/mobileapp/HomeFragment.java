@@ -499,7 +499,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
                             break;
                         case 2: // Xóa nhiệm vụ
                             cancelNotification(task);   // Hủy thông báo trước khi xóa
-//                            db.deleteTask(task); // Xóa khỏi database
+                            db.deleteTask(task); // Xóa khỏi database
                             tasksList.remove(position);
                             lvAdapter.notifyDataSetChanged();
                             break;
