@@ -39,8 +39,10 @@ import java.util.stream.Collectors;
 public class ListFragment extends Fragment {
 
     private TaskDatabaseHandler taskDb;
+    private CategoryDatabaseHandler categoryDb;
     private PieChart pieChart;
     private BarChart barChart;
+    private PieChart typePieChart;
 
     @Nullable
     @Override
@@ -49,7 +51,9 @@ public class ListFragment extends Fragment {
 
         pieChart = view.findViewById(R.id.pieChart); //  Lấy PieChart từ layout
         barChart = view.findViewById(R.id.barChart);
+        typePieChart = view.findViewById(R.id.pieChart2);
         taskDb = new TaskDatabaseHandler(requireContext()); // Khởi tạo database handler
+        categoryDb = new CategoryDatabaseHandler(requireContext());
 
         return view;
     }
@@ -79,16 +83,6 @@ public class ListFragment extends Fragment {
                 incompleteTasks.add(task);
             }
         }
-        // Add some sample data for testing
-        Task completedTask_1 = new Task();
-        Task completedTask_2 = new Task();
-        Task completedTask_3 = new Task();
-        completedTask_1.setStatus("completed");
-        completedTask_2.setStatus("completed");
-        completedTask_3.setStatus("completed");
-        completedTasks.add(completedTask_1);
-        completedTasks.add(completedTask_2);
-        completedTasks.add(completedTask_3);
 
         // Create pie entries for incomplete and completed tasks
         List<PieEntry> entries = new ArrayList<>();
@@ -121,8 +115,11 @@ public class ListFragment extends Fragment {
         Legend legend = pieChart.getLegend();
         legend.setTextSize(20f);
         legend.setFormSize(15f);
-        legend.setXEntrySpace(90f);
+        legend.setXEntrySpace(60f);
         legend.setFormToTextSpace(15f);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL); // Dạng ngang
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM); // Nằm dưới
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER); // Căn giữa dưới biểu đồ
 
         pieChart.invalidate();
     }
@@ -225,6 +222,88 @@ public class ListFragment extends Fragment {
 
         barChart.invalidate(); // Refresh biểu đồ
     }
+    private void setupTypePieChart() {
+        typePieChart.setUsePercentValues(true); // Hiển thị phần trăm
+        typePieChart.getDescription().setEnabled(false); // Ẩn mô tả
+        typePieChart.setExtraOffsets(5, 10, 5, 5); // Khoảng cách giữa biểu đồ và viền
+        typePieChart.setDragDecelerationFrictionCoef(0.95f);
+        typePieChart.setDrawHoleEnabled(true); // Có lỗ ở giữa
+        typePieChart.setHoleColor(Color.WHITE); // Màu sắc của lỗ
+        typePieChart.setHoleRadius(30f);
+        typePieChart.setTransparentCircleRadius(41f);
+    }
+    private void loadTaskTypePieChartData() {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate sevenDaysAgo = currentDate.minusDays(6);
+
+        // Lấy danh sách task từ database
+        List<Task> tasksList = taskDb.getAllTasks();
+
+        // Lọc các task trong 7 ngày gần nhất
+        List<Task> recentTasks = tasksList.stream()
+                .filter(task -> {
+                    try {
+                        LocalDate dueDate = LocalDate.parse(task.getDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        return dueDate.isAfter(sevenDaysAgo.minusDays(1)) && dueDate.isBefore(currentDate.plusDays(1));
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
+                .collect(Collectors.toList());
+
+        // Đếm số lượng task theo từng loại
+        Map<String, Integer> taskTypeCounts = new TreeMap<>();
+        for (Task task : recentTasks) {
+            CategoriesItem category = categoryDb.getCategory(task.getCategoryId());
+            String type = category.getName(); // Giả sử task có phương thức trả về category
+            taskTypeCounts.put(type, taskTypeCounts.getOrDefault(type, 0) + 1);
+        }
+        long totalTasks = tasksList.size(); // Tổng số task trong 7 ngày
+//        // Tạo dữ liệu cho biểu đồ tròn
+//        List<PieEntry> entries = new ArrayList<>();
+//        for (Map.Entry<String, Integer> entry : taskTypeCounts.entrySet()) {
+//            entries.add(new PieEntry(entry.getValue(), entry.getKey()));
+//        }
+        // Tạo PieEntry từ dữ liệu thể loại và tính tỷ lệ phần trăm
+        List<PieEntry> entries = taskTypeCounts.entrySet().stream()
+                .map(entry -> new PieEntry((float) entry.getValue() / totalTasks * 100, entry.getKey() + " (" + entry.getValue() + ")"))
+                .collect(Collectors.toList());
+
+        // Màu sắc cho biểu đồ
+        ArrayList<Integer> colors = new ArrayList<>();
+        for (int color : ColorTemplate.MATERIAL_COLORS) {
+            colors.add(color);
+        }
+        for (int color : ColorTemplate.VORDIPLOM_COLORS) {
+            colors.add(color);
+        }
+
+        // Thiết lập dữ liệu cho PieDataSet
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setColors(colors);
+        dataSet.setValueTextSize(16f);
+        dataSet.setValueTextColor(Color.WHITE);
+
+        // Thiết lập PieData
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter(typePieChart));
+        typePieChart.setData(data);
+
+        // Thiết lập cỡ chữ cho phần chú thích dưới biểu đồ
+        Legend legend = typePieChart.getLegend();
+        legend.setTextSize(18f); // Cỡ chữ nhỏ hơn để phù hợp với màn hình
+        legend.setFormSize(15f);
+        legend.setFormToTextSpace(10f);
+        legend.setXEntrySpace(27f); // Giảm khoảng cách ngang
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL); // Dạng ngang
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM); // Nằm dưới
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER); // Căn giữa dưới biểu đồ
+        legend.setWordWrapEnabled(true); // Cho phép tự động xuống dòng nếu không đủ chỗ
+
+        // Cập nhật biểu đồ
+        typePieChart.invalidate();
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -234,6 +313,9 @@ public class ListFragment extends Fragment {
 
         setupPieChart();
         loadPieChartData();
+
+        setupTypePieChart();
+        loadTaskTypePieChartData();
 
         setupBarChart();
         if (firstUseDate == null) {

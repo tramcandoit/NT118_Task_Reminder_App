@@ -67,7 +67,7 @@ public class TasksArrayAdapter extends ArrayAdapter<Task> {
                 if (isChecked) {
                     if (task.getStatus().equals("incomplete")) {
                         task.setStatus("completed"); // Cập nhật trạng thái của task
-                        message = "\"" + task.getName() + "\"marked as Completed.";
+                        message = "\"" + task.getName() + "\" marked as Completed.";
                     }
                 }
                 else {
