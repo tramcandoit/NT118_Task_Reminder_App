@@ -82,4 +82,7 @@
     <string name="enter_your_email_here">Nhập email của bạn ở đây ...</string>
     <string name="reset_password">Đặt lại mật khẩu</string>
     <string name="re_password">Nhập lại mật khẩu</string>
+    <string name="task_completion_ratio">Tỉ lệ hoàn thành nhiệm vụ</string>
+    <string name="number_of_tasks">Số lượng nhiệm vụ</string>
+    <string name="task_statistics_by_category">Thống kê nhiệm vụ theo thể loại</string>
 </resources>
