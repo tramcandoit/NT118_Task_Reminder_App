@@ -57,7 +57,7 @@
     <string name="feedback_content">Nội dung phản hồi</string>
     <string name="send_feedback">Gửi phản hồi</string>
     <string name="version_1_0">"Tên ứng dụng : TaskMaster \nVersion: 1.0.0           \nTổng quan: TaskMaster là ứng dụng quản lý tác vụ giúp bạn quản lý và theo dõi các tác vụ thường ngày một cách dễ dàng.           \nTính năng chính          \n • Tạo, chỉnh sửa và xóa tác vụ          \n • Sắp xếp tác vụ theo ngày và mức độ ưu tiên          \n • Đặt nhắc nhở để theo dõi tiến độ          \n • Giao diện đơn giản và dễ dàng sử dụng           \nThông tin nhà phát triển          \n • Nhóm phát triển: Nhóm 3          \n • Liên hệ: 22520624@gm.uit.edu.vn     "</string>
-    <string name="today_tasks">Nhiệm vụ hôm nay</string>
+    <string name="today_tasks">Nhiệm vụ cần làm</string>
     <string name="categories">Thể loại</string>
     <string name="no_ev_today">Không có sự kiện hôm nay</string>
     <string name="no_ev_on">Không có sự kiện vào</string>
