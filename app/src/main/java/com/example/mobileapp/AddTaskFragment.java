@@ -190,9 +190,8 @@ public class AddTaskFragment extends DialogFragment {
         // Priority Spinner
         spPriority = dialogView.findViewById(R.id.sp_addtask_priority);
         List<String> priorities = new ArrayList<>();
+        priorities.add("Normal");
         priorities.add("High");
-        priorities.add("Medium");
-        priorities.add("Low");
         ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, priorities);
         priorityAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
         spPriority.setAdapter(priorityAdapter);
