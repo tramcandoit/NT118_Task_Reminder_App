@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +58,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
     private CategoryDatabaseHandler categoryDb;
     private TextView tvCategoriesMenu;
     private SparseBooleanArray selectedCategories;
-
+    private SearchView searchView;
     public HomeFragment() {
 // Required empty public constructor
     }
@@ -225,6 +226,22 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
             }
         });
 
+        searchView = view.findViewById(R.id.sv_home);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Có thể xử lý hành động khi người dùng nhấn nút tìm kiếm (Submit)
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Lọc danh sách task khi người dùng nhập từ khóa
+                filterTasksBySearchQuery(newText);
+                return true;
+            }
+        });
 
         categoriesAdapter.setOnItemClickListener(position -> {
             int categoryId = categories.get(position).getCategoryId();
@@ -414,27 +431,53 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
     }
 
     private void filterTasksBySelectedCategories() {
-        List<Task> filteredTasks = new ArrayList<>();
-        List<Task> allTasks = db.getAllTasks();
-        Log.d("HomeFragment", "All tasks: " + allTasks.size());
-        // Check if no categories are selected
-        if (selectedCategories.size() == 0) {
-            // If no category is selected, show all tasks
+        List<Task> filteredTasks = new ArrayList<>(); // Danh sách task đã lọc
+        List<Task> allTasks = db.getAllTasks(); // Lấy tất cả task từ database
+        Log.d("HomeFragment", "Tổng số task: " + allTasks.size()); // Log tổng số task
 
-            filteredTasks.addAll(db.getAllTasks());
+        String searchQuery = ""; // Chuỗi tìm kiếm
+        if (searchView != null) {
+            searchQuery = searchView.getQuery().toString().trim().toLowerCase(); // Lấy chuỗi tìm kiếm từ SearchView
         } else {
-            // Otherwise, filter tasks based on selected categories
-            for (Task task : db.getAllTasks()) {
-                if (selectedCategories.get(task.getCategoryId(), false)) {
-                    filteredTasks.add(task);
+            Log.e("HomeFragment", "SearchView bị null!"); // Log lỗi nếu SearchView null
+        }
+
+        // Kiểm tra nếu không có category nào được chọn và không có chuỗi tìm kiếm
+        if (selectedCategories.size() == 0 && searchQuery.isEmpty()) {
+            // Nếu không có category nào được chọn và không có chuỗi tìm kiếm, hiển thị tất cả task
+            filteredTasks.addAll(allTasks);
+        } else {
+            // Trường hợp khác, lọc task dựa trên category đã chọn và chuỗi tìm kiếm
+            for (Task task : allTasks) { // Duyệt qua tất cả task
+                boolean isCategoryMatched = selectedCategories.get(task.getCategoryId(), false); // Kiểm tra task có thuộc category đã chọn không
+                boolean isSearchMatched = task.getName().toLowerCase().contains(searchQuery); // Kiểm tra task có khớp với chuỗi tìm kiếm không
+
+                // Nếu task khớp với category đã chọn và (tùy chọn) chuỗi tìm kiếm
+                if (isCategoryMatched && (searchQuery.isEmpty() || isSearchMatched)) {
+                    filteredTasks.add(task); // Thêm task vào danh sách đã lọc
                 }
             }
         }
-        Log.d("Suuuuuuuuuuuuuuuuu", selectedCategories.size() + "");
 
-        // Update the ListView with filtered tasks
+        Log.d("Filtered tasks", filteredTasks.size() + " task được tìm thấy"); // Log số task đã lọc
+
+        // Cập nhật ListView với danh sách task đã lọc
         lvAdapter = new TasksArrayAdapter(requireActivity(), filteredTasks, categoryDb);
         listView.setAdapter(lvAdapter);
     }
+
+    private void filterTasksBySearchQuery(String query) {
+        List<Task> filteredTasks = new ArrayList<>();
+        for (Task task : db.getAllTasks()) {
+            if (task.getName().toLowerCase().contains(query.toLowerCase())) {
+                filteredTasks.add(task);
+            }
+        }
+
+        // Cập nhật lại danh sách task
+        lvAdapter = new TasksArrayAdapter(requireActivity(), filteredTasks, categoryDb);
+        listView.setAdapter(lvAdapter);
+    }
+
 
 }
