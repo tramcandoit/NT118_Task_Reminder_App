@@ -1,0 +1,82 @@
+Index: app/src/google-services.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/google-services.json b/app/src/google-services.json
+new file mode 100644
+--- /dev/null	(date 1735779232748)
++++ b/app/src/google-services.json	(date 1735779232748)
+@@ -0,0 +1,30 @@
++{
++  "project_info": {
++    "project_number": "106408507765",
++    "firebase_url": "https://nt118taskreminderapp-default-rtdb.asia-southeast1.firebasedatabase.app",
++    "project_id": "nt118taskreminderapp",
++    "storage_bucket": "nt118taskreminderapp.firebasestorage.app"
++  },
++  "client": [
++    {
++      "client_info": {
++        "mobilesdk_app_id": "1:106408507765:android:ccb7c4d281de3afe54fb3c",
++        "android_client_info": {
++          "package_name": "com.example.mobileapp"
++        }
++      },
++      "oauth_client": [],
++      "api_key": [
++        {
++          "current_key": "AIzaSyDFStMH7GY4pfdbFow56NyFVMeeVEyHZ74"
++        }
++      ],
++      "services": {
++        "appinvite_service": {
++          "other_platform_oauth_client": []
++        }
++      }
++    }
++  ],
++  "configuration_version": "1"
++}
+\ No newline at end of file
+Index: app/google-services.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/google-services.json b/app/google-services.json
+new file mode 100644
+--- /dev/null	(date 1735779232748)
++++ b/app/google-services.json	(date 1735779232748)
+@@ -0,0 +1,30 @@
++{
++  "project_info": {
++    "project_number": "106408507765",
++    "firebase_url": "https://nt118taskreminderapp-default-rtdb.asia-southeast1.firebasedatabase.app",
++    "project_id": "nt118taskreminderapp",
++    "storage_bucket": "nt118taskreminderapp.firebasestorage.app"
++  },
++  "client": [
++    {
++      "client_info": {
++        "mobilesdk_app_id": "1:106408507765:android:ccb7c4d281de3afe54fb3c",
++        "android_client_info": {
++          "package_name": "com.example.mobileapp"
++        }
++      },
++      "oauth_client": [],
++      "api_key": [
++        {
++          "current_key": "AIzaSyDFStMH7GY4pfdbFow56NyFVMeeVEyHZ74"
++        }
++      ],
++      "services": {
++        "appinvite_service": {
++          "other_platform_oauth_client": []
++        }
++      }
++    }
++  ],
++  "configuration_version": "1"
++}
+\ No newline at end of file

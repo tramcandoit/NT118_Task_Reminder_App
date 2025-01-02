@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MobileApp</string>
-    <string name="welcome_back">Chào mừng trở lại</string>
+    <string name="welcome_back">Chào mừng trở lại !</string>
     <string name="login">Đăng nhập</string>
     <string name="your_email">Email của bạn</string>
     <string name="hint_email">Địa chỉ email</string>
@@ -9,7 +9,7 @@
     <string name="hint_password">Mật khẩu</string>
     <string name="forgot_password">Quên mật khẩu?</string>
     <string name="don_t_have_account">Không có tài khoản?</string>
-    <string name="sign_up">Đăng nhập</string>
+    <string name="sign_up">Đăng ký</string>
     <string name="or">hoặc</string>
     <string name="create_account">Tạo tài khoản</string>
     <string name="your_username">Username của bạn</string>
@@ -57,7 +57,7 @@
     <string name="feedback_content">Nội dung phản hồi</string>
     <string name="send_feedback">Gửi phản hồi</string>
     <string name="version_1_0">"Tên ứng dụng : TaskMaster \nVersion: 1.0.0           \nTổng quan: TaskMaster là ứng dụng quản lý tác vụ giúp bạn quản lý và theo dõi các tác vụ thường ngày một cách dễ dàng.           \nTính năng chính          \n • Tạo, chỉnh sửa và xóa tác vụ          \n • Sắp xếp tác vụ theo ngày và mức độ ưu tiên          \n • Đặt nhắc nhở để theo dõi tiến độ          \n • Giao diện đơn giản và dễ dàng sử dụng           \nThông tin nhà phát triển          \n • Nhóm phát triển: Nhóm 3          \n • Liên hệ: 22520624@gm.uit.edu.vn     "</string>
-    <string name="today_tasks">Nhiệm vụ hôm nay</string>
+    <string name="today_tasks">Nhiệm vụ cần làm</string>
     <string name="categories">Thể loại</string>
     <string name="no_ev_today">Không có sự kiện hôm nay</string>
     <string name="no_ev_on">Không có sự kiện vào</string>
@@ -78,4 +78,8 @@
     <string name="priority">Mức độ ưu tiên</string>
     <string name="search_here">Tìm kiếm ở đây</string>
     <string name="delete">Xóa</string>
+    <string name="your_current_user">"Tài khoản hiện tại là: "</string>
+    <string name="enter_your_email_here">Nhập email của bạn ở đây ...</string>
+    <string name="reset_password">Đặt lại mật khẩu</string>
+    <string name="re_password">Nhập lại mật khẩu</string>
 </resources>

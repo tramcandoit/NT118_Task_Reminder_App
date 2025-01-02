@@ -4,7 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- TRANG   -->
-    <string name="welcome_back">Welcome Back</string>
+    <string name="welcome_back">Welcome back !</string>
     <string name="login">Login</string>
     <string name="your_email">Your email</string>
     <string name="hint_email">Email address</string>
@@ -70,7 +70,7 @@
     <string name="feedback_content">Feedback content</string>
     <string name="send_feedback">Send feedback</string>
     <string name="version_1_0">"App Name: TaskMaster \nVersion: 1.0.0        \nOverview: TaskMaster is a task management app that helps you organize and track your daily tasks easily.     \nKey Features        \n • Create, edit, and delete tasks      \n • Organize tasks by date and priority   \n • Set reminders to track progress  \n • Simple and easy-to-use interface      \nDeveloper Information   \n • Developer: Group 3      \n • Contact: 22520624@gm.uit.edu.vn     "</string>
-    <string name="today_tasks">Today\'s Tasks</string>
+    <string name="today_tasks">To-do Tasks</string>
     <string name="categories">Categories</string>
     <string name="categories_menu">Categories Menu</string>
     <string name="no_ev_today">No events today</string>
@@ -92,5 +92,9 @@
     <string name="priority">Priority</string>
     <string name="search_here">Search here</string>
     <string name="delete">Delete</string>
+    <string name="your_current_user">Your current user is: </string>
+    <string name="enter_your_email_here">Enter your email here ...</string>
+    <string name="reset_password">Reset password</string>
+    <string name="re_password">Re-enter password</string>
 
 </resources>
