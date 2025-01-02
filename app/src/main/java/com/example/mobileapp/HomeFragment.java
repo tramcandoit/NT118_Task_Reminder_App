@@ -1,7 +1,9 @@
 package com.example.mobileapp;
 
 import android.app.AlarmManager;
+import android.app.DatePickerDialog;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,8 +34,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
 
@@ -298,9 +302,8 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
                 spTaskdetailCategories.setAdapter(categoriesSpAdapter);
 
                 List<String> priorities = new ArrayList<>();
+                priorities.add("Normal");
                 priorities.add("High");
-                priorities.add("Medium");
-                priorities.add("Low");
                 ArrayAdapter<String> priorityAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, priorities);
                 priorityAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
                 spTaskdetailPriority.setAdapter(priorityAdapter);
@@ -315,6 +318,76 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
                 spTaskdetailFrequencySelector.setAdapter(frequencyAdapter);
                 int spinnerFrequencyPosition = frequencyAdapter.getPosition(clickedTask.getRepeat_frequency());
 
+                // Date Picker
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Calendar calendar = Calendar.getInstance();
+
+                String currentDate = sdf.format(calendar.getTime());
+                etTaskdetailDateSelector.setText(currentDate);
+
+                etTaskdetailDateSelector.setOnClickListener(v -> {
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                            (viewDate, year, monthOfYear, dayOfMonth) -> {
+                                Calendar selectedCalendar = Calendar.getInstance();
+                                selectedCalendar.set(year, monthOfYear, dayOfMonth);
+
+                                if (selectedCalendar.before(calendar)) {
+                                    Toast.makeText(getContext(), "Vui lòng chọn ngày sau " + etTaskdetailDateSelector.getText(), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    String selectedDate = sdf.format(selectedCalendar.getTime());
+                                    etTaskdetailDateSelector.setText(selectedDate);
+                                }
+                            },
+                            calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
+                    );
+
+                    datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, LanguageManager.getLocalizedText(requireContext(), "save"), datePickerDialog);
+                    datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialog, which) -> dialog.cancel());
+                    datePickerDialog.show();
+                });
+
+                // Time Picker
+                SimpleDateFormat sdf_time = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                SimpleDateFormat sdf_date = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()); // Thêm sdf_date
+                SimpleDateFormat sdf_datetime = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()); // Thêm sdf_datetime
+
+                String currentTime = sdf_time.format(calendar.getTime());
+                etTaskdetailTimeSelector.setText(currentTime);
+
+                etTaskdetailTimeSelector.setOnClickListener(v -> {
+                    int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                    int minute = calendar.get(Calendar.MINUTE);
+
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
+                            (viewTime, selectedHour, selectedMinute) -> {
+                                try {
+                                    // Lấy ngày từ etDate
+                                    Date selectedDate = sdf_date.parse(etTaskdetailTimeSelector.getText().toString());
+                                    Calendar selectedCalendar = Calendar.getInstance();
+                                    selectedCalendar.setTime(selectedDate);
+
+                                    // Đặt giờ đã chọn
+                                    selectedCalendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+                                    selectedCalendar.set(Calendar.MINUTE, selectedMinute);
+
+                                    // So sánh với thời gian hiện tại
+                                    if (selectedCalendar.before(Calendar.getInstance())) {
+                                        Toast.makeText(getContext(), "Vui lòng chọn giờ sau " + etTaskdetailTimeSelector.getText(), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        String selectedTime = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute);
+                                        etTaskdetailTimeSelector.setText(selectedTime);
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                    // Xử lý lỗi parse date nếu cần
+                                    Toast.makeText(getContext(), "Lỗi định dạng ngày", Toast.LENGTH_SHORT).show();
+                                }
+                            }, hour, minute, true);
+
+                    timePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, LanguageManager.getLocalizedText(requireContext(), "save"), timePickerDialog);
+                    timePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialog, which) -> dialog.cancel());
+                    timePickerDialog.show();
+                });
 
                 // Tạo layout cho AlertDialog (nếu cần hiển thị nhiều thông tin hơn)
                 etTaskdetailName.setText(clickedTask.getName());
@@ -329,11 +402,8 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
                 etTaskdetailName.setFocusable(false);
                 etTaskdetailName.setFocusableInTouchMode(false);
 
-                etTaskdetailDateSelector.setFocusable(false);
-                etTaskdetailDateSelector.setFocusableInTouchMode(false);
-
-                etTaskdetailTimeSelector.setFocusable(false);
-                etTaskdetailTimeSelector.setFocusableInTouchMode(false);
+                etTaskdetailDateSelector.setEnabled(false);
+                etTaskdetailTimeSelector.setEnabled(false);
 
                 etTaskdetailDescription.setFocusable(false);
                 etTaskdetailDescription.setFocusableInTouchMode(false);
@@ -342,35 +412,44 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
                 spTaskdetailPriority.setOnTouchListener((v, event) -> true);
                 spTaskdetailFrequencySelector.setOnTouchListener((v, event) -> true);
 
+                AtomicBoolean editFlag = new AtomicBoolean(false); // Tạo cờ kiểm tra trạng thái Edit
+
                 // Thiết lập các sự kiện cho các nút
                 builder.setPositiveButton("OK", (dialog, which) -> {
-                    // Lấy dữ liệu từ các trường EditText, Spinner
-                    clickedTask.setName(etTaskdetailName.getText().toString());
-                    clickedTask.setCategoryId(categories.get(spTaskdetailCategories.getSelectedItemPosition()).getCategoryId()); // Lấy category từ danh sách categories với vị trí tương úng trong spinner spCategories, sau đó dùng getCategoryId()
-                    clickedTask.setDate(etTaskdetailDateSelector.getText().toString());
-                    clickedTask.setTime(etTaskdetailTimeSelector.getText().toString());
-                    clickedTask.setPriority(spTaskdetailPriority.getSelectedItem().toString());
-                    clickedTask.setRepeat_frequency(spTaskdetailFrequencySelector.getSelectedItem().toString());
-                    clickedTask.setDescription(etTaskdetailDescription.getText().toString());
+                    if (editFlag.get() == false) {
+                        dialog.dismiss();
+                    }
+                    else {
+                        // Lấy dữ liệu từ các trường EditText, Spinner
+                        clickedTask.setName(etTaskdetailName.getText().toString());
+                        clickedTask.setCategoryId(categories.get(spTaskdetailCategories.getSelectedItemPosition()).getCategoryId()); // Lấy category từ danh sách categories với vị trí tương úng trong spinner spCategories, sau đó dùng getCategoryId()
+                        clickedTask.setDate(etTaskdetailDateSelector.getText().toString());
+                        clickedTask.setTime(etTaskdetailTimeSelector.getText().toString());
+                        clickedTask.setPriority(spTaskdetailPriority.getSelectedItem().toString());
+                        clickedTask.setRepeat_frequency(spTaskdetailFrequencySelector.getSelectedItem().toString());
+                        clickedTask.setDescription(etTaskdetailDescription.getText().toString());
 
-                    // Cập nhật Task trong Database
-                    db.updateTask(clickedTask);
+                        // Cập nhật Task trong Database
+                        db.updateTask(clickedTask);
 
-                    // Thêm vào danh sách tasks ở HomeFragment
-                    tasksList.set(position, clickedTask);
-                    cancelNotification(clickedTask);
-                    scheduleNotification(clickedTask);
-                    lvAdapter.notifyDataSetChanged();
+                        // Thêm vào danh sách tasks ở HomeFragment
+                        tasksList.set(position, clickedTask);
+                        cancelNotification(clickedTask);
+                        scheduleNotification(clickedTask);
+                        lvAdapter.notifyDataSetChanged();
 
-                    // Sau khi lưu, đóng dialog
-                    dialog.dismiss();
+                        // Sau khi lưu, đóng dialog
+                        dialog.dismiss();
+                    }
                 });
 
                 builder.setNegativeButton("Cancel", (dialog, which) -> {
+                    editFlag.set(false);
                     dialog.dismiss();
                 });
                 builder.setNeutralButton("Edit", (dialog, which) -> {
                     // Khởi tạo nút Edit
+
                 });
 
                 // Hiển thị AlertDialog
@@ -379,15 +458,15 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
                     Button editButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
 
                     editButton.setOnClickListener(v -> {
+                        // Bật cờ editFlag
+                        editFlag.set(true);
+
                         // Chỉnh sửa thông tin task
                         etTaskdetailName.setFocusable(true);
                         etTaskdetailName.setFocusableInTouchMode(true);
 
-                        etTaskdetailDateSelector.setFocusable(true);
-                        etTaskdetailDateSelector.setFocusableInTouchMode(true);
-
-                        etTaskdetailTimeSelector.setFocusable(true);
-                        etTaskdetailTimeSelector.setFocusableInTouchMode(true);
+                        etTaskdetailDateSelector.setEnabled(true);
+                        etTaskdetailTimeSelector.setEnabled(true);
 
                         etTaskdetailDescription.setFocusable(true);
                         etTaskdetailDescription.setFocusableInTouchMode(true);
