@@ -174,6 +174,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
     public void onTaskAdded(Task task) {
         tasksList.add(task);
         lvAdapter.notifyDataSetChanged();
+        filterTasksBySelectedCategories();
     }
 
     @Override
@@ -416,6 +417,14 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
 
                 // Thiết lập các sự kiện cho các nút
                 builder.setPositiveButton("OK", (dialog, which) -> {
+                    Context context = requireContext();
+                    // Kiểm tra nếu Name trống
+                    String taskName = etTaskdetailName.getText().toString().trim();
+                    if (taskName.isEmpty()) {
+                        Toast.makeText(context, "Bạn cần nhập tên nhiệm vụ!", Toast.LENGTH_SHORT).show();
+                        return; // Không thực hiện lưu
+                    }
+                    Log.d("HomeFragment", "Edit flag: " + taskName);
                     if (editFlag.get() == false) {
                         dialog.dismiss();
                     }
@@ -437,7 +446,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
                         cancelNotification(clickedTask);
                         scheduleNotification(clickedTask);
                         lvAdapter.notifyDataSetChanged();
-
+                        filterTasksBySelectedCategories();
                         // Sau khi lưu, đóng dialog
                         dialog.dismiss();
                     }
@@ -496,12 +505,14 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
                             break;
                         case 1: // Sửa nhiệm vụ
                             showEditDialog(task, position);
+                            filterTasksBySelectedCategories();
                             break;
                         case 2: // Xóa nhiệm vụ
                             cancelNotification(task);   // Hủy thông báo trước khi xóa
                             db.deleteTask(task); // Xóa khỏi database
                             tasksList.remove(position);
                             lvAdapter.notifyDataSetChanged();
+                            filterTasksBySelectedCategories();
                             break;
                     }
                 });
@@ -642,6 +653,14 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
         // Thiết lập các sự kiện cho các nút trong dialog
         builder.setPositiveButton("Save", (dialog, which) -> {
             // Lấy thông tin từ các EditText, Spinner
+            Context context = requireContext();
+            // Kiểm tra nếu Name trống
+            String taskName = etTaskdetailName.getText().toString().trim();
+            if (taskName.isEmpty()) {
+                Toast.makeText(context, "Bạn cần nhập tên nhiệm vụ!", Toast.LENGTH_SHORT).show();
+                return; // Không thực hiện lưu
+            }
+
             task.setName(etTaskdetailName.getText().toString());
             task.setCategoryId(categories.get(spTaskdetailCategories.getSelectedItemPosition()).getCategoryId());
             task.setDate(etTaskdetailDateSelector.getText().toString());
@@ -656,7 +675,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
             lvAdapter.notifyDataSetChanged();  // Thông báo adapter về sự thay đổi
             cancelNotification(task); // Hủy thông báo cũ
             scheduleNotification(task); // Lập lịch thông báo mới
-
+            filterTasksBySelectedCategories();
             dialog.dismiss();  // Đóng dialog
         });
 
@@ -808,6 +827,17 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
 
         // Thiết lập các sự kiện cho các nút
         builder.setPositiveButton("OK", (dialog, which) -> {
+            Context context = requireContext();
+            // Kiểm tra nếu Name trống
+            String taskName = etTaskdetailName.getText().toString().trim();
+            if (taskName.isEmpty()) {
+                Toast.makeText(context, "Bạn cần nhập tên nhiệm vụ!", Toast.LENGTH_SHORT).show();
+                return; // Không thực hiện lưu
+            }
+            Log.d("HomeFragment", "Edit flag: " + taskName);
+
+
+
             if (editFlag.get() == false) {
                 dialog.dismiss();
             }
@@ -829,7 +859,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
                 cancelNotification(clickedTask);
                 scheduleNotification(clickedTask);
                 lvAdapter.notifyDataSetChanged();
-
+                filterTasksBySelectedCategories();
                 // Sau khi lưu, đóng dialog
                 dialog.dismiss();
             }

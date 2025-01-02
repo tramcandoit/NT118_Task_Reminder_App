@@ -1,6 +1,7 @@
 package com.example.mobileapp;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -99,12 +100,13 @@ public class AddCategoriesFragment extends DialogFragment {
         builder.setView(dialogView)
                 .setPositiveButton("Save", (dialog, id) -> {
                     String categoryName = etCategoryName.getText().toString();
-                    int selectedIcon = iconList.get(iconAdapter.getSelectedPosition()); // Lấy icon đã chọn từ Adapter
-
+                    Context context = requireContext();
+                    // Kiểm tra nếu Name trống
                     if (categoryName.isEmpty()) {
-                        Toast.makeText(getContext(), "Please enter a category name", Toast.LENGTH_SHORT).show();
-                        return;
+                        Toast.makeText(context, "Bạn cần nhập tên danh mục!", Toast.LENGTH_SHORT).show();
+                        return; // Không thực hiện lưu
                     }
+                    int selectedIcon = iconList.get(iconAdapter.getSelectedPosition()); // Lấy icon đã chọn từ Adapter
 
                     CategoriesItem newCategory = new CategoriesItem();
                     newCategory.setName(categoryName);
