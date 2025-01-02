@@ -196,13 +196,20 @@ public class AddEventFragment extends DialogFragment {
         Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
         positiveButton.setOnClickListener(view -> {
             if (validateAndSaveEvent()) {
+
                 dismiss();
             }
         });
     }
 
     private boolean validateAndSaveEvent() {
+        // Kiểm tra nếu tên sự kiện trống
         String eventName = etEventName.getText().toString().trim();
+        if (eventName.isEmpty()) {
+            Toast.makeText(requireContext(), "Bạn cần nhập tên sự kiện!", Toast.LENGTH_SHORT).show();
+            return false; // Không thực hiện lưu
+        }
+
         if (!validateEventName(eventName)) {
             return false;
         }

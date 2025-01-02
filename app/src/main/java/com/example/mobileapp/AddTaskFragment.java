@@ -8,6 +8,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -303,6 +304,15 @@ public class AddTaskFragment extends DialogFragment {
         // Ghi nhận các tham số và thêm vào Task
         builder.setView(dialogView)
                 .setPositiveButton(LanguageManager.getLocalizedText(requireContext(), "save"), (dialog, id) -> {
+                    Context context = requireContext();
+                    // Kiểm tra nếu Name trống
+                    String taskName = etName.getText().toString().trim();
+                    if (taskName.isEmpty()) {
+                        Toast.makeText(context, "Bạn cần nhập tên nhiệm vụ!", Toast.LENGTH_SHORT).show();
+                        return; // Không thực hiện lưu
+                    }
+
+
                     // Lấy dữ liệu từ các trường EditText, Spinner
                     task.setName(etName.getText().toString());
                     task.setCategoryId(categories.get(spCategories.getSelectedItemPosition()).getCategoryId()); // Lấy category từ danh sách categories với vị trí tương úng trong spinner spCategories, sau đó dùng getCategoryId()
@@ -324,6 +334,7 @@ public class AddTaskFragment extends DialogFragment {
 
                     // Sau khi lưu, đóng dialog
                     dismiss();
+
                     // Hiện thông báo thêm task thành công
                     showSuccessMessage();
                 })

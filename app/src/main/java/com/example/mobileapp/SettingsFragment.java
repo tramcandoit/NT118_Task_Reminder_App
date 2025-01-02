@@ -66,7 +66,7 @@ public class SettingsFragment extends Fragment {
 
     // Khai báo các view
     private TextView tvAccount;
-    private TextView tvProductivity;
+//    private TextView tvProductivity;
     private TextView tvTheme;
     private TextView tvLanguage;
     private TextView tvHelpFeed;
@@ -81,7 +81,7 @@ public class SettingsFragment extends Fragment {
 
         // lấy ra các view
         tvAccount = view.findViewById(R.id.tv_account);
-        tvProductivity = view.findViewById(R.id.tv_productivity);
+//        tvProductivity = view.findViewById(R.id.tv_productivity);
         tvTheme = view.findViewById(R.id.tv_theme);
         tvLanguage = view.findViewById(R.id.tv_language);
         tvHelpFeed = view.findViewById(R.id.tv_help_feed);
@@ -112,20 +112,20 @@ public class SettingsFragment extends Fragment {
         });
 
 
-        tvProductivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ProductivityFragment productivityFragment = new ProductivityFragment();
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-
-                // Áp dụng hiệu ứng slide sang phải
-                transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
-
-                transaction.replace(R.id.fragment_container, productivityFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
+//        tvProductivity.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                ProductivityFragment productivityFragment = new ProductivityFragment();
+//                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+//
+//                // Áp dụng hiệu ứng slide sang phải
+//                transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+//
+//                transaction.replace(R.id.fragment_container, productivityFragment);
+//                transaction.addToBackStack(null);
+//                transaction.commit();
+//            }
+//        });
 
         tvTheme.setOnClickListener(new View.OnClickListener() {
             @Override
