@@ -289,6 +289,35 @@ public class EventDatabaseHandler extends SQLiteOpenHelper {
         }
     }
 
+    public void updateEvent(Event ev) {
+        Log.d(TAG, "Updating event: " + ev.getName() + " on " + ev.getDate());
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, ev.getName());
+        values.put(KEY_DATE, ev.getDate());
+        values.put(KEY_FREQ, ev.getRepeat_frequency());
+        values.put(KEY_DESCRIPTION, ev.getDescription());
+
+        // Cập nhật sự kiện trong cơ sở dữ liệu
+        int rowsAffected = db.update(TABLE_EVENTS, values, KEY_EVENTID + " = ?", new String[]{String.valueOf(ev.getEventId())});
+
+        if (rowsAffected == 0) {
+            Log.e(TAG, "Failed to update event: " + ev.getName());
+        } else {
+            Log.d(TAG, "Event updated successfully with id: " + ev.getEventId());
+        }
+        db.close();
+    }
+
+    public void deleteEvent(Event event) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_EVENTS, KEY_EVENTID + " = ?", new String[]{String.valueOf(event.getEventId())});
+        db.close();
+        Log.d(TAG, "Event deleted with id: " + event.getEventId());
+    }
+
+
+
 
 
 

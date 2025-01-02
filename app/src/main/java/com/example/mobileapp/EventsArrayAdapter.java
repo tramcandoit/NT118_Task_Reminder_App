@@ -28,7 +28,7 @@ public class EventsArrayAdapter extends ArrayAdapter<Event> {
 
         TextView tvItemName = convertView.findViewById(R.id.tv_item_name);
         TextView tvItemTime = convertView.findViewById(R.id.tv_item_date);
-
+        tvItemName.setSelected(true);
         Event event = getItem(position);
 
         if (event != null) {

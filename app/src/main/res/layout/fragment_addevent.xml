@@ -110,11 +110,11 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginStart="20dp"
                     android:textSize="20sp"
+                    android:clickable="false"
+                    android:focusable="false"
                     android:textColorHint="@color/black"
                     android:textColor="@color/black"
                     android:hint="01/01/2001"
-                    android:clickable="false"
-                    android:focusable="false"
                     android:minHeight="48dp"/>
 
             </LinearLayout>
