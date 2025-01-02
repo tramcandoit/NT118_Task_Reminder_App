@@ -108,7 +108,7 @@ public class AccountFragment extends Fragment {
                         .setPositiveButton(LanguageManager.getLocalizedText(requireContext(), "yes"), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                // Xử lý đăng xuất
+                                // Xử lý đăng xuấtt
                                 FirebaseAuth.getInstance().signOut();
 
                                 // Chuyển về màn hình chính
