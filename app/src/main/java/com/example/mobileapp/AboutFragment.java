@@ -40,13 +40,18 @@ public class AboutFragment extends Fragment {
             public void onClick(View view) {
                 SettingsFragment settingsFragment = new SettingsFragment();
 
-                // Thực hiện transaction để thay thế fragment hiện tại
+                // Thực hiện transaction để thay thế fragment hiện tại với hiệu ứng slide sang trái
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+                // Áp dụng hiệu ứng slide vào và slide ra
+                transaction.setCustomAnimations(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
+
                 transaction.replace(R.id.fragment_container, settingsFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
         });
+
         return view;
     }
 }

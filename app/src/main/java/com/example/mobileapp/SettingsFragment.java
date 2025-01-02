@@ -95,28 +95,21 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FirebaseUser currentUser = auth.getCurrentUser();
-                if (currentUser == null)
-                {
-                    // Chuyển sang class AccountFragment
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+                // Áp dụng hiệu ứng slide sang phải
+                transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+
+                if (currentUser == null) {
                     LoginFragment loginFragment = new LoginFragment();
-
-                    // Thực hiện transaction để thay thế fragment hiện tại
-                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, loginFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-                }
-                else
-                {
+                } else {
                     AccountFragment accountFragment = new AccountFragment();
-
-                    // Thực hiện transaction để thay thế fragment hiện tại
-                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                     transaction.replace(R.id.fragment_container, accountFragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
                 }
 
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         });
 
@@ -125,6 +118,10 @@ public class SettingsFragment extends Fragment {
             public void onClick(View view) {
                 NotiSoundFragment notiSoundFragment = new NotiSoundFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+                // Áp dụng hiệu ứng slide sang phải
+                transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+
                 transaction.replace(R.id.fragment_container, notiSoundFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -136,6 +133,10 @@ public class SettingsFragment extends Fragment {
             public void onClick(View view) {
                 ProductivityFragment productivityFragment = new ProductivityFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+                // Áp dụng hiệu ứng slide sang phải
+                transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+
                 transaction.replace(R.id.fragment_container, productivityFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -145,11 +146,12 @@ public class SettingsFragment extends Fragment {
         tvTheme.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Chuyển sang class ThemeFragment
                 ThemeFragment themeFragment = new ThemeFragment();
-
-                // Thực hiện transaction để thay thế fragment hiện tại
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+                // Áp dụng hiệu ứng slide sang phải
+                transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+
                 transaction.replace(R.id.fragment_container, themeFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -161,10 +163,13 @@ public class SettingsFragment extends Fragment {
             public void onClick(View view) {
                 LanguageFragment languageFragment = new LanguageFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+                // Áp dụng hiệu ứng slide sang phải
+                transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+
                 transaction.replace(R.id.fragment_container, languageFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
-
             }
         });
 
@@ -173,6 +178,10 @@ public class SettingsFragment extends Fragment {
             public void onClick(View view) {
                 HelpFeedFragment helpFeedFragment = new HelpFeedFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+                // Áp dụng hiệu ứng slide sang phải
+                transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+
                 transaction.replace(R.id.fragment_container, helpFeedFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
@@ -184,13 +193,15 @@ public class SettingsFragment extends Fragment {
             public void onClick(View view) {
                 AboutFragment aboutFragment = new AboutFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+                // Áp dụng hiệu ứng slide sang phải
+                transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_to_left);
+
                 transaction.replace(R.id.fragment_container, aboutFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
-
             }
         });
-
 
 
 
