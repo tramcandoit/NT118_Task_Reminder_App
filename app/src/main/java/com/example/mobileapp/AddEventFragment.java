@@ -74,7 +74,7 @@ public class AddEventFragment extends DialogFragment {
     }
 
     private void initializeViews(View view) {
-        etEventName = view.findViewById(R.id.tv_addevent_addevent_textbox);
+        etEventName = view.findViewById(R.id.et_addevent_addevent_textbox);
         etDate = view.findViewById(R.id.et_addevent_date_selector);
         etDescription = view.findViewById(R.id.et_addevent_description);
         spFrequency = view.findViewById(R.id.sp_addevent_frequency_selector);

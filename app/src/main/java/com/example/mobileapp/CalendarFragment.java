@@ -1,13 +1,18 @@
 package com.example.mobileapp;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CalendarFragment extends Fragment implements OnEventAddedListener {
 
@@ -158,8 +164,129 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Event clickedEvent = eventList.get(position);
-                showEventDetailsDialog(clickedEvent);
+                Event event = eventList.get(position);
+
+                // Tạo AlertDialog để hiển thị chi tiết event
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_addevent, null);
+                builder.setView(dialogView);
+
+                // Tìm các TextView trong dialog layout và thiết lập giá trị
+                EditText etEventName = dialogView.findViewById(R.id.et_addevent_addevent_textbox);
+                EditText etEventDate = dialogView.findViewById(R.id.et_addevent_date_selector);
+                Spinner spEventFrequency = dialogView.findViewById(R.id.sp_addevent_frequency_selector);
+                TextView etEventDescription = dialogView.findViewById(R.id.et_addevent_description);
+
+
+                List<String> frequencies = new ArrayList<>();
+                frequencies.add("Daily");
+                frequencies.add("Weekly");
+                frequencies.add("Once");
+                ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, frequencies);
+                frequencyAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
+                spEventFrequency.setAdapter(frequencyAdapter);
+                int spinnerFrequencyPosition = frequencyAdapter.getPosition(event.getRepeat_frequency());
+
+                // Date Picker
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Calendar calendar = Calendar.getInstance();
+
+                String currentDate = sdf.format(calendar.getTime());
+                etEventDate.setText(currentDate);
+
+                etEventDate.setOnClickListener(v -> {
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                            (viewDate, year, monthOfYear, dayOfMonth) -> {
+                                Calendar selectedCalendar = Calendar.getInstance();
+                                selectedCalendar.set(year, monthOfYear, dayOfMonth);
+
+                                if (selectedCalendar.before(calendar)) {
+                                    Toast.makeText(getContext(), "Vui lòng chọn ngày sau " + etEventDate.getText(), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    String selectedDate = sdf.format(selectedCalendar.getTime());
+                                    etEventDate.setText(selectedDate);
+                                }
+                            },
+                            calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
+                    );
+
+                    datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, LanguageManager.getLocalizedText(requireContext(), "save"), datePickerDialog);
+                    datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialog, which) -> dialog.cancel());
+                    datePickerDialog.show();
+                });
+
+                // Thiết lập các giá trị vào các trường
+                etEventName.setText(event.getName());
+                etEventDate.setText(event.getDate());
+                spEventFrequency.setSelection(spinnerFrequencyPosition);
+                etEventDescription.setText(event.getDescription());
+
+                // Tắt chế độ focusable cho các trường không cần sửa đổi
+                etEventName.setFocusable(false);
+                etEventName.setFocusableInTouchMode(false);
+
+                etEventDate.setFocusable(false);
+                etEventDate.setFocusableInTouchMode(false);
+
+                etEventDescription.setFocusable(false);
+                etEventDescription.setFocusableInTouchMode(false);
+
+                spEventFrequency.setOnTouchListener((v, event13) -> true);
+
+                AtomicBoolean editFlag = new AtomicBoolean(false);
+
+                builder.setPositiveButton("OK", (dialog, which) -> {
+                    if (editFlag.get() == false) {
+                        dialog.dismiss();
+                    } else {
+                        event.setName(etEventName.getText().toString());
+                        event.setDate(etEventDate.getText().toString());
+                        event.setRepeat_frequency(spEventFrequency.getSelectedItem().toString());
+                        event.setDescription(etEventDescription.getText().toString());
+
+                        event_db.updateEvent(event);
+
+                        eventList.set(position, event);
+                        adapter.notifyDataSetChanged();
+
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", (dialog, which) -> {
+                    editFlag.set(false);
+                    dialog.dismiss();
+                });
+
+                builder.setNeutralButton("Edit", (dialog, which) -> {
+                    // Khởi tạo nút Edit
+
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.setOnShowListener(dialogInterface -> {
+                    Button editButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+
+                    editButton.setOnClickListener(v -> {
+                        // Bật cờ editFlag
+                        editFlag.set(true);
+
+                        // Chỉnh sửa thông tin task
+                        etEventName.setFocusable(true);
+                        etEventName.setFocusableInTouchMode(true);
+
+                        etEventDate.setFocusable(true);
+                        etEventDate.setFocusableInTouchMode(true);
+
+                        etEventDescription.setFocusable(true);
+                        etEventDescription.setFocusableInTouchMode(true);
+
+                        spEventFrequency.setOnTouchListener(null);
+                    });
+                });
+
+                dialog.show();
+
             }
         });
 
@@ -168,8 +295,28 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Event longClickedEvent = eventList.get(position);
-                // Xử lý khi item được long-click
-                Toast.makeText(requireContext(), "Long-clicked: " + longClickedEvent.getName(), Toast.LENGTH_SHORT).show();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+                builder.setTitle("Chọn hành động");
+
+                builder.setItems(new CharSequence[]{"Xem nhiệm vụ", "Sửa nhiệm vụ", "Xóa nhiệm vụ"}, (dialog, which) -> {
+                    switch (which) {
+                        case 0: // Xem nhiệm vụ
+                            showEventDetailsDialog(longClickedEvent, position);
+                            break;
+                        case 1: // Sửa nhiệm vụ
+                            showEditDialog(longClickedEvent, position);
+                            break;
+                        case 2: // Xóa nhiệm vụ
+                            event_db.deleteEvent(longClickedEvent); // Xóa khỏi database
+                            eventList.remove(position);
+                            adapter.notifyDataSetChanged();
+                            break;
+                    }
+                });
+
+                builder.show();
+
                 return true; // Trả về true để không xử lý thêm hành động onClick
             }
         });
@@ -177,46 +324,183 @@ public class CalendarFragment extends Fragment implements OnEventAddedListener {
         return view;
     }
 
-    private void showEventDetailsDialog(Event event) {
+    private void showEditDialog(Event event, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.fragment_eventdetails, null);
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_addevent, null);
+        builder.setView(dialogView);
 
-        TextView tvEventName = dialogView.findViewById(R.id.tv_eventdetail_eventdetail_textbox);
-        TextView tvEventDate = dialogView.findViewById(R.id.tv_eventdetail_date_selector);
-        TextView tvEventFrequency = dialogView.findViewById(R.id.tv_eventdetail_frequency_selector);
-        TextView tvEventDescription = dialogView.findViewById(R.id.tv_eventdetail_description);
+        // Tìm các TextView trong dialog layout và thiết lập giá trị
+        EditText etEventName = dialogView.findViewById(R.id.et_addevent_addevent_textbox);
+        EditText etEventDate = dialogView.findViewById(R.id.et_addevent_date_selector);
+        Spinner spEventFrequency = dialogView.findViewById(R.id.sp_addevent_frequency_selector);
+        TextView etEventDescription = dialogView.findViewById(R.id.et_addevent_description);
 
-        tvEventName.setText(event.getName());
-        tvEventDate.setText(event.getDate());
-        tvEventFrequency.setText(event.getRepeat_frequency());
-        tvEventDescription.setText(event.getDescription());
 
-        builder.setView(dialogView)
-                .setPositiveButton(LanguageManager.getLocalizedText(requireContext(), "ok"), null)
-                .setNegativeButton(LanguageManager.getLocalizedText(requireContext(), "delete"), (dialog, which) -> {
-                    new AlertDialog.Builder(requireContext())
-                            .setTitle(LanguageManager.getLocalizedText(requireContext(), "confirm_delete"))
-                            .setMessage(LanguageManager.getLocalizedText(requireContext(), "confirm_delete_message"))
-                            .setPositiveButton(LanguageManager.getLocalizedText(requireContext(), "yes"), (confirmDialog, whichButton) -> {
-                                event_db.RemoveEvent(event.getEventId());
+        List<String> frequencies = new ArrayList<>();
+        frequencies.add("Monthly");
+        frequencies.add("Yearly");
+        frequencies.add("Once");
+        ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, frequencies);
+        frequencyAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
+        spEventFrequency.setAdapter(frequencyAdapter);
+        int spinnerFrequencyPosition = frequencyAdapter.getPosition(event.getRepeat_frequency());
 
-                                eventList.remove(event);
-                                fullEventList.remove(event);
+        // Date Picker
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
 
-                                adapter.notifyDataSetChanged();
-                                addEventsToCalendar();
+        String currentDate = sdf.format(calendar.getTime());
+        etEventDate.setText(currentDate);
 
-                                Toast.makeText(requireContext(), LanguageManager.getLocalizedText(requireContext(), "event_deleted"), Toast.LENGTH_SHORT).show();
+        etEventDate.setOnClickListener(v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                    (viewDate, year, monthOfYear, dayOfMonth) -> {
+                        Calendar selectedCalendar = Calendar.getInstance();
+                        selectedCalendar.set(year, monthOfYear, dayOfMonth);
 
-                                dialog.dismiss();
-                            })
-                            .setNegativeButton(LanguageManager.getLocalizedText(requireContext(), "no"), null)
-                            .show();
-                })
-                .setNeutralButton(LanguageManager.getLocalizedText(requireContext(), "edit"), (dialog, which) -> {
-                    // Chỉnh sửa event tại đây
-                });
+                        if (selectedCalendar.before(calendar)) {
+                            Toast.makeText(getContext(), "Vui lòng chọn ngày sau " + etEventDate.getText(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            String selectedDate = sdf.format(selectedCalendar.getTime());
+                            etEventDate.setText(selectedDate);
+                        }
+                    },
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
+            );
+
+            datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, LanguageManager.getLocalizedText(requireContext(), "save"), datePickerDialog);
+            datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialog, which) -> dialog.cancel());
+            datePickerDialog.show();
+        });
+
+        // Thiết lập các giá trị vào các trường
+        etEventName.setText(event.getName());
+        etEventDate.setText(event.getDate());
+        spEventFrequency.setSelection(spinnerFrequencyPosition);
+        etEventDescription.setText(event.getDescription());
+
+        // Tắt chế độ focusable cho các trường không cần sửa đổi
+        etEventName.setFocusable(true);
+        etEventName.setFocusableInTouchMode(true);
+
+        etEventDate.setFocusable(true);
+        etEventDate.setFocusableInTouchMode(true);
+
+        etEventDescription.setFocusable(true);
+        etEventDescription.setFocusableInTouchMode(true);
+
+
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+                event.setName(etEventName.getText().toString());
+                event.setDate(etEventDate.getText().toString());
+                event.setRepeat_frequency(spEventFrequency.getSelectedItem().toString());
+                event.setDescription(etEventDescription.getText().toString());
+
+                event_db.updateEvent(event);
+                eventList.set(position, event);
+                adapter.notifyDataSetChanged();
+
+                dialog.dismiss();
+
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showEventDetailsDialog(Event event, int position) {
+
+        // Tạo AlertDialog để hiển thị chi tiết event
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        View dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_addevent, null);
+        builder.setView(dialogView);
+
+        // Tìm các TextView trong dialog layout và thiết lập giá trị
+        EditText etEventName = dialogView.findViewById(R.id.et_addevent_addevent_textbox);
+        EditText etEventDate = dialogView.findViewById(R.id.et_addevent_date_selector);
+        Spinner spEventFrequency = dialogView.findViewById(R.id.sp_addevent_frequency_selector);
+        TextView etEventDescription = dialogView.findViewById(R.id.et_addevent_description);
+
+
+        List<String> frequencies = new ArrayList<>();
+        frequencies.add("Daily");
+        frequencies.add("Weekly");
+        frequencies.add("Once");
+        ArrayAdapter<String> frequencyAdapter = new ArrayAdapter<>(getContext(), R.layout.addtask_spinner_item_text, frequencies);
+        frequencyAdapter.setDropDownViewResource(R.layout.addtask_spinner_item_text);
+        spEventFrequency.setAdapter(frequencyAdapter);
+        int spinnerFrequencyPosition = frequencyAdapter.getPosition(event.getRepeat_frequency());
+
+        // Date Picker
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+
+        String currentDate = sdf.format(calendar.getTime());
+        etEventDate.setText(currentDate);
+
+        etEventDate.setOnClickListener(v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                    (viewDate, year, monthOfYear, dayOfMonth) -> {
+                        Calendar selectedCalendar = Calendar.getInstance();
+                        selectedCalendar.set(year, monthOfYear, dayOfMonth);
+
+                        if (selectedCalendar.before(calendar)) {
+                            Toast.makeText(getContext(), "Vui lòng chọn ngày sau " + etEventDate.getText(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            String selectedDate = sdf.format(selectedCalendar.getTime());
+                            etEventDate.setText(selectedDate);
+                        }
+                    },
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
+            );
+
+            datePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE, LanguageManager.getLocalizedText(requireContext(), "save"), datePickerDialog);
+            datePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE, LanguageManager.getLocalizedText(requireContext(), "cancel"), (dialog, which) -> dialog.cancel());
+            datePickerDialog.show();
+        });
+
+        // Thiết lập các giá trị vào các trường
+        etEventName.setText(event.getName());
+        etEventDate.setText(event.getDate());
+        spEventFrequency.setSelection(spinnerFrequencyPosition);
+        etEventDescription.setText(event.getDescription());
+
+        // Tắt chế độ focusable cho các trường không cần sửa đổi
+        etEventName.setFocusable(false);
+        etEventName.setFocusableInTouchMode(false);
+
+        etEventDate.setFocusable(false);
+        etEventDate.setFocusableInTouchMode(false);
+
+        etEventDescription.setFocusable(false);
+        etEventDescription.setFocusableInTouchMode(false);
+
+        spEventFrequency.setOnTouchListener((v, event13) -> true);
+
+        AtomicBoolean editFlag = new AtomicBoolean(false);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            if (editFlag.get() == false) {
+                dialog.dismiss();
+            } else {
+                event.setName(etEventName.getText().toString());
+                event.setDate(etEventDate.getText().toString());
+                event.setRepeat_frequency(spEventFrequency.getSelectedItem().toString());
+                event.setDescription(etEventDescription.getText().toString());
+
+                event_db.updateEvent(event);
+
+                eventList.set(position, event);
+                adapter.notifyDataSetChanged();
+
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
         AlertDialog dialog = builder.create();
         dialog.show();
