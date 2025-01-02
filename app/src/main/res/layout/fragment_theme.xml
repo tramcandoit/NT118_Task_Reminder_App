@@ -16,6 +16,7 @@
         android:orientation="horizontal"
         android:id="@+id/tv_settings"
         android:background="@drawable/ripple_item_effect"
+        android:padding="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -62,7 +63,7 @@
 
         <RadioGroup
             android:id="@+id/rg_theme"
-            android:layout_width="match_parent"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintStart_toStartOf="parent"
@@ -71,6 +72,8 @@
             <RadioButton
                 android:id="@+id/rb_light"
                 android:layout_width="match_parent"
+                android:background="@drawable/ripple_item_effect"
+                android:padding="10dp"
                 android:layout_height="wrap_content"
                 android:text="@string/light"
                 android:textSize="20sp" />
@@ -84,8 +87,10 @@
 
             <RadioButton
                 android:id="@+id/rb_dark"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ripple_item_effect"
+                android:padding="10dp"
                 android:text="@string/dark"
                 android:textSize="20sp" />
 
