@@ -44,6 +44,7 @@ public class LanguageFragment extends Fragment {
         tvSetting.setOnClickListener(view1 -> {
             SettingsFragment settingsFragment = new SettingsFragment();
             FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
             transaction.replace(R.id.fragment_container, settingsFragment);
             transaction.addToBackStack(null);
             transaction.commit();

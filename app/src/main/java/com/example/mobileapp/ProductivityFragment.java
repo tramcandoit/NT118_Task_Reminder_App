@@ -42,6 +42,7 @@ public class ProductivityFragment extends Fragment {
 
                 // Thực hiện transaction để thay thế fragment hiện tại
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.slide_in_from_left, R.anim.slide_out_to_right);
                 transaction.replace(R.id.fragment_container, settingsFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
