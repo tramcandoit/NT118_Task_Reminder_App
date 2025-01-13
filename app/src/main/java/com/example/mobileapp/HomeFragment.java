@@ -530,7 +530,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
             public void onClick(View v) {
                 CategoriesMenuFragment categoriesMenuFragment = new CategoriesMenuFragment();
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, categoriesMenuFragment); // Thay "R.id.fragment_container" bằng ID của container Fragment trong layout chính của bạn.
+                transaction.replace(R.id.fragment_container, categoriesMenuFragment);
                 transaction.addToBackStack(null); // Cho phép quay lại fragment Home khi nhấn nút Back.
                 transaction.commit();
             }
