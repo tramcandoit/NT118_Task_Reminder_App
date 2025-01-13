@@ -16,7 +16,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url = uri("https://jitpack.io") } //Add this line in your settings.gradle
+        maven { url = uri("https://jitpack.io") }
     }
 }
 

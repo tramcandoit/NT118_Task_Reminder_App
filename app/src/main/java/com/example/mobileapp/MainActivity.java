@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Lưu trạng thái hiển thị của FAB khi activity bị destroy tạm thời (ví dụ: xoay màn hình)
+    // Lưu trạng thái hiển thị của FAB khi activity bị destroy tạm thời
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);

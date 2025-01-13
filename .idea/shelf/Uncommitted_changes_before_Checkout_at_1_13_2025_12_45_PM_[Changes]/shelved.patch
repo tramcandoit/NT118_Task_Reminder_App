@@ -1,0 +1,346 @@
+Index: app/src/main/java/com/example/mobileapp/Database/UserDatabaseHandler.java
+===================================================================
+diff --git a/app/src/main/java/com/example/mobileapp/Database/UserDatabaseHandler.java b/app/src/main/java/com/example/mobileapp/Database/UserDatabaseHandler.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/mobileapp/Database/UserDatabaseHandler.java	(revision d96df260fa7857ba10c705d1ce5604152a67f9b1)
++++ /dev/null	(revision d96df260fa7857ba10c705d1ce5604152a67f9b1)
+@@ -1,88 +0,0 @@
+-package com.example.mobileapp.Database;
+-
+-import android.content.ContentValues;
+-import android.content.Context;
+-import android.database.Cursor;
+-import android.database.sqlite.SQLiteDatabase;
+-import android.database.sqlite.SQLiteOpenHelper;
+-
+-import java.util.ArrayList;
+-import java.util.List;
+-
+-public class UserDatabaseHandler extends SQLiteOpenHelper {
+-
+-
+-
+-    private static final int DATABASE_VERSION = 1;
+-    // Database Name
+-    private static final String DATABASE_NAME = "UsersManager";
+-    // Contacts table name
+-    private static final String TABLE_USERS = "Users";
+-    // Contacts Table Columns names
+-    private static final String KEY_USERID = "id";
+-    private static final String KEY_NAME = "name";
+-    private static final String KEY_EMAIL = "email";
+-    private static final String KEY_PASSWORD = "password";
+-
+-    public UserDatabaseHandler(Context context) {
+-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+-    }
+-    @Override
+-    public void onCreate(SQLiteDatabase db) {
+-        // Create table
+-        String CREATE_TASKS_TABLE = "CREATE TABLE " +
+-                TABLE_USERS + "("
+-                + KEY_USERID + " INTEGER,"
+-                + KEY_NAME + " TEXT,"
+-                + KEY_EMAIL + "TEXT,"
+-                + KEY_PASSWORD + "TEXT"
+-                + ")";
+-        db.execSQL(CREATE_TASKS_TABLE);
+-    }
+-
+-    @Override
+-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+-        // Drop older table if existed
+-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+-        // Create tables again
+-        onCreate(db);
+-
+-    }
+-
+-    public void AddUser(User user) {
+-        SQLiteDatabase db = this.getWritableDatabase();
+-        ContentValues values = new ContentValues();
+-        values.put(KEY_USERID, user.getUser_id());
+-        values.put(KEY_NAME, user.getUsername());
+-        values.put(KEY_EMAIL, user.getEmail());
+-        values.put(KEY_PASSWORD, user.getPassword());
+-        db.insert(TABLE_USERS, null, values);
+-        db.close();
+-    }
+-
+-    public User getUserbyID(int id)
+-    {
+-        SQLiteDatabase db = this.getReadableDatabase();
+-        Cursor cursor = db.query(TABLE_USERS, new String[]{KEY_USERID, KEY_NAME, KEY_EMAIL, KEY_PASSWORD}, KEY_USERID + "=?",
+-                new String[]{String.valueOf(id)}, null, null, null, null);
+-        if (cursor != null)
+-            cursor.moveToFirst();
+-
+-        User user = new User();
+-        user.setUser_id(Integer.parseInt(cursor.getString(0)));
+-        user.setUsername(cursor.getString(1));
+-        user.setEmail(cursor.getString(2));
+-        user.setPassword(cursor.getString(3));
+-        cursor.close();
+-        return user;
+-    }
+-
+-    public void deleteUserbyID(int ID)
+-    {
+-        SQLiteDatabase db = this.getWritableDatabase();
+-        db.delete(TABLE_USERS, KEY_USERID + " = ?",
+-                new String[]{String.valueOf(ID)});
+-        db.close();
+-    }
+-
+-}
+Index: app/src/main/java/com/example/mobileapp/Database/Task.java
+===================================================================
+diff --git a/app/src/main/java/com/example/mobileapp/Database/Task.java b/app/src/main/java/com/example/mobileapp/Database/Task.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/mobileapp/Database/Task.java	(revision d96df260fa7857ba10c705d1ce5604152a67f9b1)
++++ /dev/null	(revision d96df260fa7857ba10c705d1ce5604152a67f9b1)
+@@ -1,110 +0,0 @@
+-package com.example.mobileapp.Database;
+-
+-public class Task {
+-    private int taskId;
+-    private int userId;
+-    private int categoryId;
+-    private String name;
+-    private String priority;
+-    private String status;
+-    private String date;
+-    private String time;
+-    private String repeat_frequency;
+-    private String description;
+-
+-    public Task() {
+-    }
+-
+-    public Task(int taskId, int userId, int categoryId, String name, String priority, String status, String date, String time, String repeat_frequency, String description) {
+-        this.taskId = taskId;
+-        this.userId = userId;
+-        this.categoryId = categoryId;
+-        this.name = name;
+-        this.priority = priority;
+-        this.status = status;
+-        this.date = date;
+-        this.time = time;
+-        this.repeat_frequency = repeat_frequency;
+-        this.description = description;
+-    }
+-
+-    public int getTaskId() {
+-        return taskId;
+-    }
+-
+-    public void setTaskId(int taskId) {
+-        this.taskId = taskId;
+-    }
+-
+-    public int getUserId() {
+-        return userId;
+-    }
+-
+-    public void setUserId(int userId) {
+-        this.userId = userId;
+-    }
+-
+-    public int getCategoryId() {
+-        return categoryId;
+-    }
+-
+-    public void setCategoryId(int categoryId) {
+-        this.categoryId = categoryId;
+-    }
+-
+-    public String getName() {
+-        return name;
+-    }
+-
+-    public void setName(String name) {
+-        this.name = name;
+-    }
+-
+-    public String getPriority() {
+-        return priority;
+-    }
+-
+-    public void setPriority(String priority) {
+-        this.priority = priority;
+-    }
+-
+-    public String getStatus() {
+-        return status;
+-    }
+-
+-    public void setStatus(String status) {
+-        this.status = status;
+-    }
+-
+-    public String getDate() {
+-        return date;
+-    }
+-
+-    public void setDate(String date) {
+-        this.date = date;
+-    }
+-
+-    public String getTime() {
+-        return time;
+-    }
+-
+-    public void setTime(String time) {
+-        this.time = time;
+-    }
+-
+-    public String getRepeat_frequency() {
+-        return repeat_frequency;
+-    }
+-
+-    public void setRepeat_frequency(String repeat_frequency) {
+-        this.repeat_frequency = repeat_frequency;
+-    }
+-
+-    public String getDescription() {
+-        return description;
+-    }
+-
+-    public void setDescription(String description) {
+-        this.description = description;
+-    }
+-}
+Index: app/src/main/java/com/example/mobileapp/Database/User.java
+===================================================================
+diff --git a/app/src/main/java/com/example/mobileapp/Database/User.java b/app/src/main/java/com/example/mobileapp/Database/User.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/mobileapp/Database/User.java	(revision d96df260fa7857ba10c705d1ce5604152a67f9b1)
++++ /dev/null	(revision d96df260fa7857ba10c705d1ce5604152a67f9b1)
+@@ -1,68 +0,0 @@
+-package com.example.mobileapp.Database;
+-
+-public class User {
+-    /*user_id (ID người dùng)
+-
+-    username (Tên người dùng)
+-
+-    email (Email)
+-
+-    password (Mật khẩu)*/
+-
+-    private int user_id;
+-    private String username;
+-    private String email;
+-    private String password;
+-
+-    public User(){
+-
+-    }
+-
+-    public User(int user_id, String username, String email, String password)
+-    {
+-        this.user_id = user_id;
+-        this.username = username;
+-        this.email = email;
+-        this.password = password;
+-    }
+-
+-    public void setUser_id(int user_id)
+-    {
+-        this.user_id = user_id;
+-    }
+-
+-    public int getUser_id()
+-    {
+-        return this.user_id;
+-    }
+-
+-    public void setUsername(String username)
+-    {
+-        this.username = username;
+-    }
+-
+-    public String getUsername()
+-    {
+-        return this.username;
+-    }
+-
+-    public void setEmail(String email){
+-        this.email = email;
+-    }
+-
+-    public String getEmail()
+-    {
+-        return this.email;
+-    }
+-
+-    public void setPassword(String password)
+-    {
+-        this.password = password;
+-    }
+-
+-    public String getPassword()
+-    {
+-        return this.password;
+-    }
+-
+-}
+Index: app/src/main/java/com/example/mobileapp/Database/UserSettings.java
+===================================================================
+diff --git a/app/src/main/java/com/example/mobileapp/Database/UserSettings.java b/app/src/main/java/com/example/mobileapp/Database/UserSettings.java
+deleted file mode 100644
+--- a/app/src/main/java/com/example/mobileapp/Database/UserSettings.java	(revision d96df260fa7857ba10c705d1ce5604152a67f9b1)
++++ /dev/null	(revision d96df260fa7857ba10c705d1ce5604152a67f9b1)
+@@ -1,34 +0,0 @@
+-package com.example.mobileapp.Database;
+-
+-public class UserSettings {
+-    private int userId;
+-    private String theme;
+-    private String language;
+-
+-    public UserSettings() {
+-    }
+-
+-    public int getUserId() {
+-        return userId;
+-    }
+-
+-    public void setUserId(int userId) {
+-        this.userId = userId;
+-    }
+-
+-    public String getTheme() {
+-        return theme;
+-    }
+-
+-    public void setTheme(String theme) {
+-        this.theme = theme;
+-    }
+-
+-    public String getLanguage() {
+-        return language;
+-    }
+-
+-    public void setLanguage(String language) {
+-        this.language = language;
+-    }
+-}
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <option name=\"testRunner\" value=\"CHOOSE_PER_TEST\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\r\n        <option name=\"modules\">\r\n          <set>\r\n            <option value=\"$PROJECT_DIR$\" />\r\n            <option value=\"$PROJECT_DIR$/app\" />\r\n          </set>\r\n        </option>\r\n        <option name=\"resolveExternalAnnotations\" value=\"false\" />\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	(revision d96df260fa7857ba10c705d1ce5604152a67f9b1)
++++ b/.idea/gradle.xml	(date 1736747056418)
+@@ -3,7 +3,6 @@
+   <component name="GradleSettings">
+     <option name="linkedExternalProjectsSettings">
+       <GradleProjectSettings>
+-        <option name="testRunner" value="CHOOSE_PER_TEST" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+         <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+         <option name="modules">

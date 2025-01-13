@@ -37,7 +37,7 @@ android {
 dependencies {
 
     implementation(libs.firebase.auth)
-    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.3") // Hoặc phiên bản mới nhất
+    coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.3")
     implementation("com.applandeo:material-calendar-view:1.9.2")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.jakewharton.threetenabp:threetenabp:1.4.0")
