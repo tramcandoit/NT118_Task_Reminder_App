@@ -32,7 +32,7 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    // Creating Tables
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CATEGORIES_TABLE = "CREATE TABLE " +
@@ -56,7 +56,7 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    // Upgrading database
+    // Upgrade CSDL
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
@@ -65,7 +65,7 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Adding new contact
+    // Thêm contact
     public long addCategory(CategoriesItem category) {
         Log.d(TAG, "Adding category: " + category.getName());
         int uniqueId = generateUniqueRandomId();
@@ -87,7 +87,7 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
         return id;
     }
 
-    // Getting single Category
+    // Get danh mục
     public CategoriesItem getCategory(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_CATEGORIES,
@@ -115,7 +115,7 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
         return category;
     }
 
-    // Getting All Categories
+    // // Get all danh mục
     public List<CategoriesItem> getAllCategories() {
         List<CategoriesItem> CategoryList = new ArrayList<CategoriesItem>();
         // Select All Query
@@ -135,11 +135,11 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
-        // return Category list
+
         return CategoryList;
     }
 
-    // Updating single contact
+    // Update danh mục
     public int updateCategory(CategoriesItem category) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -149,14 +149,14 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_NAME, category.getName());
         values.put(KEY_ICONRESID, category.getIconResId());
 
-        // Updating row
+        // Updating hàng
         return db.update(TABLE_CATEGORIES, values,
                 KEY_CATEGORYID + " = ?",
                 new String[]{String.valueOf(category.getCategoryId())}
         );
     }
 
-    // Deleting single contact
+    // Xóa danh mục
     public void deleteCategory(CategoriesItem category) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_CATEGORIES, KEY_CATEGORYID + " = ?",
@@ -164,7 +164,7 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Deleting all Categories
+    // Xóa all danh mục
     public void deleteAllCategories() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_CATEGORIES, null, null); // Xóa tất cả các hàng trong bảng Categories
@@ -200,7 +200,7 @@ public class CategoryDatabaseHandler extends SQLiteOpenHelper {
         int randomId;
         boolean idExists;
         do {
-            randomId = (int) (Math.random() * ID_BOUND) + 1; // Generating a random number between 1 and ID_BOUND
+            randomId = (int) (Math.random() * ID_BOUND) + 1;
             idExists = checkIfIdExists(randomId);
         } while (idExists);
         return randomId;

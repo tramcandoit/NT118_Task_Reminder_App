@@ -99,11 +99,11 @@ public class HelpFeedFragment extends Fragment {
             return;
         }
 
-        // Get feedback details
+        // Lấy chi tiết phản hồi từ người dùng
         String feedbackType = edtFeedbackType.getText().toString().trim();
         String feedbackContent = edtFeedbackContent.getText().toString().trim();
 
-        // Validate input
+        // Kiểm tra xem người dùng đã nhập đầy đủ thông tin chưa
         if (TextUtils.isEmpty(feedbackType)) {
             edtFeedbackType.setError("Feedback type cannot be empty");
             return;
@@ -114,34 +114,32 @@ public class HelpFeedFragment extends Fragment {
             return;
         }
 
-        // Create a map to store feedback data
+            // Tạo một HashMap để lưu trữ thông tin phản hồi
         Map<String, Object> feedback = new HashMap<>();
         feedback.put("user_id", currentUser.getUid());
         feedback.put("user_email", currentUser.getEmail()); // Thêm email người dùng (tùy chọn)
         feedback.put("feedback_type", feedbackType);
         feedback.put("feedback_content", feedbackContent);
 
-        // Get Firestore instance
+        // Lấy tham chiếu đến Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Add feedback to Firestore
+        // Thêm phản hồi vào Firestore
         db.collection("feedbacks")
                 .add(feedback)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        // Clear input fields
+                        // Xóa nội dung đã nhập
                         edtFeedbackType.setText("");
                         edtFeedbackContent.setText("");
 
-                        // Show success message
                         Toast.makeText(getContext(), "Feedback submitted successfully!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Show error message
                         Toast.makeText(getContext(), "Failed to submit feedback: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });

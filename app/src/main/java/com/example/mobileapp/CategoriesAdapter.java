@@ -20,23 +20,23 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     private final List<CategoriesItem> categories;
     private final Context context;
 
-    private SparseBooleanArray selectedCategories; // Add this
-    private OnItemClickListener onItemClickListener; // Add listener
+    private SparseBooleanArray selectedCategories;
+    private OnItemClickListener onItemClickListener;
 
     private HashMap<String, Integer> categoryPositions = new HashMap<>();
 
     public CategoriesAdapter(Context context, List<CategoriesItem> categories, SparseBooleanArray selectedCategories) {
         this.context = context;
         this.categories = categories;
-        this.selectedCategories = selectedCategories; // Assign the passed parameter, not itself!
+        this.selectedCategories = selectedCategories; // Gán giá trị từ tham số truyền vào
     }
 
-    public interface OnItemClickListener { // Define interface
+    public interface OnItemClickListener { // Định nghĩa interface
         void onItemClick(int position);
     }
 
 
-    public void setOnItemClickListener(OnItemClickListener listener) { // Setter for listener
+    public void setOnItemClickListener(OnItemClickListener listener) { // Hàm setter cho listener
         this.onItemClickListener = listener;
     }
 
@@ -58,9 +58,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
         // Set background based on selected state
         if (selectedCategories.get(categories.get(position).getCategoryId(), false)) {
-            holder.itemView.setBackgroundResource(R.drawable.background_categories_item_selected); // Your selected background
+            holder.itemView.setBackgroundResource(R.drawable.background_categories_item_selected); //selected background
         } else {
-            holder.itemView.setBackgroundResource(R.drawable.background_categories_item); // Your unselected background
+            holder.itemView.setBackgroundResource(R.drawable.background_categories_item);  // unselected background
         }
 
 
