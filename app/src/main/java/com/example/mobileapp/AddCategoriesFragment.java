@@ -156,11 +156,9 @@ public class AddCategoriesFragment extends DialogFragment {
 
         // Thêm nút "OK" để đóng dialog
         builder.setPositiveButton("OK", (dialog, which) -> {
-            // Nút OK đã nhấn, chỉ cần đóng dialog
             dialog.dismiss(); // Đóng dialog khi nhấn OK
         });
 
-        // Hiển thị dialog
         builder.create().show();
     }
 }

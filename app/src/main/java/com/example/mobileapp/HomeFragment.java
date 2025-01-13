@@ -184,7 +184,7 @@ public class HomeFragment extends Fragment implements OnTaskAddedListener {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-// Inflate the layout for this fragment
+
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
